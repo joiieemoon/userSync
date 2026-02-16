@@ -13,8 +13,11 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from "react-router-dom";
+import { HiEye, HiEyeOff } from "react-icons/hi";
+import { useState } from "react";
+import { usepasswordtoggle } from "../../../components/formfields/usepasswordtoggle";
 
-
+// import { field } from 'firebase/firestore/pipelines';
 const loginValidationSchema = Yup.object({
   email: Yup.string().email("Invalid email").required("Email is required"),
   password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
@@ -23,6 +26,16 @@ const loginValidationSchema = Yup.object({
 
 export const Login = () => {
   const navigate = useNavigate();
+  // const [showpassword, setshowpassword] = useState<Record<string, boolean>>({});
+const { showPassword, togglePassword } = usepasswordtoggle();
+
+
+  // const togglepassword = (fieldName: string) => {
+  //   setshowpassword((prev) => ({
+  //     ...prev,
+  //     [fieldName]: !prev[fieldName],
+  //   }));
+  // }
   return (
     <div className="flex flex-col md:flex-row min-h-screen dark:bg-black">
 
@@ -37,22 +50,22 @@ export const Login = () => {
             try {
               await signInWithEmailAndPassword(auth, values.email, values.password);
               console.log("user login successfully");
-                 toast.success("User Login Successfully!!",{position:'top-center'})
+              toast.success("User Login Successfully!!", { position: 'top-center' })
               //  navigate("/");
 
               setTimeout(() => {
-      navigate("/");
-    }, 1500);
-               
+                navigate("/");
+              }, 1500);
+
             } catch (error) {
               console.log(error.message);
-               toast.error(error.message,{
-                position:'bottom-center'
+              toast.error(error.message, {
+                position: 'bottom-center'
               })
             }
-             finally {
+            finally {
               setSubmitting(false);
-            } 
+            }
           }}
         >
           {({ values,
@@ -72,25 +85,45 @@ export const Login = () => {
               <ToastContainer position="top-center" />
 
               {loginFields.map((field) => (
-                <div key={field.name}>
+                <div key={field.name} >
                   <Label htmlFor={field.name} className="text-gray-800 dark:text-white">
                     {field.label}
                   </Label>
-
+                <div className="relative mt-1">
                   <TextInput
                     id={field.name}
                     name={field.name}
-                    type={field.type}
+                    // type={field.type}
+                   
+                    type={
+                      field.type === "password"
+                        ? showPassword[field.name]
+                          ? "text"
+                          : "password"
+                        : field.type
+                    }
                     value={values[field.name as keyof typeof values]}
                     onChange={handleChange}
                     onBlur={handleBlur}
                     placeholder={field.placeholder}
                     required
-                    className="mt-1"
+                    className="mt-1 "
+
+                    
                   />
+                  {
+                    field.type === "password" && (
+                      <button type='button' onClick={() => { togglePassword(field.name) }} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer">
+                        {showPassword[field.name]?<HiEyeOff/>:<HiEye/>}
+                      </button>
+                    )
+                  }
+                  </div>
                   {errors[field.name as keyof typeof errors] && touched[field.name as keyof typeof touched] ? (
                     <p className="text-red-500 text-sm">{errors[field.name as keyof typeof errors]}</p>
                   ) : null}
+
+                  
                 </div>
               ))}
 
@@ -101,7 +134,7 @@ export const Login = () => {
                 </div>
               </div>
 
-              <Button type="submit" className="w-full bg-blue-600">
+              <Button type="submit" className="w-full bg-blue-600 cursor-pointer">
                 Login
               </Button>
 
