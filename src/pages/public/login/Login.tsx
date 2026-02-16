@@ -16,7 +16,8 @@ import { useNavigate } from "react-router-dom";
 import { HiEye, HiEyeOff } from "react-icons/hi";
 import { useState } from "react";
 import { usepasswordtoggle } from "../../../components/formfields/usepasswordtoggle";
-
+// import ForgetPassword from "../../../modals/forgetpassword/ForgetPassword"
+import ForgotPassword from '../../../modals/forgetpassword/ForgetPassword';
 // import { field } from 'firebase/firestore/pipelines';
 const loginValidationSchema = Yup.object({
   email: Yup.string().email("Invalid email").required("Email is required"),
@@ -27,7 +28,8 @@ const loginValidationSchema = Yup.object({
 export const Login = () => {
   const navigate = useNavigate();
   // const [showpassword, setshowpassword] = useState<Record<string, boolean>>({});
-const { showPassword, togglePassword } = usepasswordtoggle();
+  const { showPassword, togglePassword } = usepasswordtoggle();
+  const [showForgot, setShowForgot] = useState(false);
 
 
   // const togglepassword = (fieldName: string) => {
@@ -89,52 +91,68 @@ const { showPassword, togglePassword } = usepasswordtoggle();
                   <Label htmlFor={field.name} className="text-gray-800 dark:text-white">
                     {field.label}
                   </Label>
-                <div className="relative mt-1">
-                  <TextInput
-                    id={field.name}
-                    name={field.name}
-                    // type={field.type}
-                   
-                    type={
-                      field.type === "password"
-                        ? showPassword[field.name]
-                          ? "text"
-                          : "password"
-                        : field.type
-                    }
-                    value={values[field.name as keyof typeof values]}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    placeholder={field.placeholder}
-                    required
-                    className="mt-1 "
+                  <div className="relative mt-1">
+                    <TextInput 
+                      id={field.name}
+                      name={field.name}
+                      // type={field.type}
 
-                    
-                  />
-                  {
-                    field.type === "password" && (
-                      <button type='button' onClick={() => { togglePassword(field.name) }} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer">
-                        {showPassword[field.name]?<HiEyeOff/>:<HiEye/>}
-                      </button>
-                    )
-                  }
+                      type={
+                        field.type === "password"
+                          ? showPassword[field.name]
+                            ? "text"
+                            : "password"
+                          : field.type
+                      }
+                      value={values[field.name as keyof typeof values]}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      placeholder={field.placeholder}
+                      required
+                      className="mt-1  placeholder-opacity-50" 
+
+
+                    />
+                    {
+                      field.type === "password" && (
+                        <button type='button' onClick={() => { togglePassword(field.name) }} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer">
+                          {showPassword[field.name] ? <HiEyeOff /> : <HiEye />}
+                        </button>
+                      )
+                    }
                   </div>
                   {errors[field.name as keyof typeof errors] && touched[field.name as keyof typeof touched] ? (
                     <p className="text-red-500 text-sm">{errors[field.name as keyof typeof errors]}</p>
                   ) : null}
 
-                  
+
                 </div>
               ))}
 
               <div className="flex items-center justify-between text-sm">
-                <div className="flex items-center gap-2">
-                  <Checkbox id="remember" />
-                  <Label htmlFor="remember">Remember me</Label>
+                <div className="flex items-center ">
+
+                  <div className="w-full text-right">
+                    <span
+                      className="text-blue-500 cursor-pointer text-sm"
+                      onClick={() => setShowForgot(true)}
+                    >
+                      Forgot Password?
+                    </span>
+                  </div>
                 </div>
               </div>
+              <ForgotPassword
+                isOpen={showForgot}
+                onClose={() => setShowForgot(false)}
+                onSubmit={(email) => {
+                  console.log("Reset email:", email);
+                  setShowForgot(false);
+                }}
+              />
 
-              <Button type="submit" className="w-full bg-blue-600 cursor-pointer">
+
+              <Button type="submit" className="w-full mt-0 bg-blue-600 cursor-pointer">
                 Login
               </Button>
 
