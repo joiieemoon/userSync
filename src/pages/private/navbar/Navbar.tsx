@@ -1,73 +1,151 @@
-import React from "react";
-import { HiMenuAlt1 } from "react-icons/hi";
-import { Avatar, Dropdown, DropdownDivider, DropdownHeader, DropdownItem, Navbar as FlowbiteNavbar, NavbarBrand, NavbarToggle } from "flowbite-react";
-import { useNavigate } from "react-router-dom";
-import { auth } from "../../../components/firebase/firebase"; 
+import React, { useState, useEffect } from "react";
+import { HiMenuAlt1, HiBell, HiMoon, HiSun } from "react-icons/hi";
+import {
+  Avatar,
+  Dropdown,
+  DropdownDivider,
+  DropdownHeader,
+  DropdownItem,
+  Navbar as FlowbiteNavbar,
+  NavbarBrand,
+} from "flowbite-react";
+import { RiLogoutBoxLine } from "react-icons/ri";
+import { FaRegUserCircle } from "react-icons/fa";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { auth } from "../../../components/firebase/firebase";
 import { toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import { useSelector } from "react-redux";
+import type { RootState } from "../../../redux/store/store";
+import { IoHomeOutline } from "react-icons/io5";
+
 
 interface NavbarProps {
   toggleSidebar: () => void;
 }
-interface User {
-  firstName: string;
-  lastname: string;
-  email: string;
-}
 
-interface NavbarProps {
-  toggleSidebar: () => void;
-  user: User | null;
-}
-
-
-const Navbar: React.FC<NavbarProps> = ({ toggleSidebar ,user}) => {
+const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // Logout function
+  const user = useSelector((state: RootState) => state.auth.user);
+
+  const [darkMode, setDarkMode] = useState(false);
+
+  // Dark Mode Toggle Logic
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [darkMode]);
+
   const handleLogout = async () => {
     try {
       await auth.signOut();
-      toast.success("Logged out successfully!", { position: "top-center" });
-      navigate("/login"); // redirect to login page
-    } catch (error) {
-      console.log(error);
-      toast.error(error.message || "Logout failed", { position: "bottom-center" });
+      toast.success("Logged out successfully!", {
+        position: "top-center",
+      });
+      navigate("/login");
+    } catch (error: any) {
+      toast.error(error.message || "Logout failed", {
+        position: "bottom-center",
+      });
     }
   };
 
   return (
-    <FlowbiteNavbar fluid className="bg-white dark:bg-gray-900 text-gray-700 dark:text-white shadow-md px-4 fixed w-full top-0 z-50">
-      <div className="flex items-center gap-3">
+    <FlowbiteNavbar
+      fluid
+      className="bg-white dark:bg-gray-900 text-gray-700 dark:text-white shadow-md px-6 fixed w-full top-0 z-50 "
+    >
+      {/* LEFT SECTION */}
+      <div className="flex items-center gap-4 border-none">
         <button
-          type="button"
           onClick={toggleSidebar}
-          aria-label="Toggle sidebar"
-          className="text-2xl text-gray-700 dark:text-white hover:text-gray-900 dark:hover:text-gray-300 transition-colors"
+          className="text-2xl hover:text-blue-500 transition"
         >
           <HiMenuAlt1 />
         </button>
 
-        <NavbarBrand href="#">
-          <span className="text-xl font-semibold dark:text-white">User Sync</span>
+        <NavbarBrand>
+          <span className="text-xl font-bold tracking-wide">
+            User Sync
+          </span>
         </NavbarBrand>
       </div>
 
-      <div className="flex items-center gap-4 md:order-2">
+      {/* RIGHT SECTION */}
+      <div className="flex items-center gap-6">
+
+        {/*  Notification */}
+        <div className="relative cursor-pointer">
+          <HiBell className="text-2xl hover:text-blue-500 transition" />
+          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
+            3
+          </span>
+        </div>
+
+        {/* Dark Mode Toggle */}
+        <button
+          onClick={() => setDarkMode(!darkMode)}
+          className="text-2xl hover:text-yellow-400 transition"
+        >
+          {darkMode ? <HiSun /> : <HiMoon />}
+        </button>
+
+        {/*  Profile Dropdown */}
         <Dropdown
+        className="border-none"
           arrowIcon={false}
           inline
-          label={<Avatar alt="User settings" img="https://flowbite.com/docs/images/people/profile-picture-5.jpg" rounded />}
+          label={
+            <Avatar
+              alt="User"
+              img={user?.profilePhoto || undefined}
+              rounded
+            />
+          }
         >
           <DropdownHeader>
-            {/* <span className="block text-sm">{user.?firstname || "gUEST"}</span> */}
-            <span className="block truncate text-sm font-medium">name@flowbite.com</span>
+            <span className="block text-sm font-semibold">
+              {user
+                ? `${user.firstName} ${user.lastName}`
+                : "Guest"}
+            </span>
+            <span className="block truncate text-sm text-gray-500">
+              {user?.email}
+            </span>
           </DropdownHeader>
-          <DropdownDivider />
-          <DropdownItem onClick={handleLogout}>Sign out</DropdownItem>
-        </Dropdown>
 
-        <NavbarToggle />
+          <DropdownItem>
+            {location.pathname === "/profile" ? (
+              <div
+                onClick={() => navigate("/")}
+                className="flex items-center gap-2 hover:text-green-500  w-full"
+              >
+              <IoHomeOutline />   Home
+              </div>
+            ) : (
+              <Link
+                to="/profile"
+                className="flex items-center gap-2 hover:text-blue-300"
+              >
+                <FaRegUserCircle />
+                Edit Profile
+              </Link>
+            )}
+          </DropdownItem>
+
+          <DropdownDivider />
+
+          <DropdownItem onClick={handleLogout}>
+            <div className="flex items-center gap-2 hover:text-red-500   w-full">
+              <RiLogoutBoxLine />
+              Sign out
+            </div>
+          </DropdownItem>
+        </Dropdown>
       </div>
     </FlowbiteNavbar>
   );

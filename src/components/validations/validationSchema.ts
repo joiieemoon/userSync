@@ -30,3 +30,68 @@ export const signupvalidationSchema = yup.object().shape({
     profilePhoto: yup.mixed().required(errorMessage.img),
 
 })
+export const updateProfileValidationSchema = yup.object().shape({
+  firstName: yup.string().matches(letterRegx, errorMessage.letter).required(errorMessage.required),
+  lastName: yup.string().matches(letterRegx, errorMessage.letter).required(errorMessage.required),
+  email: yup.string().email(errorMessage.email).required(errorMessage.email),
+
+  phone: yup
+    .string()
+    .optional()
+    .test("len", "Phone must be exactly 10 digits", (val) => !val || val.length === 10),
+
+  role: yup
+    .string()
+    .optional()
+    .matches(/^[A-Za-z\s]*$/, errorMessage.letter)
+    .max(20, "Role can be at most 20 characters"),
+
+  bio: yup.string().optional().max(200, "Bio can be at most 200 characters"),
+
+  profilePhoto: yup
+    .string()
+    .optional()
+    .test(
+      "is-url-or-base64",
+      "Please enter a valid image URL or select a file",
+      (value) => !value || value.startsWith("http") || value.startsWith("data:image")
+    ),
+});
+
+// export const updateProfileValidationSchema = yup.object().shape({
+//   firstName: yup
+//     .string()
+//     .matches(letterRegx, errorMessage.letter)
+//     .required(errorMessage.required),
+
+//   lastName: yup
+//     .string()
+//     .matches(letterRegx, errorMessage.letter)
+//     .required(errorMessage.required),
+
+//   email: yup
+//     .string()
+//     .email(errorMessage.email)
+//     .required(errorMessage.email),
+
+// phone: yup
+//     .string()
+//     .optional()
+//     .matches(/^[0-9]{10}$/, "Phone must be exactly 10 digits"),
+
+//   role: yup
+//     .string()
+//     .optional()
+//     .matches(/^[A-Za-z\s]+$/, errorMessage.letter)
+//     .max(20, "Role can be at most 20 characters"),
+
+//   bio: yup
+//     .string()
+//     .optional()
+//     .max(200, "Bio can be at most 200 characters"),
+
+//   profilePhoto: yup
+//     .string()
+//     .url("Please enter a valid image URL")
+//     .optional(),
+// });

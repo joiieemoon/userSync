@@ -7,6 +7,7 @@ import {
 } from "flowbite-react";
 import { HiChartPie, HiUser, HiShoppingBag } from "react-icons/hi";
 import { IoChatbox } from "react-icons/io5";
+import { Link } from "react-router-dom";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -24,10 +25,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
       <Flowbitesidebar aria-label="Sidebar with logo branding example">
         <SidebarItems>
           <SidebarItemGroup  >
-            <SidebarItem href="#" icon={HiChartPie} className="hover:text-cyan-500">
+            <SidebarItem href="dashboard" icon={HiChartPie} className="hover:text-cyan-500">
               Dashboard
             </SidebarItem>
-            <SidebarItem href="#" icon={HiUser} className="hover:text-yellow-500">
+            <SidebarItem href="users" icon={HiUser} className="hover:text-yellow-500">
               Users
             </SidebarItem>
             <SidebarItem href="#" icon={HiShoppingBag} className="hover:text-red-500">

@@ -19,6 +19,22 @@ import { usepasswordtoggle } from "../../../components/formfields/usepasswordtog
 // import ForgetPassword from "../../../modals/forgetpassword/ForgetPassword"
 import ForgotPassword from '../../../modals/forgetpassword/ForgetPassword';
 // import { field } from 'firebase/firestore/pipelines';
+//redux
+import { useDispatch } from "react-redux";
+import { setUser } from "../../../redux/store/authSlice";
+import type { AppDispatch } from "../../../redux/store/store";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../../../components/firebase/firebase";
+
+
+
+
+
+
+
+
+
+
 const loginValidationSchema = Yup.object({
   email: Yup.string().email("Invalid email").required("Email is required"),
   password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
@@ -30,6 +46,7 @@ export const Login = () => {
   // const [showpassword, setshowpassword] = useState<Record<string, boolean>>({});
   const { showPassword, togglePassword } = usepasswordtoggle();
   const [showForgot, setShowForgot] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
 
 
   // const togglepassword = (fieldName: string) => {
@@ -48,27 +65,76 @@ export const Login = () => {
             password: ""
           }}
           validationSchema={loginValidationSchema}
+          // onSubmit={async (values, { setSubmitting }) => {
+          //   try {
+          //     await signInWithEmailAndPassword(auth, values.email, values.password);
+          //     console.log("user login successfully");
+          //     toast.success("User Login Successfully!!", { position: 'top-center' })
+          //     //  navigate("/");
+
+          //     setTimeout(() => {
+          //       navigate("/");
+          //     }, 1500);
+
+          //   } catch (error) {
+          //     console.log(error.message);
+          //     toast.error(error.message, {
+          //       position: 'bottom-center'
+          //     })
+          //   }
+          //   finally {
+          //     setSubmitting(false);
+          //   }
+          // }}
+
+
           onSubmit={async (values, { setSubmitting }) => {
-            try {
-              await signInWithEmailAndPassword(auth, values.email, values.password);
-              console.log("user login successfully");
-              toast.success("User Login Successfully!!", { position: 'top-center' })
-              //  navigate("/");
+  try {
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      values.email,
+      values.password
+    );
 
-              setTimeout(() => {
-                navigate("/");
-              }, 1500);
+    const user = userCredential.user;
 
-            } catch (error) {
-              console.log(error.message);
-              toast.error(error.message, {
-                position: 'bottom-center'
-              })
-            }
-            finally {
-              setSubmitting(false);
-            }
-          }}
+    if (user) {
+      // Firestore fetch
+      const snap = await getDoc(doc(db, "Users", user.uid));
+
+      if (snap.exists()) {
+        const data = snap.data();
+
+        // Redux set
+        dispatch(
+          setUser({
+            uid: user.uid,
+            firstName: data.firstName,
+            lastName: data.lastname,
+            email: data.email,
+            profilePhoto: data.profilePhoto || "",
+          })
+        );
+      }
+    }
+
+    toast.success("User Login Successfully!!", {
+      position: "top-center",
+    });
+
+    setTimeout(() => {
+      navigate("/");
+    }, 1500);
+
+  } catch (error) {
+    toast.error(error.message, {
+      position: "bottom-center",
+    });
+  } finally {
+    setSubmitting(false);
+  }
+}}
+
         >
           {({ values,
             handleSubmit,
