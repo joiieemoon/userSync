@@ -1,16 +1,32 @@
   import useUsers from "../../../../hooks/useUser/useUsers";
   import { MdDeleteForever } from "react-icons/md";
   import DeleteUser from "../../../../modals/deleteUser/DeleteUser";
-  import { useState } from "react";
+  import { useState,useEffect } from "react";
   import { FaRegEdit } from "react-icons/fa";
   import EditUser from "../../../../modals/edituserModal/EditUser";
   import { FaSortAlphaDown,FaSortAlphaDownAlt  } from "react-icons/fa";
   // import { useState}  from "react";
+  import{ PaginationMain }from "../../../../components/pagination/Pagination";
+
   import { auth } from "../../../../components/firebase/firebase";
-  export default function UsersDetails() {
+import SearchBar from "../../../../components/SearchBar/SearchBar";
+
+  export default function   UsersDetails() {
     const { users, loading } = useUsers();
     const [userToDelete, setUserToDelete] = useState(null); 
     const [userToEdit, setUserToEdit] = useState(null); 
+    const [searchTerm, setsearchTerm] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+     useEffect(() => {
+  setCurrentPage(1);
+}, [searchTerm]);
+const usersPerPage = 10; 
+const indexOfLastUser = currentPage * usersPerPage;
+const indexOfFirstUser = indexOfLastUser - usersPerPage;
+
+
+
+
     
 const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
     if (loading) return <div className="p-6">Loading...</div>;
@@ -21,8 +37,14 @@ const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
     const currentUser=users.find(u=>u.uid===currentUid);
     const isAdmin=currentUser?.role==="admin";
 
-    const exculdeCurrentUser=users.filter(u=>u.uid!==currentUid)
-    const SortedUser= [...exculdeCurrentUser].sort((a,b)=>{
+    // const exculdeCurrentUser=users.filter(u=>u.uid!==currentUid)
+
+    const filterUser=users.filter(u=>u.uid!==currentUid).filter((u)=> [u.firstName, u.email, u.phone, u.role]
+    .join(" ")
+    .toLowerCase()
+    .includes(searchTerm.toLowerCase())
+  );
+    const SortedUser= [...filterUser].sort((a,b)=>{
       const nameA=a.firstName.toLowerCase();
       const nameB=b.firstName.toLowerCase();
       if(sortOrder==="asc") return nameA.localeCompare(nameB);
@@ -30,17 +52,20 @@ const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
       return nameB.localeCompare(nameA);
     })
 
+    const currentUsers = SortedUser.slice(indexOfFirstUser, indexOfLastUser);
+const totalPages = Math.ceil(SortedUser.length / usersPerPage);
     const toggleSortOrder = () => {
       setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
     };
+   
     return (
       <div className="p-6">
         <h2 className="text-3xl font-semibold mb-6 dark:text-white ">All Users</h2>
-
+        <SearchBar value={searchTerm} onchange={(e)=>setsearchTerm(e.target.value )}/>
         <table className="w-full bg-white rounded-xl shadow">
           <thead className="bg-gray-100">
-            <tr>
-              <th className="p-3 text-left flex cursor-pointer  items-center group" onClick={toggleSortOrder}> First Name {sortOrder === "asc" ?   <FaSortAlphaDown className="text-xl ml-1 hidden group-hover:block" /> : <FaSortAlphaDownAlt className="text-xl ml-1" />}</th>
+            <tr className="bg-amber-300">
+              <th className="p-3 text-left flex cursor-pointer  items-center group " onClick={toggleSortOrder}> First Name {sortOrder === "asc" ?   <FaSortAlphaDown className="text-xl ml-1 hidden group-hover:block" /> : <FaSortAlphaDownAlt className="text-xl ml-1" />}</th>
             
               
               <th className="p-3 text-left">Email</th>
@@ -55,8 +80,8 @@ const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
           </thead>
 
           <tbody>
-            {SortedUser.map((u) => (
-              <tr key={u.uid} className="border-t">
+            {currentUsers.map((u) => (
+              <tr key={u.uid} className="border-t ">
                 <td className="p-3">{u.firstName} </td>
               
                 <td className="p-3">{u.email}</td>
@@ -89,6 +114,17 @@ const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
             ))}
           </tbody>
         </table>
+          {totalPages > 1 && (
+  <PaginationMain
+  currentPage={currentPage}
+  totalPages={totalPages}
+  onPageChange={(page) => {
+    console.log("page clicked:", page); 
+    setCurrentPage(Number(page));       
+  }}
+/>
+
+)}
 
         {/* Render modal outside the table */}
         <DeleteUser

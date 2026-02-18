@@ -136,7 +136,7 @@ export const Signup = () => {
                 </div>
               ))}
 
-              <Button type="submit" className="w-full bg-blue-600">Sign Up</Button>
+              <Button type="submit" className="w-full bg-amber-300 text-black">Sign Up</Button>
 
               <span className="dark:text-white">
                 Already have an account? <Link to="/login" className="text-blue-600">Login</Link>

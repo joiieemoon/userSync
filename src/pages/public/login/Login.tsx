@@ -218,7 +218,7 @@ export const Login = () => {
               />
 
 
-              <Button type="submit" className="w-full mt-0 bg-blue-600 cursor-pointer">
+              <Button type="submit" className="w-full mt-0 bg-amber-300 text-black cursor-pointer">
                 Login
               </Button>
 

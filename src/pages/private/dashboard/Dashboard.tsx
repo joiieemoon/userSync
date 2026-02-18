@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import type { RootState } from "../../../redux/store/store";
 
 import Navbar from "../navbar/Navbar";
-import { seedUsers } from "../../../services/seed/seeduser";
+import  {seedAuthUsers } from "../../../services/seed/seeduser";
 import { Sidebarmain } from "../../../components/sidebar/Sidebar";
 import dashboardBg from "../../../../public/dashboardbg.jpg";
 import avatar from "../../../../public/avtar.png";
@@ -39,7 +39,7 @@ const Dashboard = () => {
         <main className="flex flex-1 items-center justify-center p-6 pt-24">
 
           {/* Glass Card */}
-          <div className="w-full bg-cyan-400  max-w-4xl backdrop-blur-xl  border border-white/20 rounded-3xl shadow-2xl p-12 text-center dark:bg-cyan-400">
+          <div className="w-full bg-amber-300  max-w-4xl backdrop-blur-xl  border border-white/20 rounded-3xl shadow-2xl p-12 text-center ">
 
             {/* Avatar */}
             <div className="flex justify-center mb-6">
@@ -62,14 +62,14 @@ const Dashboard = () => {
             </p>
 
               {/* large datasetpush */}
-            {/* upload json data into firestorge  */}
+            {/* upload json data into firestorge  */} 
             {/* <button
-              onClick={seedUsers}
+              onClick={seedAuthUsers}
               style={{ padding: 10, background: "black", color: "white" }}
             >
               Seed Users
             </button> */}
-            {/* Stats */}
+            
             {/* <div className="flex justify-center">
               <div className="bg-cyan-900  text-white rounded-2xl px-10 py-6 shadow-lg">
                 <p className="text-sm opacity-80">User Fields</p>
