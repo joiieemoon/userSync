@@ -7,7 +7,7 @@ import { Formik, Form } from "formik";
 // import * as Yup from "yup";
 import { auth, db } from "../../../components/firebase/firebase.js"
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { setDoc, doc } from 'firebase/firestore';
+import { setDoc, doc,serverTimestamp  } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -34,6 +34,7 @@ export const Signup = () => {
             email: "",
             password: "",
             confirmPassword: "",
+         
             profilePhoto: null,
           }}
 
@@ -66,6 +67,7 @@ export const Signup = () => {
                   password: values.password,
                   // profilePhoto:photoURl,
                   profilePhoto: "",//temp
+                      createdAt: serverTimestamp(),
                 })
               }
               console.log("user registerd", user);

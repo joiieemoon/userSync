@@ -18,7 +18,7 @@ const DeleteUser: React.FC<Props> = ({ isOpen, onClose, user }) => {
     if (!user) return;
 
     try {
-      await deleteDoc(doc(db, "users", user.uid));
+      await deleteDoc(doc(db, "Users", user.uid));
       console.log(`User ${user.firstName} deleted successfully`);
       onClose();
     } catch (error) {
@@ -35,7 +35,7 @@ const DeleteUser: React.FC<Props> = ({ isOpen, onClose, user }) => {
           Are you sure you want to delete {user?.firstName} {user?.lastName}?
         </h2>
 
-        <button
+        <button 
           onClick={handleSubmit}
           className="w-full bg-blue-600 text-white py-2 rounded mb-2"
         >

@@ -110,7 +110,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
           <DropdownHeader>
             <span className="block text-sm font-semibold">
               {user
-                ? `${user.firstName} ${user.lastName}`
+                ? `${user.firstName} ${user.lastName}  (${user.role})`
                 : "Guest"}
             </span>
             <span className="block truncate text-sm text-gray-500">
