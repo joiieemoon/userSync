@@ -1,2 +1,8 @@
 @import "tailwindcss";
 @import "flowbite";
+@tailwind utilities;
+
+input::placeholder{
+    opacity: 0.3;
+    
+}

@@ -6,10 +6,10 @@ interface SearchBarProps {
 }
 const SearchBar = ({value,onchange}: SearchBarProps) => {
   return (
-    <div className="flex justify-center items-center w-full mb-4">
-      <div className="flex items-center w-full max-w-md bg-white/70 backdrop-blur-md shadow-lg rounded-full px-4 py-2 border border-gray-200 focus-within:ring-2 focus-within:ring-amber-400 transition-all duration-300">
+    <div className="flex justify-center items-center  ">
+      <div className="flex items-center  max-w-md bg-white/70 backdrop-blur-md shadow-lg rounded-full px-4 py-2 border border-gray-200 focus-within:ring-2 focus-within:ring-amber-400 transition-all duration-300">
         
-        <IoMdSearch className="text-gray-400 text-xl mr-2 " />
+        <IoMdSearch className="text-gray-800 text-4xl mr-2 " />
         
         <input
           type="text"

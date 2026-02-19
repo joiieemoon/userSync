@@ -14,8 +14,9 @@ export  function PaginationMain({
   onPageChange,
 }: PaginationMainProps) {
   return (
-    <div className="flex justify-center mt-6 overflow-x-auto">
+    <div className="flex justify-center mt-6 overflow-x-auto ">
       <Pagination
+     
         currentPage={currentPage}
         totalPages={totalPages}
         showIcons
