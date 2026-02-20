@@ -3,6 +3,7 @@ import { db } from "../../components/firebase/firebase";
 import { updateDoc, doc } from "firebase/firestore";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { updateProfileValidationSchema } from "../../components/validations/validationSchema";
+import { toast } from "react-toastify";
 
 type Props = {
   isOpen: boolean;
@@ -28,10 +29,11 @@ const EditUser: React.FC<Props> = ({ isOpen, onClose, user }) => {
 
   const handleSubmit = async (
     values: typeof initialValues,
-    { setSubmitting }: any
+    { setSubmitting }: any,
   ) => {
     try {
       await updateDoc(doc(db, "Users", user.uid), values);
+      toast.success("user update successfuly");
       onClose();
     } catch (error) {
       console.error("Error updating user:", error);
@@ -41,16 +43,16 @@ const EditUser: React.FC<Props> = ({ isOpen, onClose, user }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white w-96 p-6 rounded-xl shadow-lg">
-        <h2 className="text-xl font-semibold mb-4">
+    <div className="fixed inset-0 bg-black/50  flex items-center justify-center z-50">
+      <div className="bg-white dark:bg-gray-900 w-96 p-6 rounded-xl shadow-lg">
+        <h2 className="text-xl font-semibold mb-4 dark:text-white">
           Edit User {user.firstName}
         </h2>
 
         <Formik
           initialValues={initialValues}
           enableReinitialize
-          validationSchema={updateProfileValidationSchema} 
+          validationSchema={updateProfileValidationSchema}
           onSubmit={handleSubmit}
         >
           {({ isSubmitting }) => (
@@ -98,7 +100,11 @@ const EditUser: React.FC<Props> = ({ isOpen, onClose, user }) => {
               </div>
 
               <div>
-                <Field as="select" name="role" className="w-full bg-gray-300 border-none p-2 rounded">
+                <Field
+                  as="select"
+                  name="role"
+                  className="w-full bg-gray-300 border-none p-2 rounded"
+                >
                   <option value="">Select Role</option>
                   <option value="admin">Admin</option>
                   <option value="user">User</option>
@@ -114,7 +120,7 @@ const EditUser: React.FC<Props> = ({ isOpen, onClose, user }) => {
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-4 py-2 bg-gray-300 rounded"
+                  className="px-4 py-2 bg-gray-300 rounded cursor-pointer"
                 >
                   Cancel
                 </button>

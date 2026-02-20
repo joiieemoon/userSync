@@ -19,7 +19,7 @@ const EditBtn = ({
         bg-amber-300 dark:bg-gray-800 border border-gray-300 dark:border-gray-600
         shadow hover:shadow-md hover:bg-gray-50 dark:hover:bg-gray-700
         transform hover:-translate-y-0.5 hover:scale-105
-        transition-all duration-200 ease-in-out"
+        transition-all duration-200 ease-in-out cursor-pointer"
     >
       {icon}
       <span className="text-sm font-medium">{label}</span>

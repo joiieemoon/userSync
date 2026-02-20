@@ -51,8 +51,8 @@ export default function UpdateProfileModal({ user, onClose }: Props) {
 
   const handleSubmit = async (values: typeof initialValues) => {
     if (!user.uid) return;
-console.log("Submitting...", values);
-    try { 
+    console.log("Submitting...", values);
+    try {
       let photoURL = values.profilePhoto;
 
       //  If new image selected → convert to base64
@@ -83,7 +83,7 @@ console.log("Submitting...", values);
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black/60 dark:bg-gray-900 flex items-center justify-center z-50 p-4">
       <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl w-full max-w-3xl p-8 md:p-10 overflow-y-auto max-h-[90vh]">
         <h2 className="text-2xl md:text-3xl font-bold mb-8 text-gray-900 dark:text-white">
           Update Profile
@@ -141,7 +141,7 @@ console.log("Submitting...", values);
                         )}
                       </ErrorMessage>
                     </div>
-                  )
+                  ),
                 )}
 
                 {/* Bio */}

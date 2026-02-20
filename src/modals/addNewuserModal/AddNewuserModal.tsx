@@ -1,5 +1,5 @@
-import React from 'react';
-import NewUserForm from '../../components/createnewUserForm/NewUserForm';
+import React from "react";
+import NewUserForm from "../../components/createnewUserForm/NewUserForm";
 
 type Props = {
   isOpen: boolean;

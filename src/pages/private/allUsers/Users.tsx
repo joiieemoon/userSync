@@ -3,13 +3,15 @@ import useUsers from "../../../hooks/useUser/useUsers";
 import Navbar from "../navbar/Navbar";
 import { Sidebarmain } from "../../../components/sidebar/Sidebar";
 
-// Lazy load only 
-const UsersDetails = lazy(() =>
-  import("../../private/allUsers/userdetails/UserDetails")
+// Lazy load only
+const UsersDetails = lazy(
+  () => import("../../private/allUsers/userdetails/UserDetails"),
 );
 
 // Skeleton loader
 function UsersSkeleton() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   return (
     <div className="space-y-4 mt-40">
       {[...Array(10)].map((_, i) => (
@@ -42,7 +44,7 @@ export default function Users() {
         }`}
       >
         {/* Navbar */}
-        <Navbar toggleSidebar={toggleSidebar} />
+        <Navbar toggleSidebar={toggleSidebar} isOpen={isSidebarOpen} />
 
         {/* Content */}
         <main className="p-8 pt-19 space-y-6">

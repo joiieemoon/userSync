@@ -72,29 +72,29 @@ export default function UsersDetails() {
         All Users
       </h2>
 
-      <div className=" flex mt-5  justify-between items-center mb-3 "><SearchBar
-        value={searchTerm}
-        onchange={(e) => setsearchTerm(e.target.value)}
-      />{" "}
-      {/* <EditBtn onClick={() => setIsAddUserOpen(true)} /> */}
-    
-    
-    {isAdmin && <EditBtn
-  label="Add User"
-  icon={<MdAdd className="text-xl" />}
-  onClick={() => setIsAddUserOpen(true)}
-/>}  
+      <div className=" flex mt-5  justify-between items-center mb-3 ">
+        <SearchBar
+          value={searchTerm}
+          onchange={(e) => setsearchTerm(e.target.value)}
+        />{" "}
+        {/* <EditBtn onClick={() => setIsAddUserOpen(true)} /> */}
+        {isAdmin && (
+          <EditBtn
+            label="Add User"
+            icon={<MdAdd className="text-xl" />}
+            onClick={() => setIsAddUserOpen(true)}
+          />
+        )}
+        <AddNewuserModal
+          isOpen={isAddUserOpen}
+          onClose={() => setIsAddUserOpen(false)}
+        />
+      </div>
 
-
-      <AddNewuserModal
-        isOpen={isAddUserOpen}
-        onClose={() => setIsAddUserOpen(false)}
-      /></div>
-      
       <table className="w-full bg-white rounded-xl shadow-2xl     ">
         <thead className="bg-gray-100">
           <tr className="bg-amber-300 rounded-2xl">
-            <th 
+            <th
               className="p-3 text-left flex cursor-pointer  items-center group "
               onClick={toggleSortOrder}
             >
