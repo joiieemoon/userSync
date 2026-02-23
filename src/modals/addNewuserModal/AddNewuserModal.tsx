@@ -25,3 +25,4 @@ const AddNewuserModal: React.FC<Props> = ({ isOpen, onClose }) => {
 };
 
 export default AddNewuserModal;
+  

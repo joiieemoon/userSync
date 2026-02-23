@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../redux/store/store";
 import { IoHomeOutline } from "react-icons/io5";
+import { DarkThemeToggle } from "flowbite-react";
 
 interface NavbarProps {
   toggleSidebar: () => void;
@@ -57,9 +58,9 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isOpen }) => {
   return (
     <FlowbiteNavbar
       fluid
-      className={`fixed top-0 z-50 w-full bg-white dark:bg-gray-900 text-gray-700 dark:text-white border shadow-md px-6 transition-all duration-300
+      className={`fixed top-0 z-50 w-full bg-white dark:bg-gray-900 text-gray-700 dark:text-white  shadow-md px-6 transition-all duration-300
         ${isOpen ? "pl-64" : "pl-6"}`}
-      style={{ height: "64px" }} // Optional: fix height to match sidebar top offset
+      style={{ height: "64px" }} 
     >
       {/* LEFT SECTION */}
       <div className="flex items-center gap-4 border-none">
@@ -87,6 +88,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isOpen }) => {
         </div>
 
         {/* Dark Mode Toggle */}
+         <DarkThemeToggle />
         <button
           onClick={() => setDarkMode(!darkMode)}
           className="text-2xl hover:text-yellow-400 transition"

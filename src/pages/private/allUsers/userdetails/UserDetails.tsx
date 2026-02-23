@@ -90,7 +90,7 @@ export default function UsersDetails() {
           onClose={() => setIsAddUserOpen(false)}
         />
       </div>
-
+        
       <table className="w-full bg-white rounded-xl shadow-2xl     ">
         <thead className="bg-gray-100">
           <tr className="bg-amber-300 rounded-2xl">
