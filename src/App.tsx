@@ -22,7 +22,7 @@ const App = () => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setUser(user);
     });
-    return () => unsubscribe(); // cleanup
+    return () => unsubscribe();
   }, []);
 
   return (

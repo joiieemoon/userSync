@@ -32,7 +32,7 @@ export const useAuthListener = () => {
 
         }
       } else {
-        dispatch(clearUser());
+        dispatch(clearUser());  
       }
     });
 

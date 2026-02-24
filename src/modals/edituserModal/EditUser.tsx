@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { db } from "../../components/firebase/firebase";
-import { updateDoc, doc } from "firebase/firestore";
+import { updateDoc, doc, collection, getDocs } from "firebase/firestore";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { updateProfileValidationSchema } from "../../components/validations/validationSchema";
 import { toast } from "react-toastify";
@@ -18,6 +18,25 @@ type Props = {
 };
 
 const EditUser: React.FC<Props> = ({ isOpen, onClose, user }) => {
+  const [roles, setRoles] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "roles"));
+        const roleList = querySnapshot.docs.map((docSnap) => ({
+          id: docSnap.id,
+          roleName: docSnap.data().roleName,
+        }));
+        setRoles(roleList);
+      } catch (error) {
+        console.error("Error fetching roles:", error);
+      }
+    };
+
+    fetchRoles();
+  }, []);
+
   if (!isOpen || !user) return null;
 
   const initialValues = {
@@ -33,17 +52,18 @@ const EditUser: React.FC<Props> = ({ isOpen, onClose, user }) => {
   ) => {
     try {
       await updateDoc(doc(db, "Users", user.uid), values);
-      toast.success("user update successfuly");
+      toast.success("User updated successfully");
       onClose();
     } catch (error) {
       console.error("Error updating user:", error);
+      toast.error("Failed to update user");
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50  flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white dark:bg-gray-900 w-96 p-6 rounded-xl shadow-lg">
         <h2 className="text-xl font-semibold mb-4 dark:text-white">
           Edit User {user.firstName}
@@ -57,12 +77,13 @@ const EditUser: React.FC<Props> = ({ isOpen, onClose, user }) => {
         >
           {({ isSubmitting }) => (
             <Form className="space-y-4">
+
               <div>
                 <Field
                   type="text"
                   name="firstName"
                   placeholder="First Name"
-                  className="w-full border-none bg-gray-300 p-2 rounded "
+                  className="w-full bg-gray-300 p-2 rounded border-none"
                 />
                 <ErrorMessage
                   name="firstName"
@@ -76,7 +97,7 @@ const EditUser: React.FC<Props> = ({ isOpen, onClose, user }) => {
                   type="text"
                   name="lastName"
                   placeholder="Last Name"
-                  className="w-full border-none bg-gray-300 p-2 rounded"
+                  className="w-full bg-gray-300 p-2 rounded border-none"
                 />
                 <ErrorMessage
                   name="lastName"
@@ -90,7 +111,7 @@ const EditUser: React.FC<Props> = ({ isOpen, onClose, user }) => {
                   type="email"
                   name="email"
                   placeholder="Email"
-                  className="w-full border-none bg-gray-300 p-2 rounded"
+                  className="w-full bg-gray-300 p-2 rounded border-none"
                 />
                 <ErrorMessage
                   name="email"
@@ -99,16 +120,21 @@ const EditUser: React.FC<Props> = ({ isOpen, onClose, user }) => {
                 />
               </div>
 
+              {/*  Dynamic Role Dropdown */}
               <div>
                 <Field
                   as="select"
                   name="role"
-                  className="w-full bg-gray-300 border-none p-2 rounded"
+                  className="w-full bg-gray-300 p-2 rounded border-none"
                 >
                   <option value="">Select Role</option>
-                  <option value="admin">Admin</option>
-                  <option value="user">User</option>
+                  {roles.map((role) => (
+                    <option key={role.id} value={role.roleName}>
+                      {role.roleName}
+                    </option>
+                  ))}
                 </Field>
+
                 <ErrorMessage
                   name="role"
                   component="div"
@@ -120,7 +146,7 @@ const EditUser: React.FC<Props> = ({ isOpen, onClose, user }) => {
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-4 py-2 bg-gray-300 rounded cursor-pointer"
+                  className="px-4 py-2 bg-gray-300 rounded"
                 >
                   Cancel
                 </button>
@@ -133,6 +159,7 @@ const EditUser: React.FC<Props> = ({ isOpen, onClose, user }) => {
                   {isSubmitting ? "Saving..." : "Save"}
                 </button>
               </div>
+
             </Form>
           )}
         </Formik>

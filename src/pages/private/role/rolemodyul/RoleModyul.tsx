@@ -1,63 +1,86 @@
 import React, { useEffect, useState } from "react";
-import { MdDelete, MdAdd, MdEdit } from "react-icons/md";
-import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
-import { db } from "../../../../components/firebase/firebase";
-// import AddRoleModal from "../../../../modals/addRoleModal/AddRoleModal";
-import EditBtn from "../../../../components/button/editbutton/Editbtn";
-import { FaSortAlphaDown, FaSortAlphaDownAlt } from "react-icons/fa";
-// import { RiUserSettingsLine } from "react-icons/ri";
-import SearchBar from "../../../../components/SearchBar/SearchBar";
-// import { MdEditSquare } from "react-icons/md";
+import { MdAdd } from "react-icons/md";
 import { CiEdit } from "react-icons/ci";
 import { MdDeleteOutline } from "react-icons/md";
-// import { Link } from "react-router-dom";
+import { FaSortAlphaDown, FaSortAlphaDownAlt } from "react-icons/fa";
+
+import {
+  collection,
+  getDocs,
+  deleteDoc,
+  updateDoc,
+  where,
+  query,
+  onSnapshot,
+  doc,
+  Timestamp,
+} from "firebase/firestore";
+import { db } from "../../../../components/firebase/firebase";
+
+import SearchBar from "../../../../components/SearchBar/SearchBar";
+import EditBtn from "../../../../components/button/editbutton/Editbtn";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const RoleModyul = () => {
   const [roles, setRoles] = useState<any[]>([]);
-
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-  const [searchTerm, setsearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const navigation = useNavigate();
 
-  
-
-  const fetchRoles = async () => {
-    const querySnapshot = await getDocs(collection(db, "roles"));
-    const roleList = querySnapshot.docs.map((docSnap) => ({
-      id: docSnap.id,
-      roleName: docSnap.data().roleName || "",
-      permissions: docSnap.data().permissions || {},
-
-      createdAt: docSnap.data().createdAt
-        ? docSnap.data().createdAt.toDate()
-        : null,
-    }));
-    setRoles(roleList);
-  };
-
+ 
   useEffect(() => {
-    fetchRoles();
+    const unsubscribe = onSnapshot(collection(db, "roles"), (snapshot) => {
+      const roleList = snapshot.docs.map((docSnap) => {
+        const data = docSnap.data();
+        return {
+          id: docSnap.id,
+          roleName: data.roleName || "",
+          permissions: data.permissions || {},
+          createdAt:
+            data.createdAt instanceof Timestamp
+              ? data.createdAt.toDate()
+              : null,
+        };
+      });
+      setRoles(roleList);
+    });
+
+    return () => unsubscribe();
   }, []);
 
-  // Delete 
-  const removeRole = async (roleId: string) => {
-    if (window.confirm("Are you sure you want to delete this role?")) {
+  
+  const removeRole = async (roleId: string, roleName: string) => {
+    try {
+   
+      const q = query(collection(db, "Users"), where("role", "==", roleName));
+      const snapshot = await getDocs(q);
+
+      snapshot.forEach(async (userDoc) => {
+        await updateDoc(userDoc.ref, { role: "No Role" });
+      });
+
+
       await deleteDoc(doc(db, "roles", roleId));
-      fetchRoles();
+
+      toast.success(
+        `Role '${roleName}' deleted and users updated to 'No Role'.`,
+      );
+    } catch (error: any) {
+      console.error(error);
+      toast.error("Error deleting role: " + error.message);
     }
   };
 
-  const filterRole = roles.filter((role) =>
-    role.roleName?.toLowerCase().includes(searchTerm.toLowerCase()),
+  const filteredRoles = roles.filter((role) =>
+    role.roleName.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-
-  const sortedRoles = [...filterRole].sort((a, b) => {
+ 
+  const sortedRoles = [...filteredRoles].sort((a, b) => {
     const roleA = a.roleName.toLowerCase();
     const roleB = b.roleName.toLowerCase();
-
     return sortOrder === "asc"
       ? roleA.localeCompare(roleB)
       : roleB.localeCompare(roleA);
@@ -70,10 +93,11 @@ const RoleModyul = () => {
     <div className="p-6 mt-10 rounded-2xl shadow-2xl">
       <h2 className="text-3xl font-semibold mb-4">Roles</h2>
 
-      <div className="mb-3 flex justify-between">
+   
+      <div className="mb-3 flex justify-between items-center">
         <SearchBar
           value={searchTerm}
-          onchange={(e) => setsearchTerm(e.target.value)}
+          onchange={(e) => setSearchTerm(e.target.value)}
         />
         <EditBtn
           label="Add Role"
@@ -82,13 +106,6 @@ const RoleModyul = () => {
         />
       </div>
 
-      {/* <AddRoleModal
-        
-        role={editingRole}
-       
-      /> */}
-
-  
       <table className="w-full bg-white rounded-xl shadow-2xl">
         <thead className="bg-amber-300">
           <tr>
@@ -105,8 +122,7 @@ const RoleModyul = () => {
               )}
             </th>
             <th className="p-3 text-left">Created At</th>
-            <th className="p-3 text-left">Role Permission</th>
-
+            <th className="p-3 text-left">Role Permissions</th>
             <th className="p-3 text-left">Action</th>
           </tr>
         </thead>
@@ -116,34 +132,28 @@ const RoleModyul = () => {
             <tr key={role.id} className="border-b">
               <td className="p-2">{index + 1}</td>
               <td className="p-2">{role.roleName}</td>
-
-              <td>
+              <td className="p-2">
                 {role.createdAt ? role.createdAt.toLocaleDateString() : "-"}
               </td>
-              <td>
+              <td className="p-2">
                 {Object.values(role.permissions || {}).reduce(
                   (count: number, module: any) =>
                     count + Object.values(module).filter(Boolean).length,
                   0,
                 )}
               </td>
-
-              {/* Delete role */}
-
-              <td className="p-2 flex px-2 cursor-pointer">
+              <td className="p-2 flex gap-2">
                 <button onClick={() => navigation(`/role/edit/${role.id}`)}>
                   <CiEdit className="text-2xl cursor-pointer" />
                 </button>
-                <MdDeleteOutline
-                  className="text-2xl ml-2"
-                  onClick={() => removeRole(role.id)}
-                />
+                <button onClick={() => removeRole(role.id, role.roleName)}>
+                  <MdDeleteOutline className="text-2xl cursor-pointer" />
+                </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      <></>
     </div>
   );
 };

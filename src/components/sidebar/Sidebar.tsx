@@ -6,13 +6,14 @@ import {
   SidebarItems,
 } from "flowbite-react";
 import { HiChartPie, HiUser, HiShoppingBag } from "react-icons/hi";
-import { IoChatbox } from "react-icons/io5";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { IoHomeOutline } from "react-icons/io5";
-
+import { IoChatbox, IoHomeOutline } from "react-icons/io5";
 import { MdCampaign } from "react-icons/md";
-// import { FaRegUserCircle } from "react-icons/fa";
 import { TbUserEdit } from "react-icons/tb";
+import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { canPermit } from "../../helper/canPermit/canpermit";
+import type { RootState } from "../../redux/store/store";
+
 interface SidebarProps {
   isOpen: boolean;
 }
@@ -20,6 +21,12 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Get permissions from Redux slice
+  const { permissions,username } = useSelector(
+    (state: RootState) => state.userPermissions,
+  );
+  if (!username) return null;
   return (
     <div
       className={`
@@ -38,37 +45,49 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
             >
               Dashboard
             </SidebarItem>
-            <SidebarItem
-              href="users"
-              icon={HiUser}
-              className="hover:text-yellow-500"
-            >
-              Users
-            </SidebarItem>
-            <SidebarItem
-              href="role"
-              icon={HiShoppingBag}
-              className="hover:text-red-500"
-            >
-              Role
-            </SidebarItem>
-            <SidebarItem
-              href="#"
-              icon={IoChatbox}
-              className="hover:text-pink-400"
-            >
-              Chat
-            </SidebarItem>
-            <SidebarItem
-              href="#"
-              icon={MdCampaign}
-              className="hover:text-pink-400"
-            >
-              Campaign
-            </SidebarItem>
+
+            {canPermit(permissions, "user", "canView") && (
+              <SidebarItem
+                onClick={() => navigate("/users")}
+                icon={HiUser}
+                className="hover:text-yellow-500"
+              >
+                Users
+              </SidebarItem>
+            )}
+
+            {canPermit(permissions, "role", "canView") && (
+              <SidebarItem
+                onClick={() => navigate("/role")}
+                icon={HiShoppingBag}
+                className="hover:text-red-500"
+              >
+                Role
+              </SidebarItem>
+            )}
+
+            {canPermit(permissions, "chat", "canView") && (
+              <SidebarItem
+                href="#"
+                icon={IoChatbox}
+                className="hover:text-pink-400"
+              >
+                Chat
+              </SidebarItem>
+            )}
+
+            {canPermit(permissions, "campaign", "canView") && (
+              <SidebarItem
+                href="#"
+                icon={MdCampaign}
+                className="hover:text-pink-400"
+              >
+                Campaign
+              </SidebarItem>
+            )}
           </SidebarItemGroup>
 
-          <SidebarItemGroup className="bottom-0 ">
+          <SidebarItemGroup className="bottom-0">
             <SidebarItem className="bg-amber-300 text-black">
               {location.pathname === "/profile" ? (
                 <div

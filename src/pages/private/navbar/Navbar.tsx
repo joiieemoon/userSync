@@ -18,7 +18,9 @@ import { useSelector } from "react-redux";
 import type { RootState } from "../../../redux/store/store";
 import { IoHomeOutline } from "react-icons/io5";
 import { DarkThemeToggle } from "flowbite-react";
-
+import { setUserPermissions } from "../../../redux/permissionslice/permissionslice";
+import { useDispatch } from "react-redux";
+import useUsers from "../../../hooks/useUser/useUsers";
 interface NavbarProps {
   toggleSidebar: () => void;
   isOpen: boolean;
@@ -32,7 +34,6 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isOpen }) => {
 
   const [darkMode, setDarkMode] = useState(false);
 
-  // Dark Mode Toggle Logic
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add("dark");
@@ -40,6 +41,24 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isOpen }) => {
       document.documentElement.classList.remove("dark");
     }
   }, [darkMode]);
+
+  const { users } = useUsers(); 
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!auth.currentUser) return;
+
+    
+    const currentUser = users.find((u) => u.uid === auth.currentUser.uid);
+    if (currentUser) {
+      dispatch(
+        setUserPermissions({
+          username: currentUser.firstName,
+          permissions: currentUser.permissions,
+        }),
+      );
+    }
+  }, [users, dispatch]);
 
   const handleLogout = async () => {
     try {
@@ -60,7 +79,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isOpen }) => {
       fluid
       className={`fixed top-0 z-50 w-full bg-white dark:bg-gray-900 text-gray-700 dark:text-white  shadow-md px-6 transition-all duration-300
         ${isOpen ? "pl-64" : "pl-6"}`}
-      style={{ height: "64px" }} 
+      style={{ height: "64px" }}
     >
       {/* LEFT SECTION */}
       <div className="flex items-center gap-4 border-none">
@@ -87,8 +106,6 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isOpen }) => {
           </span>
         </div>
 
-        {/* Dark Mode Toggle */}
-         <DarkThemeToggle />
         <button
           onClick={() => setDarkMode(!darkMode)}
           className="text-2xl hover:text-yellow-400 transition"

@@ -1,28 +1,63 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import { db } from "../../components/firebase/firebase";
 import { collection, onSnapshot, Timestamp } from "firebase/firestore";
 
 const useUsers = () => {
   const [users, setUsers] = useState<any[]>([]);
+  const [rolesMap, setRolesMap] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState(true);
 
+  //
   useEffect(() => {
-    const unsubscribe = onSnapshot(
+    const unsubscribeRoles = onSnapshot(collection(db, "roles"), (snapshot) => {
+      const map: Record<string, any> = {};
+
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+
+        map[data.roleName?.toLowerCase()] = {
+          roleName: data.roleName,
+          permissions: data.permissions || {},
+        };
+      });
+
+      setRolesMap(map);
+    });
+
+    return () => unsubscribeRoles();
+  }, []);
+
+  
+  useEffect(() => {
+    const unsubscribeUsers = onSnapshot(
       collection(db, "Users"),
       (snapshot) => {
         const list = snapshot.docs.map((doc) => {
           const data = doc.data();
 
-          // Convert Firestore Timestamp to human-readable string
           const createdAt =
-            data.createdAt && data.createdAt instanceof Timestamp
+            data.createdAt instanceof Timestamp
               ? data.createdAt.toDate().toLocaleDateString()
               : "-";
 
+          //  Match role === roleName
+          const roleKey = data.role?.toLowerCase();
+
+          const roleInfo = rolesMap[roleKey] || {
+            roleName: "No Role",
+            permissions: {},
+          };
+
           return {
             uid: doc.id,
-            ...data,
+            firstName: data.firstName || "",
+            lastName: data.lastName || "",
+            email: data.email || "",
+            phone: data.phone || "",
+            role: data.role || "",
             createdAt,
+            roleName: roleInfo.roleName,
+            permissions: roleInfo.permissions, 
           };
         });
 
@@ -35,8 +70,8 @@ const useUsers = () => {
       }
     );
 
-    return () => unsubscribe();
-  }, []);
+    return () => unsubscribeUsers();
+  }, [rolesMap]);
 
   return { users, loading };
 };
