@@ -12,13 +12,15 @@ const AddNewuserModal: React.FC<Props> = ({ isOpen, onClose }) => {
   return (
     <div
       className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
-      onClick={onClose} // clicking outside closes the modal
+      onClick={onClose} 
     >
       <div
         className="relative"
-        onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside the form
+        onClick={(e) => e.stopPropagation()} 
       >
         <NewUserForm onClose={onClose} />
+
+        
       </div>
     </div>
   );

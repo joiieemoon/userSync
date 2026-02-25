@@ -50,7 +50,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
               <SidebarItem
                 onClick={() => navigate("/users")}
                 icon={HiUser}
-                className="hover:text-yellow-500"
+                className="hover:text-yellow-500 cursor-pointer"
               >
                 Users
               </SidebarItem>
@@ -60,7 +60,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
               <SidebarItem
                 onClick={() => navigate("/role")}
                 icon={HiShoppingBag}
-                className="hover:text-red-500"
+                className="hover:text-red-500 cursor-pointer"
               >
                 Role
               </SidebarItem>
@@ -70,7 +70,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
               <SidebarItem
                 href="#"
                 icon={IoChatbox}
-                className="hover:text-pink-400"
+                className="hover:text-pink-400 cursor-pointer"
               >
                 Chat
               </SidebarItem>

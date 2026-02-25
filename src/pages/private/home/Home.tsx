@@ -5,8 +5,9 @@ import { auth, db } from "../../../components/firebase/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import Dashboard from "../dashboard/Dashboard";
+import { Spinner } from "flowbite-react/components/Spinner";
 const Home = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [userDetails, setUserDetails] = useState(null);
 
@@ -28,14 +29,12 @@ const Home = () => {
   }, []);
 
   async function handleLogout() {
-    try{
+    try {
       await auth.signOut();
-       navigate("/login");
-    }
-    catch(error){
+      navigate("/login");
+    } catch (error) {
       console.log(error);
     }
-    
   }
 
   return (
@@ -46,9 +45,14 @@ const Home = () => {
         <Navbar toggleSidebar={toggleSidebar} user={userDetails} />
 
         {userDetails ? (
-         <Dashboard/>
+          <Dashboard />
         ) : (
-          <h1 className="text-center mt-7 p-7 text-5xl">Loading...</h1>
+          <div className="">
+            <h1 className="text-center h-screen mt-7 p-7 flex justify-center items-center border  text-5xl">
+              {" "}
+              <Spinner color="success" aria-label="Success spinner example "  className="w-15 h-15  "/>
+            </h1>
+          </div>
         )}
       </div>
     </div>

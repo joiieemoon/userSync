@@ -36,16 +36,14 @@ export default function Users() {
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Sidebar */}
       <Sidebarmain isOpen={isSidebarOpen} />
-
+      {/* Navbar */}
+      <Navbar toggleSidebar={toggleSidebar} isOpen={isSidebarOpen} />
       {/* Main layout */}
       <div
         className={`flex-1 flex flex-col transition-all duration-300 ${
           isSidebarOpen ? "ml-64" : "ml-0"
         }`}
       >
-        {/* Navbar */}
-        <Navbar toggleSidebar={toggleSidebar} isOpen={isSidebarOpen} />
-
         {/* Content */}
         <main className="p-8 pt-19 space-y-6">
           {loading ? (

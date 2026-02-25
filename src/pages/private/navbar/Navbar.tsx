@@ -17,7 +17,7 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../redux/store/store";
 import { IoHomeOutline } from "react-icons/io5";
-import { DarkThemeToggle } from "flowbite-react";
+
 import { setUserPermissions } from "../../../redux/permissionslice/permissionslice";
 import { useDispatch } from "react-redux";
 import useUsers from "../../../hooks/useUser/useUsers";
@@ -32,23 +32,34 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isOpen }) => {
 
   const user = useSelector((state: RootState) => state.auth.user);
 
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    if (typeof window !== "undefined") {
+   
+      const saved = localStorage.getItem("theme");
+      if (saved) return saved === "dark";
+
+   
+      return window.matchMedia("(prefers-color-scheme: dark)").matches;
+    }
+    return false;
+  });
 
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
     } else {
       document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
     }
   }, [darkMode]);
 
-  const { users } = useUsers(); 
+  const { users } = useUsers();
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (!auth.currentUser) return;
 
-    
     const currentUser = users.find((u) => u.uid === auth.currentUser.uid);
     if (currentUser) {
       dispatch(
@@ -92,13 +103,11 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isOpen }) => {
         </button>
 
         <NavbarBrand>
-          <span className="text-xl font-bold tracking-wide">User Sync</span>
+          <span className="text-xl font-bold tracking-wide ">User Sync</span>
         </NavbarBrand>
       </div>
 
-      {/* RIGHT SECTION */}
       <div className="flex items-center gap-6">
-        {/* Notification */}
         <div className="relative cursor-pointer">
           <HiBell className="text-2xl hover:text-blue-500 transition" />
           <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
@@ -114,7 +123,6 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isOpen }) => {
           {darkMode ? <HiSun /> : <HiMoon />}
         </button>
 
-        {/* Profile Dropdown */}
         <Dropdown
           className="border-none"
           arrowIcon={false}

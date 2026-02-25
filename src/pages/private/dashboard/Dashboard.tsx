@@ -28,13 +28,13 @@ const Dashboard = () => {
 
       {/* Sidebar */}
       <Sidebarmain isOpen={isSidebarOpen} />
-
+           <Navbar toggleSidebar={toggleSidebar} />
       {/* Main */}
       <div
         className={`relative flex-1 flex flex-col transition-all duration-300 ${isSidebarOpen ? "ml-64" : "ml-0"
           }`}
       >
-        <Navbar toggleSidebar={toggleSidebar} />
+     
 
         <main className="flex flex-1 items-center justify-center p-6 pt-24">
 

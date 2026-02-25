@@ -3,6 +3,7 @@ import { MdAdd } from "react-icons/md";
 import { CiEdit } from "react-icons/ci";
 import { MdDeleteOutline } from "react-icons/md";
 import { FaSortAlphaDown, FaSortAlphaDownAlt } from "react-icons/fa";
+import { canPermit } from "../../../../helper/canPermit/canpermit";
 
 import {
   collection,
@@ -16,20 +17,24 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import { db } from "../../../../components/firebase/firebase";
-
+import useUsers from "../../../../hooks/useUser/useUsers";
 import SearchBar from "../../../../components/SearchBar/SearchBar";
 import EditBtn from "../../../../components/button/editbutton/Editbtn";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-
+import { useSelector } from "react-redux";
+import { Spinner } from "flowbite-react/components/Spinner";
 const RoleModyul = () => {
   const [roles, setRoles] = useState<any[]>([]);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [searchTerm, setSearchTerm] = useState("");
-
+const [loading, setLoading] = useState(true);
   const navigation = useNavigate();
+  
+  const currentUserPermissions = useSelector(
+    (state: RootState) => state.userPermissions.permissions,
+  );
 
- 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "roles"), (snapshot) => {
       const roleList = snapshot.docs.map((docSnap) => {
@@ -45,22 +50,26 @@ const RoleModyul = () => {
         };
       });
       setRoles(roleList);
+      setLoading(false);
     });
 
     return () => unsubscribe();
   }, []);
-
-  
+  if (loading)
+    return (
+      <div className="p-6 flex justify-center items-center h-screen">
+        Loading...
+        <Spinner color="success" aria-label="Success spinner example" />
+      </div>
+    );
   const removeRole = async (roleId: string, roleName: string) => {
     try {
-   
       const q = query(collection(db, "Users"), where("role", "==", roleName));
       const snapshot = await getDocs(q);
 
       snapshot.forEach(async (userDoc) => {
         await updateDoc(userDoc.ref, { role: "No Role" });
       });
-
 
       await deleteDoc(doc(db, "roles", roleId));
 
@@ -77,7 +86,6 @@ const RoleModyul = () => {
     role.roleName.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
- 
   const sortedRoles = [...filteredRoles].sort((a, b) => {
     const roleA = a.roleName.toLowerCase();
     const roleB = b.roleName.toLowerCase();
@@ -93,17 +101,18 @@ const RoleModyul = () => {
     <div className="p-6 mt-10 rounded-2xl shadow-2xl">
       <h2 className="text-3xl font-semibold mb-4">Roles</h2>
 
-   
       <div className="mb-3 flex justify-between items-center">
         <SearchBar
           value={searchTerm}
           onchange={(e) => setSearchTerm(e.target.value)}
         />
-        <EditBtn
-          label="Add Role"
-          icon={<MdAdd className="text-xl" />}
-          onClick={() => navigation("/role/edit")}
-        />
+        {canPermit(currentUserPermissions, "role", "canAdd") && (
+          <EditBtn
+            label="Add Role"
+            icon={<MdAdd className="text-xl" />}
+            onClick={() => navigation("/role/edit")}
+          />
+        )}
       </div>
 
       <table className="w-full bg-white rounded-xl shadow-2xl">
@@ -143,12 +152,16 @@ const RoleModyul = () => {
                 )}
               </td>
               <td className="p-2 flex gap-2">
-                <button onClick={() => navigation(`/role/edit/${role.id}`)}>
-                  <CiEdit className="text-2xl cursor-pointer" />
-                </button>
-                <button onClick={() => removeRole(role.id, role.roleName)}>
-                  <MdDeleteOutline className="text-2xl cursor-pointer" />
-                </button>
+                {canPermit(currentUserPermissions, "role", "canEdit") && (
+                  <button onClick={() => navigation(`/role/edit/${role.id}`)}>
+                    <CiEdit className="text-2xl cursor-pointer" />
+                  </button>
+                )}
+                {canPermit(currentUserPermissions, "role", "canDelete") && (
+                  <button onClick={() => removeRole(role.id, role.roleName)}>
+                    <MdDeleteOutline className="text-2xl cursor-pointer" />
+                  </button>
+                )}
               </td>
             </tr>
           ))}
