@@ -68,7 +68,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
 
             {canPermit(permissions, "chat", "canView") && (
               <SidebarItem
-                href="#"
+                
+                onClick={()=>navigate("/chat")}
                 icon={IoChatbox}
                 className="hover:text-pink-400 cursor-pointer"
               >

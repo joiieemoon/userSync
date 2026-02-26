@@ -60,7 +60,7 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onClose }) => {
                 password: values.password,
                 phone: values.phone || "",
                 bio: "",
-                role: "user",
+                role: "new user",
                 profilePhoto: "",
                 createdAt: serverTimestamp(),
               });

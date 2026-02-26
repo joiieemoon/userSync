@@ -23,7 +23,7 @@ import ForgotPassword from "../../../modals/forgetpassword/ForgetPassword";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../../redux/store/authSlice";
 import type { AppDispatch } from "../../../redux/store/store";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../../../components/firebase/firebase";
 
 const loginValidationSchema = Yup.object({
@@ -39,7 +39,11 @@ export const Login = () => {
   const { showPassword, togglePassword } = usepasswordtoggle();
   const [showForgot, setShowForgot] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
-
+  const generateAvatar = (name: string) => {
+    return `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(
+      name,
+    )}`;
+  };
   // const togglepassword = (fieldName: string) => {
   //   setshowpassword((prev) => ({
   //     ...prev,
@@ -55,8 +59,6 @@ export const Login = () => {
             password: "",
           }}
           validationSchema={loginValidationSchema}
-        
-
           onSubmit={async (values, { setSubmitting }) => {
             try {
               const userCredential = await signInWithEmailAndPassword(
@@ -73,7 +75,20 @@ export const Login = () => {
 
                 if (snap.exists()) {
                   const data = snap.data();
+                  const fullName = `${data.firstName} ${data.lastName}`;
 
+                  let profilePhoto = data.profilePhoto;
+
+                  if (!profilePhoto || profilePhoto.trim() === "") {
+                    profilePhoto = generateAvatar(fullName);
+
+                    // Update Firestore with generated avatar
+                    await setDoc(
+                      doc(db, "Users", user.uid),
+                      { profilePhoto },
+                      { merge: true }, // merge  don't overwrite other fields
+                    );
+                  }
                   // Redux set
                   dispatch(
                     setUser({
@@ -81,7 +96,11 @@ export const Login = () => {
                       firstName: data.firstName,
                       lastName: data.lastname,
                       email: data.email,
-                      profilePhoto: data.profilePhoto || "",
+                      // profilePhoto: data.profilePhoto || "",
+                      profilePhoto:
+                        data.profilePhoto && data.profilePhoto.trim() !== ""
+                          ? data.profilePhoto
+                          : generateAvatar(fullName),
                     }),
                   );
                 }

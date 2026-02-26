@@ -101,8 +101,8 @@ export default function UsersDetails() {
 
       {/* Users Table */}
       <table className="w-full bg-white rounded-xl shadow-2xl">
-        <thead className=" bg-amber-300  border">
-          <tr className="border bg-amber-300">
+        <thead className=" bg-amber-300 rounded-2xl">
+          <tr className=" bg-amber-300 rounded-2xl">
             <th
               className="p-3 text-left flex cursor-pointer items-center"
               onClick={toggleSortOrder}
@@ -138,14 +138,20 @@ export default function UsersDetails() {
                   canPermit(currentUserPermissions, "user", "canDelete")) && (
                   <td className="p-2 flex gap-2">
                     {canPermit(currentUserPermissions, "user", "canEdit") && (
-                      <button onClick={() => setUserToEdit(u)}>
+                      <button
+                        onClick={() => setUserToEdit(u)}
+                        className="cursor-pointer"
+                      >
                         <FaRegEdit className="text-amber-300 text-2xl" />
                       </button>
                     )}
 
                     {canPermit(currentUserPermissions, "user", "canDelete") && (
-                      <button onClick={() => setUserToDelete(u)}>
-                        <AiOutlineUserDelete className="text-red-400 text-2xl" />
+                      <button
+                        onClick={() => setUserToDelete(u)}
+                        className="cursor-pointer"
+                      >
+                        <AiOutlineUserDelete className="text-red-400 text-2xl " />
                       </button>
                     )}
                   </td>

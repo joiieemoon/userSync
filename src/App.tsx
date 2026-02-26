@@ -14,6 +14,7 @@ import Dashboard from "./pages/private/dashboard/Dashboard";
 import Role from "./pages/private/role/Role";
 // import EditRole from "../src/modals/addRole/AddRoleModal";
 import EditRoleMain from "./pages/private/role/rolemodyul/editRole/EditRoleMain";
+import ChatLayout from "./pages/private/chat/Layout/ChatLayout";
 
 const App = () => {
   useAuthListener();
@@ -51,8 +52,10 @@ const App = () => {
             <Route path="/users" element={<Users />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/role" element={<Role />} />
+
             <Route path="/role/edit" element={<EditRoleMain />} />
             <Route path="/role/edit/:id" element={<EditRoleMain />} />
+            <Route path="/chat" element={<ChatLayout />} />
           </>
         )}
       </Routes>

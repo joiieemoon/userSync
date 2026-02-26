@@ -8,7 +8,8 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { updateProfileValidationSchema } from "../../../src/components/validations/validationSchema";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-
+// import { avatarTheme } from "flowbite-react";
+import avatar from "../../../public/avtar.png";
 interface Props {
   user: {
     uid: string;
@@ -102,7 +103,7 @@ export default function UpdateProfileModal({ user, onClose }: Props) {
                   src={
                     preview ||
                     values.profilePhoto ||
-                    "https://i.pravatar.cc/150?img=12"
+                    avatar 
                   }
                   className="w-24 h-24 md:w-28 md:h-28 rounded-full object-cover border-2 border-gray-300 dark:border-gray-600"
                 />
@@ -123,26 +124,24 @@ export default function UpdateProfileModal({ user, onClose }: Props) {
 
               {/* Fields */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                {["firstName", "lastName", "email", "phone", "role"].map(
-                  (field) => (
-                    <div key={field}>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        {field}
-                      </label>
+                {["firstName", "lastName", "email", "phone"].map((field) => (
+                  <div key={field}>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      {field}
+                    </label>
 
-                      <Field
-                        name={field}
-                        className="w-full px-4 py-3 bg-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                      />
+                    <Field
+                      name={field}
+                      className="w-full px-4 py-3 bg-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    />
 
-                      <ErrorMessage name={field}>
-                        {(msg) => (
-                          <p className="text-red-500 text-xs mt-1">{msg}</p>
-                        )}
-                      </ErrorMessage>
-                    </div>
-                  ),
-                )}
+                    <ErrorMessage name={field}>
+                      {(msg) => (
+                        <p className="text-red-500 text-xs mt-1">{msg}</p>
+                      )}
+                    </ErrorMessage>
+                  </div>
+                ))}
 
                 {/* Bio */}
                 <div className="md:col-span-2">

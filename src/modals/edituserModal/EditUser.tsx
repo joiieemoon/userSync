@@ -77,7 +77,6 @@ const EditUser: React.FC<Props> = ({ isOpen, onClose, user }) => {
         >
           {({ isSubmitting }) => (
             <Form className="space-y-4">
-
               <div>
                 <Field
                   type="text"
@@ -126,13 +125,16 @@ const EditUser: React.FC<Props> = ({ isOpen, onClose, user }) => {
                   as="select"
                   name="role"
                   className="w-full bg-gray-300 p-2 rounded border-none"
+                  disabled={user.role === "admin"}
                 >
                   <option value="">Select Role</option>
-                  {roles.map((role) => (
-                    <option key={role.id} value={role.roleName}>
-                      {role.roleName}
-                    </option>
-                  ))}
+                  {roles
+                    .filter((role) => role.roleName.toLowerCase() !== "admin")
+                    .map((role) => (
+                      <option key={role.id} value={role.roleName}>
+                        {role.roleName}
+                      </option>
+                    ))}
                 </Field>
 
                 <ErrorMessage
@@ -146,7 +148,7 @@ const EditUser: React.FC<Props> = ({ isOpen, onClose, user }) => {
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-4 py-2 bg-gray-300 rounded"
+                  className="px-4 py-2 bg-gray-300 rounded cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -159,7 +161,6 @@ const EditUser: React.FC<Props> = ({ isOpen, onClose, user }) => {
                   {isSubmitting ? "Saving..." : "Save"}
                 </button>
               </div>
-
             </Form>
           )}
         </Formik>

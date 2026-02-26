@@ -41,7 +41,11 @@ const Dashboard = () => {
             <div className="flex justify-center mb-6">
               <img
                 // src={avatar}
-                src={user?.profilePhoto || avatar}
+                src={
+                  user?.profilePhoto && user.profilePhoto !== ""
+                    ? user.profilePhoto
+                    : avatar
+                }
                 alt="profile"
                 className="w-28 h-28 rounded-full object-cover border-4 border-white/30 shadow-lg"
               />

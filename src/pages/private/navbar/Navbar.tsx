@@ -22,7 +22,7 @@ import { setUserPermissions } from "../../../redux/permissionslice/permissionsli
 import { useDispatch } from "react-redux";
 import useUsers from "../../../hooks/useUser/useUsers";
 interface NavbarProps {
-  toggleSidebar: () => void;
+  toggleSidebar: () => void;  
   isOpen: boolean;
 }
 

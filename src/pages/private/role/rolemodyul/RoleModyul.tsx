@@ -24,11 +24,13 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { Spinner } from "flowbite-react/components/Spinner";
+import DeleteRole from "../../../../modals/deleteRole/DeleteRole";
 const RoleModyul = () => {
   const [roles, setRoles] = useState<any[]>([]);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
+  const [roleToDelete, setRoleToDelete] = useState<any | null>(null);
   const navigation = useNavigate();
 
   const currentUserPermissions = useSelector(
@@ -67,14 +69,19 @@ const RoleModyul = () => {
       const q = query(collection(db, "Users"), where("role", "==", roleName));
       const snapshot = await getDocs(q);
 
-      snapshot.forEach(async (userDoc) => {
-        await updateDoc(userDoc.ref, { role: "No Role" });
-      });
+      const updatePromises = snapshot.docs.map((userDoc) =>
+        updateDoc(userDoc.ref, { role: "No Role" }),
+      );
+
+      await Promise.all(updatePromises);
 
       await deleteDoc(doc(db, "roles", roleId));
-
+      console.log("delte role ", roleName);
+      // toast.success(
+      //   `Role '${roleName}' deleted and users updated to 'No Role'.`,
+      // );
       toast.success(
-        `Role '${roleName}' deleted and users updated to 'No Role'.`,
+        `Role '${roleName}' deleted successfully! Users have been updated to 'No Role'.`,
       );
     } catch (error: any) {
       console.error(error);
@@ -144,7 +151,9 @@ const RoleModyul = () => {
             sortedRoles.map((role, index) => (
               <tr key={role.id} className="border-b">
                 <td className="p-2">{index + 1}</td>
-                <td className="p-2">{role.roleName}</td>
+                <td className="p-2">
+                  {role.roleName} {}
+                </td>
                 <td className="p-2">
                   {role.createdAt ? role.createdAt.toLocaleDateString() : "-"}
                 </td>
@@ -167,7 +176,8 @@ const RoleModyul = () => {
                     )}
                     {canPermit(currentUserPermissions, "role", "canDelete") && (
                       <button
-                        onClick={() => removeRole(role.id, role.roleName)}
+                        // onClick={() => removeRole(role.id, role.roleName)}
+                        onClick={() => setRoleToDelete(role)}
                       >
                         <MdDeleteOutline className="text-2xl cursor-pointer" />
                       </button>
@@ -193,6 +203,18 @@ const RoleModyul = () => {
           )}
         </tbody>
       </table>
+      <DeleteRole
+        isOpen={!!roleToDelete}
+        role={roleToDelete}
+        onClose={() => setRoleToDelete(null)}
+        onConfirm={async () => {
+          if (roleToDelete) {
+            await removeRole(roleToDelete.id, roleToDelete.roleName);
+            setRoleToDelete(null);
+          }
+        }}
+      />
+    
     </div>
   );
 };
