@@ -126,31 +126,47 @@ export default function UsersDetails() {
         </thead>
 
         <tbody>
-          {currentUsers.map((u) => (
-            <tr key={u.uid} className="border-t">
-              <td className="p-2">{u.firstName}</td>
-              <td className="p-2">{u.email}</td>
-              <td className="p-2">{u.phone || "-"}</td>
-              <td className="p-2">{u.role || "-"}</td>
-              <td className="p-2">{u.createdAt}</td>
-              {(canPermit(currentUserPermissions, "user", "canEdit") ||
-                canPermit(currentUserPermissions, "user", "canDelete")) && (
-                <td className="p-2 flex gap-2">
-                  {canPermit(currentUserPermissions, "user", "canEdit") && (
-                    <button onClick={() => setUserToEdit(u)}>
-                      <FaRegEdit className="text-amber-300 text-2xl" />
-                    </button>
-                  )}
+          {currentUsers.length > 0 ? (
+            currentUsers.map((u) => (
+              <tr key={u.uid} className="border-t">
+                <td className="p-2">{u.firstName}</td>
+                <td className="p-2">{u.email}</td>
+                <td className="p-2">{u.phone || "-"}</td>
+                <td className="p-2">{u.role || "-"}</td>
+                <td className="p-2">{u.createdAt}</td>
+                {(canPermit(currentUserPermissions, "user", "canEdit") ||
+                  canPermit(currentUserPermissions, "user", "canDelete")) && (
+                  <td className="p-2 flex gap-2">
+                    {canPermit(currentUserPermissions, "user", "canEdit") && (
+                      <button onClick={() => setUserToEdit(u)}>
+                        <FaRegEdit className="text-amber-300 text-2xl" />
+                      </button>
+                    )}
 
-                  {canPermit(currentUserPermissions, "user", "canDelete") && (
-                    <button onClick={() => setUserToDelete(u)}>
-                      <AiOutlineUserDelete className="text-red-400 text-2xl" />
-                    </button>
-                  )}
-                </td>
-              )}
+                    {canPermit(currentUserPermissions, "user", "canDelete") && (
+                      <button onClick={() => setUserToDelete(u)}>
+                        <AiOutlineUserDelete className="text-red-400 text-2xl" />
+                      </button>
+                    )}
+                  </td>
+                )}
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td
+                colSpan={
+                  canPermit(currentUserPermissions, "user", "canEdit") ||
+                  canPermit(currentUserPermissions, "user", "canDelete")
+                    ? 6
+                    : 5
+                }
+                className="text-center p-6 text-gray-500 font-medium"
+              >
+                No users found.
+              </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
 

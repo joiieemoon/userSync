@@ -140,37 +140,57 @@ const RoleModyul = () => {
         </thead>
 
         <tbody>
-          {sortedRoles.map((role, index) => (
-            <tr key={role.id} className="border-b">
-              <td className="p-2">{index + 1}</td>
-              <td className="p-2">{role.roleName}</td>
-              <td className="p-2">
-                {role.createdAt ? role.createdAt.toLocaleDateString() : "-"}
-              </td>
-              <td className="p-2">
-                {Object.values(role.permissions || {}).reduce(
-                  (count: number, module: any) =>
-                    count + Object.values(module).filter(Boolean).length,
-                  0,
-                )}
-              </td>
-              {(canPermit(currentUserPermissions, "role", "canEdit") ||
-                canPermit(currentUserPermissions, "role", "canDelete")) && (
-                <td className="p-2 flex gap-2">
-                  {canPermit(currentUserPermissions, "role", "canEdit") && (
-                    <button onClick={() => navigation(`/role/edit/${role.id}`)}>
-                      <CiEdit className="text-2xl cursor-pointer" />
-                    </button>
-                  )}
-                  {canPermit(currentUserPermissions, "role", "canDelete") && (
-                    <button onClick={() => removeRole(role.id, role.roleName)}>
-                      <MdDeleteOutline className="text-2xl cursor-pointer" />
-                    </button>
+          {sortedRoles.length > 0 ? (
+            sortedRoles.map((role, index) => (
+              <tr key={role.id} className="border-b">
+                <td className="p-2">{index + 1}</td>
+                <td className="p-2">{role.roleName}</td>
+                <td className="p-2">
+                  {role.createdAt ? role.createdAt.toLocaleDateString() : "-"}
+                </td>
+                <td className="p-2">
+                  {Object.values(role.permissions || {}).reduce(
+                    (count: number, module: any) =>
+                      count + Object.values(module).filter(Boolean).length,
+                    0,
                   )}
                 </td>
-              )}
+                {(canPermit(currentUserPermissions, "role", "canEdit") ||
+                  canPermit(currentUserPermissions, "role", "canDelete")) && (
+                  <td className="p-2 flex gap-2">
+                    {canPermit(currentUserPermissions, "role", "canEdit") && (
+                      <button
+                        onClick={() => navigation(`/role/edit/${role.id}`)}
+                      >
+                        <CiEdit className="text-2xl cursor-pointer" />
+                      </button>
+                    )}
+                    {canPermit(currentUserPermissions, "role", "canDelete") && (
+                      <button
+                        onClick={() => removeRole(role.id, role.roleName)}
+                      >
+                        <MdDeleteOutline className="text-2xl cursor-pointer" />
+                      </button>
+                    )}
+                  </td>
+                )}
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td
+                colSpan={
+                  canPermit(currentUserPermissions, "user", "canEdit") ||
+                  canPermit(currentUserPermissions, "user", "canDelete")
+                    ? 6
+                    : 5
+                }
+                className="text-center p-6 text-gray-500 font-medium"
+              >
+                No roles found.
+              </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>
