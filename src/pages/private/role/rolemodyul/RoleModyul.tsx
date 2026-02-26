@@ -28,9 +28,9 @@ const RoleModyul = () => {
   const [roles, setRoles] = useState<any[]>([]);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [searchTerm, setSearchTerm] = useState("");
-const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const navigation = useNavigate();
-  
+
   const currentUserPermissions = useSelector(
     (state: RootState) => state.userPermissions.permissions,
   );
@@ -132,7 +132,10 @@ const [loading, setLoading] = useState(true);
             </th>
             <th className="p-3 text-left">Created At</th>
             <th className="p-3 text-left">Role Permissions</th>
-            <th className="p-3 text-left">Action</th>
+            {(canPermit(currentUserPermissions, "user", "canEdit") ||
+              canPermit(currentUserPermissions, "user", "canDelete")) && (
+              <th className="p-3 text-left">Action</th>
+            )}
           </tr>
         </thead>
 
@@ -151,18 +154,21 @@ const [loading, setLoading] = useState(true);
                   0,
                 )}
               </td>
-              <td className="p-2 flex gap-2">
-                {canPermit(currentUserPermissions, "role", "canEdit") && (
-                  <button onClick={() => navigation(`/role/edit/${role.id}`)}>
-                    <CiEdit className="text-2xl cursor-pointer" />
-                  </button>
-                )}
-                {canPermit(currentUserPermissions, "role", "canDelete") && (
-                  <button onClick={() => removeRole(role.id, role.roleName)}>
-                    <MdDeleteOutline className="text-2xl cursor-pointer" />
-                  </button>
-                )}
-              </td>
+              {(canPermit(currentUserPermissions, "role", "canEdit") ||
+                canPermit(currentUserPermissions, "role", "canDelete")) && (
+                <td className="p-2 flex gap-2">
+                  {canPermit(currentUserPermissions, "role", "canEdit") && (
+                    <button onClick={() => navigation(`/role/edit/${role.id}`)}>
+                      <CiEdit className="text-2xl cursor-pointer" />
+                    </button>
+                  )}
+                  {canPermit(currentUserPermissions, "role", "canDelete") && (
+                    <button onClick={() => removeRole(role.id, role.roleName)}>
+                      <MdDeleteOutline className="text-2xl cursor-pointer" />
+                    </button>
+                  )}
+                </td>
+              )}
             </tr>
           ))}
         </tbody>

@@ -17,7 +17,7 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../redux/store/store";
 import { IoHomeOutline } from "react-icons/io5";
-
+import avatar from "../../../../public/avtar.png";
 import { setUserPermissions } from "../../../redux/permissionslice/permissionslice";
 import { useDispatch } from "react-redux";
 import useUsers from "../../../hooks/useUser/useUsers";
@@ -45,7 +45,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isOpen }) => {
   });
 
   useEffect(() => {
-    if (darkMode) {
+    if (darkMode) {                                                                         
       document.documentElement.classList.add("dark");
       localStorage.setItem("theme", "dark");
     } else {
@@ -128,7 +128,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isOpen }) => {
           arrowIcon={false}
           inline
           label={
-            <Avatar alt="User" img={user?.profilePhoto || undefined} rounded />
+            <Avatar alt="User" img={user?.profilePhoto || avatar} rounded />
           }
         >
           <DropdownHeader>

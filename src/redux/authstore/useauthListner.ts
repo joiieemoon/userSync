@@ -28,7 +28,7 @@ export const useAuthListener = () => {
     role: data.role || "",
     bio: data.bio || "",
   })
-);
+);      
 
         }
       } else {

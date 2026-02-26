@@ -12,7 +12,7 @@ import { ToastContainer } from "react-toastify";
 import Users from "./pages/private/allUsers/Users";
 import Dashboard from "./pages/private/dashboard/Dashboard";
 import Role from "./pages/private/role/Role";
-import EditRole from "../src/modals/addRole/AddRoleModal";
+// import EditRole from "../src/modals/addRole/AddRoleModal";
 import EditRoleMain from "./pages/private/role/rolemodyul/editRole/EditRoleMain";
 
 const App = () => {

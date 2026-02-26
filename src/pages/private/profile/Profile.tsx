@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -19,7 +18,6 @@ const Profile = () => {
 
   const [open, setOpen] = useState(false);
 
-
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
@@ -36,9 +34,9 @@ const Profile = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
-      
       {/* Sidebar */}
       <Sidebarmain isOpen={isSidebarOpen} />
+      <Navbar toggleSidebar={toggleSidebar} />
 
       {/* Main Layout */}
       <div
@@ -48,25 +46,18 @@ const Profile = () => {
         `}
       >
         {/* Navbar */}
-        <Navbar toggleSidebar={toggleSidebar} />
 
         {/* Content */}
         <main className="p-8 pt-24 space-y-6">
-          <ProfileHeader
-            user={user}
-            onEdit={() => setOpen(true)}
-          />
+          <ProfileHeader user={user} onEdit={() => setOpen(true)} />
 
-          <PersonalDetails user={user}  onEdit={() => setOpen(true)} />
+          <PersonalDetails user={user} onEdit={() => setOpen(true)} />
         </main>
       </div>
 
       {/* Modal */}
       {open && (
-        <UpdateProfileModal
-          user={user}
-          onClose={() => setOpen(false)}
-        />
+        <UpdateProfileModal user={user} onClose={() => setOpen(false)} />
       )}
     </div>
   );

@@ -63,9 +63,9 @@ const useUsers = () => {
 
         setUsers(list);
         setLoading(false);
-      },
+      },  
       (error) => {
-        console.error("Error fetching users:", error);
+          console.error("Error fetching users:", error);
         setLoading(false);
       }
     );

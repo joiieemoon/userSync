@@ -133,20 +133,22 @@ export default function UsersDetails() {
               <td className="p-2">{u.phone || "-"}</td>
               <td className="p-2">{u.role || "-"}</td>
               <td className="p-2">{u.createdAt}</td>
+              {(canPermit(currentUserPermissions, "user", "canEdit") ||
+                canPermit(currentUserPermissions, "user", "canDelete")) && (
+                <td className="p-2 flex gap-2">
+                  {canPermit(currentUserPermissions, "user", "canEdit") && (
+                    <button onClick={() => setUserToEdit(u)}>
+                      <FaRegEdit className="text-amber-300 text-2xl" />
+                    </button>
+                  )}
 
-              <td className="p-2 flex gap-2">
-                {canPermit(currentUserPermissions, "user", "canEdit") && (
-                  <button onClick={() => setUserToEdit(u)}>
-                    <FaRegEdit className="text-amber-300 text-2xl" />
-                  </button>
-                )}
-
-                {canPermit(currentUserPermissions, "user", "canDelete") && (
-                  <button onClick={() => setUserToDelete(u)}>
-                    <AiOutlineUserDelete className="text-red-400 text-2xl" />
-                  </button>
-                )}
-              </td>
+                  {canPermit(currentUserPermissions, "user", "canDelete") && (
+                    <button onClick={() => setUserToDelete(u)}>
+                      <AiOutlineUserDelete className="text-red-400 text-2xl" />
+                    </button>
+                  )}
+                </td>
+              )}
             </tr>
           ))}
         </tbody>
