@@ -12,7 +12,7 @@ const ChatLayout = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
   useTitle("User Sync-Chat");
-  const currentUid = users.find((u) => u.uid === currentUid);
+  //  const currentUid = users.find((u) => u.uid === currentUid);
   
   return (
     <>
