@@ -4,6 +4,7 @@ import { updateDoc, doc, collection, getDocs } from "firebase/firestore";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { updateProfileValidationSchema } from "../../components/validations/validationSchema";
 import { toast } from "react-toastify";
+import useTitle from "../../hooks/useTitle/useTitle";
 
 type Props = {
   isOpen: boolean;
@@ -19,7 +20,7 @@ type Props = {
 
 const EditUser: React.FC<Props> = ({ isOpen, onClose, user }) => {
   const [roles, setRoles] = useState<any[]>([]);
-
+  // useTitle("User Sync-Edit User");
   useEffect(() => {
     const fetchRoles = async () => {
       try {

@@ -4,13 +4,14 @@ import { Button, Drawer, DrawerHeader, DrawerItems } from "flowbite-react";
 import SearchBar from "../../../../components/SearchBar/SearchBar";
 import type { RootState } from "../../../../redux/store/store";
 import { useSelector } from "react-redux";
+import dashboardBg from "../../../../../public/dashboardbg.jpg";
 
 const ChatModyul = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleClose = () => setIsOpen(false);
   const handleOpen = () => setIsOpen(true);
- const { permissions,username } = useSelector(
+  const { permissions, username } = useSelector(
     (state: RootState) => state.userPermissions,
   );
   return (
@@ -40,20 +41,19 @@ const ChatModyul = () => {
           </div>
 
           <div className="p-4  ">
-            <SearchBar  />
+            <SearchBar />
           </div>
 
           <div className="flex-1 overflow-y-auto p-4 space-y-2 bg-white rounded-lg shadow">
             {/*  dynamic chat list */}
-            {["JAINIL", "harry", "sumit"].map((user,idx) => (
-                <>
-              <div
-                key={user}
-                className="cursor-pointer rounded-md p-3 hover:bg-gray-100 flex bg-gray-100"
-              >
-                {user}
-              </div>
-           
+            {["JAINIL", "harry", "sumit"].map((user, idx) => (
+              <>
+                <div
+                  key={user}
+                  className="cursor-pointer rounded-md p-3 hover:bg-gray-100 flex bg-gray-100"
+                >
+                  {user}
+                </div>
               </>
             ))}
           </div>
@@ -62,13 +62,26 @@ const ChatModyul = () => {
         {/* Main Chat Area */}
         <main className="flex-1 p-6 overflow-y-auto bg-white rounded-2xl shadow ml-4">
           {/* your chat UI */}
+           {/* Background */}
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{
+          backgroundImage: `url(${dashboardBg})`,
+          opacity: 0.15,
+        }}
+      />
           <h3 className="text-lg font-semibold mb-4">Select a chat</h3>
           <p>Chat content will appear here...</p>
         </main>
       </div>
 
       {/* Mobile drawer */}
-      <Drawer open={isOpen} onClose={handleClose} placement="left" className="md:hidden">
+      <Drawer
+        open={isOpen}
+        onClose={handleClose} 
+        placement="left"
+        className="md:hidden"
+      >
         <DrawerHeader title="Chats" />
         <DrawerItems>
           <div className="p-4">
@@ -77,12 +90,16 @@ const ChatModyul = () => {
           <div className="space-y-2 overflow-auto max-h-[60vh]">
             {/* dynamic chat list */}
             {["Kaiya George", "Lindsey Curtis", "Zain Geidt"].map((user) => (
-              <div
+              <>
+              
+               <div
                 key={user}
                 className="cursor-pointer rounded-md p-3 hover:bg-gray-100"
               >
                 {user}
               </div>
+              </>
+             
             ))}
           </div>
         </DrawerItems>

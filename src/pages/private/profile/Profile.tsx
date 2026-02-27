@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import { useSelector } from "react-redux";
 
 import ProfileHeader from "../../../components/profile/profileHeader/ProfileHeader";
@@ -10,6 +10,7 @@ import type { RootState } from "../../../redux/store/store";
 
 import Navbar from "../navbar/Navbar";
 import { Sidebarmain } from "../../../components/sidebar/Sidebar";
+import useTitle from "../../../hooks/useTitle/useTitle";
 
 const Profile = () => {
   useAuthListener();
@@ -19,7 +20,7 @@ const Profile = () => {
   const [open, setOpen] = useState(false);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
+useTitle("User Sync-Profile");
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };

@@ -233,7 +233,7 @@ const EditRole: React.FC = () => {
             </Button>
             <Button
               type="submit"
-              className="bg-amber-300 text-black border-none"
+              className="bg-amber-300 text-black border-none outline-none focus:ring-0 cursor-pointer"
             >
               {id ? "Save Changes" : "Add Role"}
             </Button>

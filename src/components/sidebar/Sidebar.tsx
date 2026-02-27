@@ -22,8 +22,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Get permissions from Redux slice
-  const { permissions,username } = useSelector(
+ 
+  const { permissions, username } = useSelector(
     (state: RootState) => state.userPermissions,
   );
   if (!username) return null;
@@ -68,8 +68,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
 
             {canPermit(permissions, "chat", "canView") && (
               <SidebarItem
-                
-                onClick={()=>navigate("/chat")}
+                onClick={() => navigate("/chat")}
                 icon={IoChatbox}
                 className="hover:text-pink-400 cursor-pointer"
               >
@@ -79,7 +78,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
 
             {canPermit(permissions, "campaign", "canView") && (
               <SidebarItem
-                href="#"
+                onClick={() => navigate("/campaign")}
                 icon={MdCampaign}
                 className="hover:text-pink-400"
               >
@@ -88,24 +87,16 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
             )}
           </SidebarItemGroup>
 
-          <SidebarItemGroup className="bottom-0">
-            <SidebarItem className="bg-amber-300 text-black">
-              {location.pathname === "/profile" ? (
-                <div
-                  onClick={() => navigate("/")}
-                  className="flex items-center gap-2 hover:text-blue-300 w-full cursor-pointer font-semibold text-black"
-                >
-                  <IoHomeOutline className="text-2xl" /> Home
-                </div>
-              ) : (
-                <Link
-                  to="/profile"
-                  className="flex items-center gap-2 text-black hover:text-blue-300 font-semibold"
-                >
-                  <TbUserEdit className="text-2xl" />
-                  Edit Profile
-                </Link>
-              )}
+          <SidebarItemGroup className="mt-auto">
+            <SidebarItem
+              as={Link}
+              to={location.pathname === "/profile" ? "/" : "/profile"}
+              icon={
+                location.pathname === "/profile" ? IoHomeOutline : TbUserEdit
+              }
+              className="bg-amber-300 text-black font-semibold hover:text-blue-300"
+            >
+              {location.pathname === "/profile" ? "Home" : "Edit Profile"}
             </SidebarItem>
           </SidebarItemGroup>
         </SidebarItems>

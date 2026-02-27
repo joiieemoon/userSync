@@ -10,6 +10,7 @@ import { updateProfileValidationSchema } from "../../../src/components/validatio
 import { Formik, Form, Field, ErrorMessage } from "formik";
 // import { avatarTheme } from "flowbite-react";
 import avatar from "../../../public/avtar.png";
+import useTitle from "../../hooks/useTitle/useTitle";
 interface Props {
   user: {
     uid: string;
@@ -29,7 +30,7 @@ export default function UpdateProfileModal({ user, onClose }: Props) {
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-
+useTitle("User Sync-Update Profile");
   const initialValues = {
     firstName: user.firstName || "",
     lastName: user.lastName || "",

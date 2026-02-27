@@ -106,7 +106,7 @@ const RoleModyul = () => {
 
   return (
     <div className="p-6 mt-10 rounded-2xl shadow-2xl">
-      <h2 className="text-3xl font-semibold mb-4">Roles</h2>
+      <h2 className="text-3xl font-semibold mb-4 dark:text-white">Roles</h2>
 
       <div className="mb-3 flex justify-between items-center">
         <SearchBar
@@ -127,7 +127,7 @@ const RoleModyul = () => {
           <tr>
             <th className="p-3 text-left">#</th>
             <th
-              className="p-3 text-left cursor-pointer flex"
+              className="p-3 text-left cursor-pointer flex "
               onClick={toggleSortOrder}
             >
               Role Name

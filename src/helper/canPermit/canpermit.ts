@@ -3,7 +3,9 @@ export const canPermit = (
     module: string,
     action: "canAdd" | "canEdit" | "canDelete" | "canView"
 ) => {
-    const result = permissions?.[module]?.[action] === true;
-    // console.log(`canPermit -> module: ${module}, action: ${action}, result: ${result}`);
-    return permissions?.[module]?.[action] === true;
+    const modulekey=module.toLowerCase();
+    const result = permissions?.[modulekey]?.[action] === true;
+    console.log(`canPermit -> module: ${module}, action: ${action}, result: ${result}`);
+    // return permissions?.[modulekey]?.[action] === true;
+    return result;
 };

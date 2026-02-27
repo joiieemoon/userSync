@@ -23,8 +23,9 @@ import ForgotPassword from "../../../modals/forgetpassword/ForgetPassword";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../../redux/store/authSlice";
 import type { AppDispatch } from "../../../redux/store/store";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
 import { db } from "../../../components/firebase/firebase";
+import { setUserPermissions } from "../../../redux/permissionslice/permissionslice";
 
 const loginValidationSchema = Yup.object({
   email: Yup.string().email("Invalid email").required("Email is required"),
@@ -89,18 +90,43 @@ export const Login = () => {
                       { merge: true }, // merge  don't overwrite other fields
                     );
                   }
-                  // Redux set
+                  let rolePermissions = {};
+
+                  if (data.role) {
+                    const q = query(
+                      collection(db, "roles"),
+                      where("roleName", "==", data.role),
+                    );
+
+                    const querySnapshot = await getDocs(q);
+
+                    if (!querySnapshot.empty) {
+                      const roleData = querySnapshot.docs[0].data();
+                      rolePermissions = roleData.permissions || {};
+                    }
+                  }
+
+                  console.log("Fetched Permissions:", rolePermissions);
+
                   dispatch(
                     setUser({
                       uid: user.uid,
                       firstName: data.firstName,
-                      lastName: data.lastname,
+                      lastName: data.lastName,
                       email: data.email,
-                      // profilePhoto: data.profilePhoto || "",
                       profilePhoto:
-                        data.profilePhoto && data.profilePhoto.trim() !== ""
-                          ? data.profilePhoto
-                          : generateAvatar(fullName),
+                        data.profilePhoto?.trim() ||
+                        generateAvatar(`${data.firstName} ${data.lastName}`),
+                      role: data.role || "User", // default role
+                      phone: data.phone || "",
+                      bio: data.bio || "",
+                    }),
+                  );
+
+                  dispatch(
+                    setUserPermissions({
+                      username: data.firstName,
+                      permissions: rolePermissions,
                     }),
                   );
                 }
@@ -110,11 +136,13 @@ export const Login = () => {
                 position: "top-center",
               });
 
-              setTimeout(() => {
-                navigate("/");
-              }, 1500);
+              navigate("/", { replace: true });
             } catch (error) {
-              toast.error(error.message, {
+              const cleanMessage = error.message
+                .replace("Firebase:", "")
+                .trim();
+
+              toast.error("Login failed! " + cleanMessage, {
                 position: "bottom-center",
               });
             } finally {

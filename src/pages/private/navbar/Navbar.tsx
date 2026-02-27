@@ -21,8 +21,9 @@ import avatar from "../../../../public/avtar.png";
 import { setUserPermissions } from "../../../redux/permissionslice/permissionslice";
 import { useDispatch } from "react-redux";
 import useUsers from "../../../hooks/useUser/useUsers";
+import { setUser } from "../../../redux/store/authSlice";
 interface NavbarProps {
-  toggleSidebar: () => void;  
+  toggleSidebar: () => void;
   isOpen: boolean;
 }
 
@@ -34,18 +35,16 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isOpen }) => {
 
   const [darkMode, setDarkMode] = useState(() => {
     if (typeof window !== "undefined") {
-   
       const saved = localStorage.getItem("theme");
       if (saved) return saved === "dark";
 
-   
       return window.matchMedia("(prefers-color-scheme: dark)").matches;
     }
     return false;
   });
 
   useEffect(() => {
-    if (darkMode) {                                                                         
+    if (darkMode) {
       document.documentElement.classList.add("dark");
       localStorage.setItem("theme", "dark");
     } else {
@@ -62,6 +61,18 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isOpen }) => {
 
     const currentUser = users.find((u) => u.uid === auth.currentUser.uid);
     if (currentUser) {
+      dispatch(
+        setUser({
+          uid: currentUser.uid,
+          firstName: currentUser.firstName,
+          lastName: currentUser.lastName,
+          email: currentUser.email,
+          profilePhoto: currentUser.profilePhoto,
+          role: currentUser.role || "User", // make sure role is set
+          phone: currentUser.phone,
+          bio: currentUser.bio,
+        }),
+      );
       dispatch(
         setUserPermissions({
           username: currentUser.firstName,

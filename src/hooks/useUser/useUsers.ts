@@ -27,7 +27,7 @@ const useUsers = () => {
     return () => unsubscribeRoles();
   }, []);
 
-  
+
   useEffect(() => {
     const unsubscribeUsers = onSnapshot(
       collection(db, "Users"),
@@ -57,15 +57,16 @@ const useUsers = () => {
             role: data.role || "",
             createdAt,
             roleName: roleInfo.roleName,
-            permissions: roleInfo.permissions, 
+            permissions: roleInfo.permissions,
+            profilePhoto: data.profilePhoto || "",
           };
         });
 
         setUsers(list);
         setLoading(false);
-      },  
+      },
       (error) => {
-          console.error("Error fetching users:", error);
+        console.error("Error fetching users:", error);
         setLoading(false);
       }
     );

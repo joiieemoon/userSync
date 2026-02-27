@@ -3,6 +3,7 @@ import useUsers from "../../../../hooks/useUser/useUsers";
 import Navbar from "../../navbar/Navbar";
 import { Sidebarmain } from "../../../../components/sidebar/Sidebar";
 import ChatModyul from "../chatModyul/ChatModyul";
+import useTitle from "../../../../hooks/useTitle/useTitle";
 const ChatLayout = () => {
   const { users, loading } = useUsers();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -10,7 +11,9 @@ const ChatLayout = () => {
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
-
+  useTitle("User Sync-Chat");
+  const currentUid = users.find((u) => u.uid === currentUid);
+  
   return (
     <>
       <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">

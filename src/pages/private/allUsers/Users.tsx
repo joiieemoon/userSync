@@ -1,7 +1,8 @@
-import React, { useState, lazy, Suspense } from "react";
+import React, { useState, lazy, Suspense, use } from "react";
 import useUsers from "../../../hooks/useUser/useUsers";
 import Navbar from "../navbar/Navbar";
 import { Sidebarmain } from "../../../components/sidebar/Sidebar";
+import useTitle from "../../../hooks/useTitle/useTitle";
 
 // Lazy load only
 const UsersDetails = lazy(
@@ -27,7 +28,7 @@ function UsersSkeleton() {
 export default function Users() {
   const { users, loading } = useUsers();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
+useTitle("User Sync-Users");
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };

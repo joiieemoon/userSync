@@ -7,70 +7,88 @@ import { seedAuthUsers } from "../../../services/seed/seeduser";
 import { Sidebarmain } from "../../../components/sidebar/Sidebar";
 import dashboardBg from "../../../../public/dashboardbg.jpg";
 import avatar from "../../../../public/avtar.png";
+import useTitle from "../../../hooks/useTitle/useTitle";
+import { Spinner } from "flowbite-react";
 
 const Dashboard = () => {
   const user = useSelector((state: RootState) => state.auth.user);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
-
+  useTitle("User Sync-Dashboard");
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        {/* <p>Loading profile...</p> */}
+        <Spinner aria-label="Loading profile" />
+      </div>
+    );
+  }
   return (
-    <div className="relative flex min-h-screen overflow-hidden">
-      {/* Background */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage: `url(${dashboardBg})`,
-          opacity: 0.15,
-        }}
-      />
+    <>
+      <div className="relative flex min-h-screen overflow-hidden">
+        {/* Background */}
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: `url(${dashboardBg})`,
+            opacity: 0.15,
+          }}
+        />
 
-      {/* Sidebar */}
-      <Sidebarmain isOpen={isSidebarOpen} />
-      <Navbar toggleSidebar={toggleSidebar} />
-      {/* Main */}
-      <div
-        className={`relative flex-1 flex flex-col transition-all duration-300 ${
-          isSidebarOpen ? "ml-64" : "ml-0"
-        }`}
-      >
-        <main className="flex flex-1 items-center justify-center p-6 pt-24">
-          {/* Glass Card */}
-          <div className="w-full bg-amber-300  max-w-4xl backdrop-blur-xl  border border-white/20 rounded-3xl shadow-2xl p-12 text-center ">
-            {/* Avatar */}
-            <div className="flex justify-center mb-6">
-              <img
-                // src={avatar}
-                src={
-                  user?.profilePhoto && user.profilePhoto !== ""
-                    ? user.profilePhoto
-                    : avatar
-                }
-                alt="profile"
-                className="w-28 h-28 rounded-full object-cover border-4 border-white/30 shadow-lg"
-              />
-            </div>
+        {/* Sidebar */}
+        <Sidebarmain isOpen={isSidebarOpen} />
+        <Navbar toggleSidebar={toggleSidebar} />
 
-            {/* Welcome */}
-            <h2 className="text-4xl md:text-5xl font-bold text-black mb-3">
-              Welcome, {user?.firstName || "User"}
-            </h2>
+        {/* Main */}
 
-            <p className="text-black/70 text-lg mb-10">
-              Manage your profile, explore users, and control your dashboard
-              from here.
-            </p>
+        {!user ? (
+          <div className="flex items-center justify-center min-h-screen">
+            <Spinner aria-label="Loading profile" />
+          </div>
+        ) : (
+          <div
+            className={`relative flex-1 flex flex-col transition-all duration-300 ${
+              isSidebarOpen ? "ml-64" : "ml-0"
+            }`}
+          >
+            <main className="flex flex-1 items-center justify-center p-6 pt-24">
+              {/* Glass Card */}
+              <div className="w-full bg-amber-300  max-w-4xl backdrop-blur-xl  border border-white/20 rounded-3xl shadow-2xl p-12 text-center ">
+                {/* Avatar */}
+                <div className="flex justify-center mb-6">
+                  <img
+                    // src={avatar}
+                    src={
+                      user?.profilePhoto && user.profilePhoto !== ""
+                        ? user.profilePhoto
+                        : avatar
+                    }
+                    alt="profile"
+                    className="w-28 h-28 rounded-full object-cover border-4 border-white/30 shadow-lg"
+                  />
+                </div>
 
-            {/* large datasetpush */}
-            {/* upload json data into firestorge  */}
-            {/* <button
+                {/* Welcome */}
+                <h2 className="text-4xl md:text-5xl font-bold text-black mb-3">
+                  Welcome, {user?.firstName || "User"}
+                </h2>
+
+                <p className="text-black/70 text-lg mb-10">
+                  Manage your profile, explore users, and control your dashboard
+                  from here.
+                </p>
+
+                {/* large datasetpush */}
+                {/* upload json data into firestorge  */}
+                {/* <button
               onClick={seedAuthUsers}
               style={{ padding: 10, background: "black", color: "white" }}
             >
               Seed Users
             </button> */}
 
-            {/* <div className="flex justify-center">
+                {/* <div className="flex justify-center">
               <div className="bg-cyan-900  text-white rounded-2xl px-10 py-6 shadow-lg">
                 <p className="text-sm opacity-80">User Fields</p>
                 <p className="text-3xl font-bold mt-2">
@@ -78,10 +96,12 @@ const Dashboard = () => {
                 </p>
               </div>
             </div> */}
+              </div>
+            </main>
           </div>
-        </main>
+        )}
       </div>
-    </div>
+    </>
   );
 };
 

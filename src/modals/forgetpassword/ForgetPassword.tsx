@@ -63,7 +63,7 @@ toast.error(error.message ,{
 
         <button
           onClick={handleSubmit}
-          className="w-full bg-blue-600 text-white py-2 rounded mb-2"
+          className="w-full bg-amber-300 text-black  py-2 rounded mb-2"
         >
           Send Reset Link
         </button>
