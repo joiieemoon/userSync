@@ -7,6 +7,14 @@ import {
   DrawerItems,
   Spinner,
 } from "flowbite-react";
+import { Virtuoso } from "react-virtuoso";
+import { auth } from "../../../../components/firebase/firebase";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionPanel,
+  AccordionTitle,
+} from "flowbite-react";
 import SearchBar from "../../../../components/SearchBar/SearchBar";
 import type { RootState } from "../../../../redux/store/store";
 import { useSelector } from "react-redux";
@@ -14,17 +22,29 @@ import dashboardBg from "../../../../../public/dashboardbg.jpg";
 import avtar from "../../../../../public/avtar.png";
 import useUsers from "../../../../hooks/useUser/useUsers";
 import AddNewChatModal from "../../../../modals/AddNewChatModal/AddNewChatModal";
+import { Droptest } from "../../../../try/Droptest";
 const ChatModyul = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleClose = () => setIsOpen(false);
   const handleOpen = () => setIsOpen(true);
+  const [searchTerm, setsearchTerm] = useState("");
+  const currentUid = auth.currentUser?.uid;
 
   const { users, loading } = useUsers();
+  const currentUser = users.find((u) => u.uid === currentUid);
+
   // const { permissions, username } = useSelector(
   //   (state: RootState) => state.userPermissions,
   // );
-
+  const filteredUsers = users
+    .filter((u) => u.uid !== currentUid)
+    .filter((u) =>
+      [u.firstName, u.email]
+        .join(" ")
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()),
+    );
   if (loading)
     return (
       <div className="p-6 flex justify-center items-center">
@@ -55,29 +75,52 @@ const ChatModyul = () => {
         {/* Sidebar */}
         <div className="hidden md:flex ">
           <div className="w-72 bg-gray-100 rounded-2xl shadow flex flex-col  ">
-            <div className="p-4 flex items-center justify-between border-b border-gray-300">
-              {/* <SearchBar /> */}
-              <AddNewChatModal />
+            <div className="p-4 flex flex-col items-center justify-between border-b border-gray-300">
+              <div className=" w-full mb-3">
+                <AddNewChatModal />
+              </div>
+              <div className="">
+                <SearchBar
+                  value={searchTerm}
+                  onchange={(e) => setsearchTerm(e.target.value)}
+                />
+              </div>
             </div>
 
             <div className="flex-1 min-h-0 overflow-y-auto p-4 space-y-2 bg-white">
-              {users.map((user, idx) => (
-                <div
-                  key={user.uid}
-                  className="cursor-pointer rounded-md p-3 hover:bg-gray-200 flex items-center gap-2 bg-gray-100"
-                >
-                  <img
-                    src={
-                      user?.profilePhoto && user.profilePhoto !== ""
-                        ? user.profilePhoto
-                        : avtar
-                    }
-                    alt={user.firstName}
-                    className="h-6 w-6 rounded-full"
-                  />
-                  {user.firstName}
-                </div>
-              ))}
+              {filteredUsers.length === 0 ? (
+                `No users found`
+              ) : (
+                <Virtuoso
+                  style={{ height: "100%" }}
+                  data={filteredUsers}
+                  itemContent={(index, user) => (
+                    <div
+                      key={user.uid}
+                      className="cursor-pointer rounded-md p-3 m-2 hover:bg-gray-200 flex items-center gap-3 bg-gray-100"
+                    >
+                      <img
+                        src={
+                          user?.profilePhoto && user.profilePhoto !== ""
+                            ? user.profilePhoto
+                            : avtar
+                        }
+                        alt={user.firstName}
+                        className="h-10 w-10 rounded-full object-cover"
+                      />
+
+                      <div className="flex flex-col">
+                        <span className="font-medium text-gray-900">
+                          {user.firstName}
+                        </span>
+                        <span className="text-xs text-gray-500">
+                          {/* {user.email} */}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -94,6 +137,8 @@ const ChatModyul = () => {
           />
           <h3 className="text-lg font-semibold mb-4">Select a chat</h3>
           <p>Chat content will appear here...</p>
+          {/* <Droptest/> */}
+       
         </main>
       </div>
 
@@ -106,29 +151,47 @@ const ChatModyul = () => {
       >
         <DrawerHeader title="Chats" />
         <DrawerItems>
-          <div className="p-4">
-            <SearchBar />
+          <div className=" ">
+            <SearchBar
+              value={searchTerm}
+              onchange={(e) => setsearchTerm(e.target.value)}
+            />
           </div>
           <div className="space-y-2 overflow-auto max-h-[60vh]">
             {/* dynamic chat list */}
-            {users.map((user, idx) => (
-              <div
-                key={idx}
-                className="cursor-pointer rounded-md p-3 hover:bg-gray-200 flex items-center gap-2 bg-gray-100"
-              >
-                <img
-                  src={
-                    user?.profilePhoto && user.profilePhoto !== ""
-                      ? user.profilePhoto
-                      : avtar
-                  }
-                  alt={user.firstName}
-                  className="h-6 w-6 rounded-full"
-                />
+            {filteredUsers.length === 0 ? (
+              `No users found`
+            ) : (
+              <Virtuoso
+                style={{ height: "80%" }}
+                data={filteredUsers}
+                itemContent={(index, user) => (
+                  <div
+                    key={user.uid}
+                    className="cursor-pointer rounded-md p-3 m-2 hover:bg-gray-200 flex items-center gap-3 bg-gray-100"
+                  >
+                    <img
+                      src={
+                        user?.profilePhoto && user.profilePhoto !== ""
+                          ? user.profilePhoto
+                          : avtar
+                      }
+                      alt={user.firstName}
+                      className="h-10 w-10 rounded-full object-cover"
+                    />
 
-                {user.firstName}
-              </div>
-            ))}
+                    <div className="flex flex-col">
+                      <span className="font-medium text-gray-900">
+                        {user.firstName}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        {/* {user.email} */}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              />
+            )}
           </div>
         </DrawerItems>
       </Drawer>

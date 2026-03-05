@@ -106,7 +106,7 @@ export const Login = () => {
                     }
                   }
 
-                  console.log("Fetched Permissions:", rolePermissions);
+                  // console.log("Fetched Permissions:", rolePermissions);
 
                   dispatch(
                     setUser({

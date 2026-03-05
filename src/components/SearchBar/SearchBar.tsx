@@ -18,7 +18,7 @@ const SearchBar = ({ value, onchange }: SearchBarProps) => {
           className="w-full bg-transparent outline-none text-gray-700 placeholder-gray-400 border-none"
         />
 
-        <button className="ml-2 bg-amber-400 hover:bg-amber-500 text-white px-4 py-1.5 rounded-full transition-all duration-300 shadow-md cursor-progress">
+        <button className="ml-2 bg-amber-400 hover:bg-amber-500 text-white px-4 py-1.5 rounded-full transition-all duration-300 shadow-md cursor-pointer">
           Go
         </button>
       </div>

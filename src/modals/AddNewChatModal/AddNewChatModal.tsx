@@ -8,16 +8,31 @@ import {
   Select,
   Spinner,
 } from "flowbite-react";
+import { Virtuoso } from "react-virtuoso";
 import avtar from "../../../public/avtar.png";
 import { RiChatNewLine } from "react-icons/ri";
 import { useState } from "react";
 import useUsers from "../../hooks/useUser/useUsers";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import EditBtn from "../../components/button/editbutton/Editbtn";
+import { auth } from "../../components/firebase/firebase";
+
 const AddNewChatModal = () => {
   const { users, loading } = useUsers();
   const [openModal, setOpenModal] = useState(true);
   const [modalSize, setModalSize] = useState<string>("md");
+  const [searchTerm, setsearchTerm] = useState("");
+  const currentUid = auth.currentUser?.uid;
+
+  const currentUser = users.find((u) => u.uid === currentUid);
+  const filteredUsers = users
+    .filter((u) => u.uid !== currentUid)
+    .filter((u) =>
+      [u.firstName, u.email]
+        .join(" ")
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()),
+    );
   if (loading)
     return (
       <div className="p-6 flex justify-center items-center">
@@ -28,24 +43,6 @@ const AddNewChatModal = () => {
   return (
     <>
       <div className="flex flex-wrap gap-4 ">
-        {/* <div className="w-40">
-          <Select
-            defaultValue="md"
-            onChange={(event) => setModalSize(event.target.value)}
-          >
-            <option value="sm">sm</option>
-            <option value="md">md</option>
-            <option value="lg">lg</option>
-            <option value="xl">xl</option>
-            <option value="2xl">2xl</option>
-            <option value="3xl">3xl</option>
-            <option value="4xl">4xl</option>
-            <option value="5xl">5xl</option>
-            <option value="6xl">6xl</option>
-            <option value="7xl">7xl</option>
-          </Select>
-        </div> */}
-        {/* <Button onClick={() => setOpenModal(true)}>Toggle modal</Button> */}
         <EditBtn
           onClick={() => setOpenModal(true)}
           label=""
@@ -54,34 +51,59 @@ const AddNewChatModal = () => {
       </div>
       <Modal
         show={openModal}
-        size={modalSize}
+        size="md"
         onClose={() => setOpenModal(false)}
+        className="scrollbar-hidden"
       >
-        <ModalHeader className="dark:bg-white "><span className="text-black">New Chat</span></ModalHeader>
-        <SearchBar className="p-4 dark:bg-white" />
+        <ModalHeader className="dark:bg-white border-none">
+          <span className="text-black">New Chat</span>
+        </ModalHeader>
+        <div className="bg-white">
+          {" "}
+          <SearchBar
+            value={searchTerm}
+            onchange={(e) => setsearchTerm(e.target.value)}
+          />
+        </div>
+
         <ModalBody className="dark:bg-white">
-          <div className="space-y-6 p-6 overflow-auto h-96 dark:bg-white">
-            {users.map((user, idx) => (
-              <div
-                key={user.uid}
-                className="cursor-pointer rounded-md p-3 hover:bg-gray-200 flex items-center gap-2 bg-gray-100"
-              >
-                <img
-                  src={
-                    user?.profilePhoto && user.profilePhoto !== ""
-                      ? user.profilePhoto
-                      : avtar
-                  }
-                  alt={user.firstName}
-                  className="h-6 w-6 rounded-full"
-                />
-                {user.firstName}
-              </div>
-            ))}
-          </div>
+          {filteredUsers.length === 0 ? (
+            `No users found`
+          ) : (
+            <Virtuoso
+              style={{ height: "300px" }}
+              data={filteredUsers}
+              itemContent={(index, user) => (
+                <div
+                  key={user.uid}
+                  className="cursor-pointer rounded-md p-3 m-2 hover:bg-gray-200 flex items-center gap-3 bg-gray-100"
+                >
+                  <img
+                    src={
+                      user?.profilePhoto && user.profilePhoto !== ""
+                        ? user.profilePhoto
+                        : avtar
+                    }
+                    alt={user.firstName}
+                    className="h-10 w-10 rounded-full object-cover"
+                  />
+
+                  <div className="flex flex-col">
+                    <span className="font-medium text-gray-900">
+                      {user.firstName}
+                    </span>
+                    <span className="text-xs text-gray-500">{user.email}</span>
+                  </div>
+                </div>
+              )}
+            />
+          )}
         </ModalBody>
-        <ModalFooter className="dark:bg-white">
-          <Button onClick={() => setOpenModal(false)} className="text-black bg-amber-300 border-none outline-none">
+        <ModalFooter className="dark:bg-white border-none">
+          <Button
+            onClick={() => setOpenModal(false)}
+            className="text-black bg-amber-300 border-none outline-none"
+          >
             Start chat
           </Button>
           <Button color="alternative" onClick={() => setOpenModal(false)}>
