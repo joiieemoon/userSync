@@ -1,19 +1,37 @@
 import React, { useState } from "react";
 import logo from "../../../../../public/logo.png";
-import { Button, Drawer, DrawerHeader, DrawerItems } from "flowbite-react";
+import {
+  Button,
+  Drawer,
+  DrawerHeader,
+  DrawerItems,
+  Spinner,
+} from "flowbite-react";
 import SearchBar from "../../../../components/SearchBar/SearchBar";
 import type { RootState } from "../../../../redux/store/store";
 import { useSelector } from "react-redux";
 import dashboardBg from "../../../../../public/dashboardbg.jpg";
 import avtar from "../../../../../public/avtar.png";
+import useUsers from "../../../../hooks/useUser/useUsers";
+import AddNewChatModal from "../../../../modals/AddNewChatModal/AddNewChatModal";
 const ChatModyul = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleClose = () => setIsOpen(false);
   const handleOpen = () => setIsOpen(true);
-  const { permissions, username } = useSelector(
-    (state: RootState) => state.userPermissions,
-  );
+
+  const { users, loading } = useUsers();
+  // const { permissions, username } = useSelector(
+  //   (state: RootState) => state.userPermissions,
+  // );
+
+  if (loading)
+    return (
+      <div className="p-6 flex justify-center items-center">
+        Loading...
+        <Spinner color="success" aria-label="Success spinner example" />
+      </div>
+    );
   return (
     <>
       {/* Header bar - mobile only: show drawer toggle */}
@@ -32,35 +50,39 @@ const ChatModyul = () => {
       </div>
 
       {/* Desktop layout: sidebar + chat content */}
-      <div className="hidden md:flex h-[calc(100vh-80px)]">
+      <div className="hidden md:flex h-[calc(100vh-80px)]  ">
+        {" "}
         {/* Sidebar */}
-        <div className="w-72 bg-gray-100 rounded-2xl shadow flex flex-col">
-          <div className="p-4 flex items-center gap-3  shadow bg-white rounded-tl-2xl rounded-tr-2xl">
-            <img src={logo} alt="Logo" className="w-10 h-10" />
-            <h2 className="text-xl font-semibold">Chats</h2>
-          </div>
+        <div className="hidden md:flex ">
+          <div className="w-72 bg-gray-100 rounded-2xl shadow flex flex-col  ">
+            <div className="p-4 flex items-center justify-between border-b border-gray-300">
+              {/* <SearchBar /> */}
+              <AddNewChatModal />
+            </div>
 
-          <div className="p-4  ">
-            <SearchBar />
-          </div>
-
-          <div className="flex-1 overflow-y-auto p-4 space-y-2 bg-white rounded-lg shadow">
-            {/*  dynamic chat list */}
-            {["JAINIL", "harry", "sumit"].map((user, idx) => (
-              <>
+            <div className="flex-1 min-h-0 overflow-y-auto p-4 space-y-2 bg-white">
+              {users.map((user, idx) => (
                 <div
-                  key={user}
-                  className="cursor-pointer rounded-md p-3 hover:bg-gray-100 flex bg-gray-100"
+                  key={user.uid}
+                  className="cursor-pointer rounded-md p-3 hover:bg-gray-200 flex items-center gap-2 bg-gray-100"
                 >
-                  {user}
+                  <img
+                    src={
+                      user?.profilePhoto && user.profilePhoto !== ""
+                        ? user.profilePhoto
+                        : avtar
+                    }
+                    alt={user.firstName}
+                    className="h-6 w-6 rounded-full"
+                  />
+                  {user.firstName}
                 </div>
-              </>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
-
         {/* Main Chat Area */}
-        <main className="flex-1 p-6 overflow-y-auto bg-white rounded-2xl shadow ml-4">
+        <main className="relative flex-1 p-6 overflow-auto bg-white rounded-2xl shadow ml-4">
           {/* your chat UI */}
           {/* Background */}
           <div
@@ -89,18 +111,23 @@ const ChatModyul = () => {
           </div>
           <div className="space-y-2 overflow-auto max-h-[60vh]">
             {/* dynamic chat list */}
-            {["Kaiya George", "Lindsey Curtis", "Zain Geidt"].map((user) => (
-              <>
-                <div>
-                  <img src="../../../../../public/avtar.png" alt="" />
-                </div>
-                <div
-                  key={user}
-                  className="cursor-pointer rounded-md p-3 hover:bg-gray-100"
-                >
-                  {user}
-                </div>
-              </>
+            {users.map((user, idx) => (
+              <div
+                key={idx}
+                className="cursor-pointer rounded-md p-3 hover:bg-gray-200 flex items-center gap-2 bg-gray-100"
+              >
+                <img
+                  src={
+                    user?.profilePhoto && user.profilePhoto !== ""
+                      ? user.profilePhoto
+                      : avtar
+                  }
+                  alt={user.firstName}
+                  className="h-6 w-6 rounded-full"
+                />
+
+                {user.firstName}
+              </div>
             ))}
           </div>
         </DrawerItems>
