@@ -5,6 +5,7 @@ import { db } from "../../components/firebase/firebase";
 import { updateUser } from "../../redux/store/authSlice";
 import type { AppDispatch } from "../../redux/store/store";
 import { toast } from "react-toastify";
+import { FileInput } from "flowbite-react";
 import "react-toastify/dist/ReactToastify.css";
 import { updateProfileValidationSchema } from "../../../src/components/validations/validationSchema";
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -30,7 +31,7 @@ export default function UpdateProfileModal({ user, onClose }: Props) {
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-useTitle("User Sync-Update Profile");
+  useTitle("User Sync-Update Profile");
   const initialValues = {
     firstName: user.firstName || "",
     lastName: user.lastName || "",
@@ -80,7 +81,7 @@ useTitle("User Sync-Update Profile");
       onClose();
     } catch (error) {
       console.error(error);
-      toast.error("Failed to update profile");
+      toast.error("Failed to update profile", { position: "top-center" });
     }
   };
 
@@ -96,20 +97,16 @@ useTitle("User Sync-Update Profile");
           validationSchema={updateProfileValidationSchema}
           onSubmit={handleSubmit}
         >
-          {({ values }) => (
+          {({ values ,isSubmitting}) => (
             <Form className="space-y-6">
               {/* Avatar */}
               <div className="flex flex-col md:flex-row items-center gap-4 mb-6">
                 <img
-                  src={
-                    preview ||
-                    values.profilePhoto ||
-                    avatar 
-                  }
+                  src={preview || values.profilePhoto || avatar}
                   className="w-24 h-24 md:w-28 md:h-28 rounded-full object-cover border-2 border-gray-300 dark:border-gray-600"
                 />
 
-                <input
+                <FileInput
                   type="file"
                   accept="image/*"
                   onChange={(e) => {
@@ -177,10 +174,11 @@ useTitle("User Sync-Update Profile");
 
                 <button
                   // type="submit"
+                  disabled={isSubmitting}
                   type="submit"
                   className="px-6 py-3 bg-amber-300 text-black rounded-xl cursor-pointer"
                 >
-                  Save Changes
+                   {isSubmitting?"Saving....":"Save Changes"}
                 </button>
               </div>
             </Form>

@@ -14,7 +14,7 @@ const AddNewuserModal: React.FC<Props> = ({ isOpen, onClose }) => {
       className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
       onClick={onClose}
     >
-      <div className="relative" onClick={(e) => e.stopPropagation()}>
+      <div className="relative w-120 " onClick={(e) => e.stopPropagation()}>
         <NewUserForm onClose={onClose} />
       </div>
     </div>

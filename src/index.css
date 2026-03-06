@@ -2,14 +2,17 @@
 @import "flowbite";
 @tailwind utilities;
 
-input::placeholder{
-    opacity: 0.3;
-    
+input::placeholder {
+  opacity: 0.3;
 }
+:root {
+  color-scheme: light !important;
+}
+
 .scrollbar-hidden::-webkit-scrollbar {
-    display: none;
-  }
+  display: none;
+}
 .scrollbar-hidden {
-    -ms-overflow-style: none;  /* Internet Explorer 10+ */
-    scrollbar-width: none;  /* Firefox */
-  }
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}

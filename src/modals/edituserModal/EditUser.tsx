@@ -53,11 +53,11 @@ const EditUser: React.FC<Props> = ({ isOpen, onClose, user }) => {
   ) => {
     try {
       await updateDoc(doc(db, "Users", user.uid), values);
-      toast.success("User updated successfully");
+      toast.success("User updated successfully", {position: "top-center"});
       onClose();
     } catch (error) {
       console.error("Error updating user:", error);
-      toast.error("Failed to update user");
+      toast.error("Failed to update user", {position: "top-center"});
     } finally {
       setSubmitting(false);
     }

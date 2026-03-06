@@ -27,7 +27,7 @@ export const signupvalidationSchema = yup.object().shape({
         .string()
         .required(errorMessage.required)
         .oneOf([yup.ref("password"), null], errorMessage.cpasswordmatch),
-    profilePhoto: yup.mixed().required(errorMessage.img),
+    // profilePhoto: yup.mixed().required(errorMessage.img),
 
 })
 export const updateProfileValidationSchema = yup.object().shape({

@@ -33,26 +33,6 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isOpen }) => {
 
   const user = useSelector((state: RootState) => state.auth.user);
 
-  const [darkMode, setDarkMode] = useState(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("theme");
-      if (saved) return saved === "dark";
-
-      return window.matchMedia("(prefers-color-scheme: dark)").matches;
-    }
-    return false;
-  });
-
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-    }
-  }, [darkMode]);
-
   const { users } = useUsers();
   const dispatch = useDispatch();
 
@@ -68,7 +48,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isOpen }) => {
           lastName: currentUser.lastName,
           email: currentUser.email,
           profilePhoto: currentUser.profilePhoto,
-          role: currentUser.role || "User", // make sure role is set
+          role: currentUser.role || "User",
           phone: currentUser.phone,
           bio: currentUser.bio,
         }),
@@ -91,7 +71,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isOpen }) => {
       navigate("/login");
     } catch (error: any) {
       toast.error(error.message || "Logout failed", {
-        position: "bottom-center",
+        position: "top-center",
       });
     }
   };
@@ -119,20 +99,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isOpen }) => {
       </div>
 
       <div className="flex items-center gap-6">
-        <div className="relative cursor-pointer">
-          <HiBell className="text-2xl hover:text-blue-500 transition" />
-          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
-            3
-          </span>
-        </div>
-
-        <button
-          onClick={() => setDarkMode(!darkMode)}
-          className="text-2xl hover:text-yellow-400 transition"
-          aria-label="Toggle dark mode"
-        >
-          {darkMode ? <HiSun /> : <HiMoon />}
-        </button>
+        
 
         <Dropdown
           className="border-none"

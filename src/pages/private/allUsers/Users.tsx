@@ -18,7 +18,7 @@ function UsersSkeleton() {
       {[...Array(10)].map((_, i) => (
         <div
           key={i}
-          className="h-10 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse "
+          className="h-10 bg-gray-200  rounded-lg animate-pulse "
         ></div>
       ))}
     </div>
@@ -28,13 +28,13 @@ function UsersSkeleton() {
 export default function Users() {
   const { users, loading } = useUsers();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-useTitle("User Sync-Users");
+  useTitle("User Sync-Users");
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900"> 
+    <div className="flex min-h-screen bg-gray-50 ">
       {/* Sidebar */}
       <Sidebarmain isOpen={isSidebarOpen} />
       {/* Navbar */}

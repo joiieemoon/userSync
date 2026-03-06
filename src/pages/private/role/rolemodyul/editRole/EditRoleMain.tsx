@@ -27,9 +27,10 @@ const EditRoleMain = () => {
   };
   return (
     <>
-      <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="flex min-h-screen bg-gray-50 ">
         {/* Sidebar */}
         <Sidebarmain isOpen={isSidebarOpen} />
+   <Navbar toggleSidebar={toggleSidebar} isOpen={isSidebarOpen} />
 
         {/* Main layout */}
         <div
@@ -38,8 +39,7 @@ const EditRoleMain = () => {
           }`}
         >
           {/* Navbar */}
-          <Navbar toggleSidebar={toggleSidebar} isOpen={isSidebarOpen} />
-
+       
           {/* Content */}
           <main className="p-8 pt-19 space-y-6">
             {/* <RoleModyul /> */}

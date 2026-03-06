@@ -17,7 +17,7 @@ const DeleteRole: React.FC<Props> = ({ isOpen, onClose, role, onConfirm }) => {
          <PiWarningCircle className="text-red-500 text-8xl mr-2 text-center font-bold w-full" />
         <div className="flex items-center mb-4">
          
-          <h2 className="text-lg font-semibold dark:text-white">
+          <h2 className="text-lg font-semibold dark:text-white text-center    ">
             Are you sure you want to delete role{" "}
             <span className="font-bold">{role?.roleName}</span>?
           </h2>

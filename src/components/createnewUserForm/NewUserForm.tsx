@@ -16,6 +16,7 @@ import { setDoc, doc, serverTimestamp } from "firebase/firestore";
 import { IoClose } from "react-icons/io5";
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { FileInput, } from "flowbite-react";
 
 type NewUserFormProps = {
   onClose: () => void;
@@ -23,6 +24,7 @@ type NewUserFormProps = {
 const NewUserForm: React.FC<NewUserFormProps> = ({ onClose }) => {
   const { showPassword, togglePassword } = usepasswordtoggle();
   const [isClose, setisClose] = useState(false);
+
   return (
     <div className="flex justify-center items-center  bg-gray-100 dark:bg-gray-900 rounded-2xl">
       <Formik
@@ -35,8 +37,6 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onClose }) => {
           profilePhoto: null,
         }}
         validationSchema={signupvalidationSchema}
-     
-
         onSubmit={async (values, { setSubmitting }) => {
           try {
             // Secondary app create
@@ -76,7 +76,7 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onClose }) => {
             });
           } catch (error: any) {
             toast.error(error.message, {
-              position: "bottom-center",
+              position: "top-center",
               autoClose: 2000,
             });
           } finally {
@@ -129,7 +129,7 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onClose }) => {
                 </Label>
 
                 {field.type === "file" ? (
-                  <input
+                  <FileInput
                     id={field.name}
                     name={field.name}
                     type="file"
@@ -137,7 +137,7 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onClose }) => {
                     onChange={(e) =>
                       setFieldValue(field.name, e.currentTarget.files?.[0])
                     }
-                    className="mt-1 w-full"
+                    className="mt-1 w-full bg-amber-200"
                   />
                 ) : (
                   <TextInput
@@ -154,7 +154,6 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onClose }) => {
                     value={values[field.name as keyof typeof values]}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    required
                     className="mt-1"
                   />
                 )}

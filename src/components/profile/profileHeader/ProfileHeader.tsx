@@ -1,6 +1,7 @@
 import EditBtn from "../../button/editbutton/Editbtn";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../redux/store/store";
+import avtar from "../../../../public/avtar.png";
 
 interface Props {
   onEdit?: () => void;
@@ -28,7 +29,7 @@ export default function ProfileHeader({ onEdit }: Props) {
         {/* LEFT */}
         <div className="flex items-center gap-4">
           <img
-            src={user.profilePhoto || "https://i.pravatar.cc/150?img=12"}
+            src={user.profilePhoto || avtar}
             alt={fullName}
             className="w-16 h-16 rounded-full object-cover border-2 border-gray-200 dark:border-gray-600"
           />

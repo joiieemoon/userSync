@@ -1,93 +1,73 @@
-import React, { useState, useEffect } from "react";
-import Home from "./pages/private/home/Home";
+import React, { useState, useEffect, lazy, Suspense } from "react";
 import { Login as Loginmain } from "./pages/public/login/Login";
 import { Signup as Signupmain } from "./pages/public/signup/Signup";
-import { Route, Routes, Navigate } from "react-router-dom";
-// import { auth } from '../../../components/firebase/firebase';
-// import { auth } from "../../../components/firebase/firebase";
-import { auth } from "../src/components/firebase/firebase";
-import { useAuthListener } from "./redux/authstore/useauthListner";
-import Profile from "./pages/private/profile/Profile";
 import { ToastContainer } from "react-toastify";
-import Users from "./pages/private/allUsers/Users";
-import Dashboard from "./pages/private/dashboard/Dashboard";
-import Role from "./pages/private/role/Role";
-// import EditRole from "../src/modals/addRole/AddRoleModal";
-import EditRoleMain from "./pages/private/role/rolemodyul/editRole/EditRoleMain";
-import ChatLayout from "./pages/private/chat/Layout/ChatLayout";
-import { Spinner } from "flowbite-react";
-import Errorpage from "./pages/public/404ErrorPage/Errorpage";
-// import RoleProtectedRoute from "./routing/RoleProtectedRoute/RoleProtectedRoute";
-import type { RootState } from "./redux/store/store";
 import { useSelector } from "react-redux";
-import RoleProtectedRoute from "./routing/RoleProtectedRoute/RoleProtectedRoute";
-// import RoleModyul from "./pages/private/role/rolemodyul/RoleModyul";
+// import type { RootState } from "./redux/store/store";
+import { Spinner } from "flowbite-react";
+import { Route, Routes, Navigate } from "react-router-dom";
+import { auth } from "./components/firebase/firebase";
+
+const Home = lazy(() => import("./pages/private/home/Home"));
+const Profile = lazy(() => import("./pages/private/profile/Profile"));
+const Users = lazy(() => import("./pages/private/allUsers/Users"));
+const Role = lazy(() => import("./pages/private/role/Role"));
+const EditRoleMain = lazy(
+  () => import("./pages/private/role/rolemodyul/editRole/EditRoleMain"),
+);
+import ChatLayout from "./pages/private/chat/Layout/ChatLayout";
+const Errorpage = lazy(() => import("./pages/public/404ErrorPage/Errorpage"));
+
+import type { User } from "firebase/auth";
 
 const App = () => {
-  useAuthListener();
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
+  const [authReady, setAuthReady] = useState(false);
+
+
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      setUser(user);
-      setLoading(false);
+    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+      setUser(currentUser);
+      setAuthReady(true); 
     });
     return () => unsubscribe();
   }, []);
-  const currentUserPermissions = useSelector(
-    (state: RootState) => state.userPermissions.permissions,
-  );
-  if (loading) {
+
+
+  if (!authReady) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <Spinner
-          color="success"
-          aria-label="Success spinner example"
-          className="w-13 h-13"
-        />
+        <Spinner aria-label="Loading..." /> 
       </div>
     );
   }
-  console.log(currentUserPermissions);
+
   return (
     <>
       <ToastContainer style={{ zIndex: 99999 }} />
-
-      <Routes>
+      <Suspense fallback={<Spinner size="lg" />}>
+        <Routes>
           {!user ? (
             <>
-              <Route
-                path="/login"
-                element={!user ? <Loginmain /> : <Navigate to="/" replace />}
-              />
-              <Route
-                path="/signup"
-                element={!user ? <Signupmain /> : <Navigate to="/" />}
-              />
-              <Route path="/chat" element={<ChatLayout />} />
-            
+              <Route path="/login" element={<Loginmain />} />
+              <Route path="/signup" element={<Signupmain />} />
+              <Route path="*" element={<Navigate to="/login" replace />} />
             </>
           ) : (
             <>
-              <Route
-                path="/"
-                element={user ? <Home /> : <Navigate to="/login" />}
-              />
+              <Route path="/" element={<Home />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/users" element={<Users />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-
+              <Route path="/dashboard" element={<Home />} />
               <Route path="/role" element={<Role />} />
               <Route path="/role/edit" element={<EditRoleMain />} />
-
               <Route path="/role/edit/:id" element={<EditRoleMain />} />
               <Route path="/chat" element={<ChatLayout />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
             </>
           )}
-            
-          <Route path="*" element={<Errorpage />} />
         </Routes>
-    
+      </Suspense>
     </>
   );
 };

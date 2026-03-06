@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../redux/store/store";
-
 import Navbar from "../navbar/Navbar";
-import { seedAuthUsers } from "../../../services/seed/seeduser";
 import { Sidebarmain } from "../../../components/sidebar/Sidebar";
 import dashboardBg from "../../../../public/dashboardbg.jpg";
 import avatar from "../../../../public/avtar.png";
@@ -79,23 +77,6 @@ const Dashboard = () => {
                   from here.
                 </p>
 
-                {/* large datasetpush */}
-                {/* upload json data into firestorge  */}
-                {/* <button
-              onClick={seedAuthUsers}
-              style={{ padding: 10, background: "black", color: "white" }}
-            >
-              Seed Users
-            </button> */}
-
-                {/* <div className="flex justify-center">
-              <div className="bg-cyan-900  text-white rounded-2xl px-10 py-6 shadow-lg">
-                <p className="text-sm opacity-80">User Fields</p>
-                <p className="text-3xl font-bold mt-2">
-                  {user ? Object.keys(user).length : 0}
-                </p>
-              </div>
-            </div> */}
               </div>
             </main>
           </div>

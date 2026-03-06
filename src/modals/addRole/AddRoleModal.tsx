@@ -7,7 +7,8 @@ import {
   doc,
   getDoc,
   query,
-  getDocs,where,
+  getDocs,
+  where,
 } from "firebase/firestore";
 import { useFormik } from "formik";
 import { Button, Label, Sidebar, TextInput } from "flowbite-react";
@@ -102,7 +103,9 @@ const EditRole: React.FC = () => {
           }
           // await Promise.all(updatePromises);
 
-          toast.success("Role updated successfully!");
+          toast.success("Role updated successfully!", {
+            position: "top-center",
+          });
         } else {
           // Add new role
           await addDoc(collection(db, "roles"), {
@@ -110,12 +113,12 @@ const EditRole: React.FC = () => {
             permissions: values.permissions,
             createdAt: new Date(),
           });
-          toast.success("Role added successfully!");
+          toast.success("Role added successfully!", { position: "top-center" });
         }
         navigate("/role");
       } catch (error) {
         console.error("Error saving role:", error);
-        toast.error("Error saving role!");
+        toast.error("Error saving role!", { position: "top-center" });
       }
     },
   });
@@ -144,7 +147,7 @@ const EditRole: React.FC = () => {
               onChange={formik.handleChange}
               disabled={role?.roleName === "admin"} // Disable if role is Admin
               placeholder="Enter role name"
-              className="text-3xl font-bold"
+              className="text-3xl font-bold bg-white text-black dark:bg-white border"
               required
             />
           </div>

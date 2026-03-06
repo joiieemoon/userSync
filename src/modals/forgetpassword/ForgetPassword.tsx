@@ -32,7 +32,7 @@ export default function ForgotPassword({
     try{
       await sendPasswordResetEmail(auth,email.trim());
       // alert("Password reset email sent");
-      toast.success("password reset email sent");
+      toast.success("password reset email sent", {position: "top-center"});
       onClose();
       setEmail("");
 
@@ -41,7 +41,7 @@ export default function ForgotPassword({
     catch(error){
 // alert(error.message);
 toast.error(error.message ,{
-  position:"bottom-center"
+  position:"top-center"
 })
     }
   };

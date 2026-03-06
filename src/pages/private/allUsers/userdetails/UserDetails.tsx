@@ -12,7 +12,8 @@ import EditUser from "../../../../modals/edituserModal/EditUser";
 import { PaginationMain } from "../../../../components/pagination/Pagination";
 import { canPermit } from "../../../../helper/canPermit/canpermit";
 import { Spinner } from "flowbite-react/components/Spinner";
-
+import { MdDeleteOutline } from "react-icons/md";
+import { MdOutlineEdit } from "react-icons/md";
 export default function UsersDetails() {
   const { users, loading } = useUsers();
   const [userToDelete, setUserToDelete] = useState(null);
@@ -74,7 +75,7 @@ export default function UsersDetails() {
 
   return (
     <div className="p-6 mt-10 rounded-2xl shadow-2xl">
-      <h2 className="text-3xl mt-2 font-semibold mb-2 dark:text-white">
+      <h2 className="text-3xl mt-2 font-semibold mb-2 ">
         All Users
       </h2>
 
@@ -93,7 +94,7 @@ export default function UsersDetails() {
           />
         )}
 
-        <AddNewuserModal
+        <AddNewuserModal  
           isOpen={isAddUserOpen}
           onClose={() => setIsAddUserOpen(false)}
         />
@@ -142,7 +143,7 @@ export default function UsersDetails() {
                         onClick={() => setUserToEdit(u)}
                         className="cursor-pointer"
                       >
-                        <FaRegEdit className="text-amber-300 text-2xl" />
+                        <MdOutlineEdit className="text-black text-2xl" />
                       </button>
                     )}
 
@@ -151,7 +152,7 @@ export default function UsersDetails() {
                         onClick={() => setUserToDelete(u)}
                         className="cursor-pointer"
                       >
-                        <AiOutlineUserDelete className="text-red-400 text-2xl " />
+                        <MdDeleteOutline className="text-red-400 text-2xl " />
                       </button>
                     )}
                   </td>

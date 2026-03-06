@@ -50,7 +50,11 @@ const Home = () => {
           <div className="">
             <h1 className="text-center h-screen mt-7 p-7 flex justify-center items-center border  text-5xl">
               {" "}
-              <Spinner color="success" aria-label="Success spinner example "  className="w-15 h-15  "/>
+              <Spinner
+                color="success"
+                aria-label="Success spinner example "
+                className="w-15 h-15  "
+              />
             </h1>
           </div>
         )}

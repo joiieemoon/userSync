@@ -16,6 +16,7 @@ import {
   doc,
   Timestamp,
 } from "firebase/firestore";
+import { MdOutlineEdit } from "react-icons/md";
 import { db } from "../../../../components/firebase/firebase";
 import useUsers from "../../../../hooks/useUser/useUsers";
 import SearchBar from "../../../../components/SearchBar/SearchBar";
@@ -82,10 +83,13 @@ const RoleModyul = () => {
       // );
       toast.success(
         `Role '${roleName}' deleted successfully! Users have been updated to 'No Role'.`,
+        { position: "top-center" },
       );
     } catch (error: any) {
       console.error(error);
-      toast.error("Error deleting role: " + error.message);
+      toast.error("Error deleting role: " + error.message, {
+        position: "top-center",
+      });
     }
   };
 
@@ -106,7 +110,7 @@ const RoleModyul = () => {
 
   return (
     <div className="p-6 mt-10 rounded-2xl shadow-2xl">
-      <h2 className="text-3xl font-semibold mb-4 dark:text-white">Roles</h2>
+      <h2 className="text-3xl font-semibold mb-4 ">Roles</h2>
 
       <div className="mb-3 flex justify-between items-center">
         <SearchBar
@@ -171,7 +175,7 @@ const RoleModyul = () => {
                       <button
                         onClick={() => navigation(`/role/edit/${role.id}`)}
                       >
-                        <CiEdit className="text-2xl cursor-pointer" />
+                        <MdOutlineEdit className="text-2xl cursor-pointer" />
                       </button>
                     )}
                     {canPermit(currentUserPermissions, "role", "canDelete") && (
@@ -214,7 +218,6 @@ const RoleModyul = () => {
           }
         }}
       />
-    
     </div>
   );
 };

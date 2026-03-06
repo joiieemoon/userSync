@@ -22,7 +22,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
- 
   const { permissions, username } = useSelector(
     (state: RootState) => state.userPermissions,
   );
@@ -30,12 +29,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
   return (
     <div
       className={`
-        fixed top-0 left-0 h-screen w-64 bg-white dark:bg-gray-900
+        fixed top-0 left-0 h-screen w-64 bg-white 
         shadow-lg transform transition-transform duration-300 ease-in-out z-20 pt-6
         ${isOpen ? "translate-x-0" : "-translate-x-full"}
       `}
     >
-      <Flowbitesidebar>
+      <Flowbitesidebar >
         <SidebarItems>
           <SidebarItemGroup>
             <SidebarItem

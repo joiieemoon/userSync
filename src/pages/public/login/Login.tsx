@@ -5,8 +5,6 @@ import { loginFields } from "../../../components/formfields/formconfig";
 import { Link } from "react-router-dom";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-// import { Formik } from "formik";
-// import { auth } from 'firebase/auth';
 import { auth } from "../../../components/firebase/firebase";
 import { loginvalidationSchema } from "../../../components/validations/validationSchema";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -16,14 +14,20 @@ import { useNavigate } from "react-router-dom";
 import { HiEye, HiEyeOff } from "react-icons/hi";
 import { useState } from "react";
 import { usepasswordtoggle } from "../../../components/formfields/usepasswordtoggle";
-// import ForgetPassword from "../../../modals/forgetpassword/ForgetPassword"
 import ForgotPassword from "../../../modals/forgetpassword/ForgetPassword";
-// import { field } from 'firebase/firestore/pipelines';
 //redux
 import { useDispatch } from "react-redux";
 import { setUser } from "../../../redux/store/authSlice";
 import type { AppDispatch } from "../../../redux/store/store";
-import { collection, doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
 import { db } from "../../../components/firebase/firebase";
 import { setUserPermissions } from "../../../redux/permissionslice/permissionslice";
 
@@ -36,23 +40,18 @@ const loginValidationSchema = Yup.object({
 
 export const Login = () => {
   const navigate = useNavigate();
-  // const [showpassword, setshowpassword] = useState<Record<string, boolean>>({});
   const { showPassword, togglePassword } = usepasswordtoggle();
   const [showForgot, setShowForgot] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
+
   const generateAvatar = (name: string) => {
     return `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(
       name,
     )}`;
   };
-  // const togglepassword = (fieldName: string) => {
-  //   setshowpassword((prev) => ({
-  //     ...prev,
-  //     [fieldName]: !prev[fieldName],
-  //   }));
-  // }
+
   return (
-    <div className="flex flex-col md:flex-row min-h-screen dark:bg-black">
+    <div className="flex flex-col md:flex-row min-h-screen ">
       <div className="flex-1 flex items-center justify-center p-6">
         <Formik
           initialValues={{
@@ -73,7 +72,7 @@ export const Login = () => {
               if (user) {
                 // Firestore fetch
                 const snap = await getDoc(doc(db, "Users", user.uid));
-
+                
                 if (snap.exists()) {
                   const data = snap.data();
                   const fullName = `${data.firstName} ${data.lastName}`;
@@ -87,7 +86,7 @@ export const Login = () => {
                     await setDoc(
                       doc(db, "Users", user.uid),
                       { profilePhoto },
-                      { merge: true }, // merge  don't overwrite other fields
+                      { merge: true }, // merge  
                     );
                   }
                   let rolePermissions = {};
@@ -106,7 +105,7 @@ export const Login = () => {
                     }
                   }
 
-                  // console.log("Fetched Permissions:", rolePermissions);
+              
 
                   dispatch(
                     setUser({
@@ -136,14 +135,14 @@ export const Login = () => {
                 position: "top-center",
               });
 
-              navigate("/", { replace: true });
+              // navigate("/", { replace: true });
             } catch (error) {
               const cleanMessage = error.message
                 .replace("Firebase:", "")
                 .trim();
 
               toast.error("Login failed! " + cleanMessage, {
-                position: "bottom-center",
+                position: "top-center",
               });
             } finally {
               setSubmitting(false);
@@ -158,13 +157,14 @@ export const Login = () => {
             handleBlur,
 
             touched,
+            isSubmitting,
           }) => (
             <Form
               onSubmit={handleSubmit}
-              className="w-full max-w-md bg-white/80 dark:bg-black p-10 rounded-2xl shadow-2xl space-y-5"
+              className="w-full max-w-md bg-white/80  p-10 rounded-2xl shadow-2xl space-y-5"
             >
               <div className="text-center">
-                <h2 className="text-3xl font-bold dark:text-white">
+                <h2 className="text-3xl font-bold ">
                   Welcome Back
                 </h2>
               </div>
@@ -174,7 +174,7 @@ export const Login = () => {
                 <div key={field.name}>
                   <Label
                     htmlFor={field.name}
-                    className="text-gray-800 dark:text-white"
+                    className="text-black dark:text-black"
                   >
                     {field.label}
                   </Label>
@@ -195,7 +195,6 @@ export const Login = () => {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       placeholder={field.placeholder}
-                      required
                       className="mt-1  placeholder-opacity-50"
                     />
                     {field.type === "password" && (
@@ -242,13 +241,15 @@ export const Login = () => {
 
               <Button
                 type="submit"
+                disabled={isSubmitting}
+               
                 className="w-full mt-0 bg-amber-300 text-black cursor-pointer border-none"
               >
-                Login
+                {isSubmitting ? "Login..." : "Login"}
               </Button>
 
-              <span className="dark:text-white">
-                New user ?{" "}
+              <span className="">
+                New user ?{" "} 
                 <Link to="/signup" className="text-blue-600">
                   Sign Up
                 </Link>

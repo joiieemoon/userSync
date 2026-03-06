@@ -9,12 +9,6 @@ import {
 } from "flowbite-react";
 import { Virtuoso } from "react-virtuoso";
 import { auth } from "../../../../components/firebase/firebase";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionPanel,
-  AccordionTitle,
-} from "flowbite-react";
 import SearchBar from "../../../../components/SearchBar/SearchBar";
 import type { RootState } from "../../../../redux/store/store";
 import { useSelector } from "react-redux";
@@ -22,7 +16,7 @@ import dashboardBg from "../../../../../public/dashboardbg.jpg";
 import avtar from "../../../../../public/avtar.png";
 import useUsers from "../../../../hooks/useUser/useUsers";
 import AddNewChatModal from "../../../../modals/AddNewChatModal/AddNewChatModal";
-import { Droptest } from "../../../../try/Droptest";
+
 const ChatModyul = () => {
   const [isOpen, setIsOpen] = useState(false);
 
