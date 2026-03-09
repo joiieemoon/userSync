@@ -152,7 +152,7 @@ export default function UsersDetails() {
                         onClick={() => setUserToDelete(u)}
                         className="cursor-pointer"
                       >
-                        <MdDeleteOutline className="text-red-400 text-2xl " />
+                        <MdDeleteOutline className="text-black text-2xl " />
                       </button>
                     )}
                   </td>
@@ -179,7 +179,7 @@ export default function UsersDetails() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <PaginationMain
+        <PaginationMain 
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={(page) => setCurrentPage(Number(page))}

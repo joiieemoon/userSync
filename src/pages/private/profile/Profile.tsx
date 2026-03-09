@@ -34,7 +34,7 @@ useTitle("User Sync-Profile");
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="flex min-h-screen bg-gray-50 ">
       {/* Sidebar */}
       <Sidebarmain isOpen={isSidebarOpen} />
       <Navbar toggleSidebar={toggleSidebar} />

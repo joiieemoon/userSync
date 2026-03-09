@@ -36,9 +36,9 @@ const DeleteUser: React.FC<Props> = ({ isOpen, onClose, user }) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white w-80 p-6 dark:bg-gray-900 rounded-xl shadow-lg">
+      <div className="bg-white w-80 p-6  rounded-xl shadow-lg">
          <PiWarningCircle className="text-red-500 text-8xl mr-2 text-center font-bold w-full" />
-        <h2 className="text-lg font-semibold mb-4 dark:text-white">
+        <h2 className="text-lg font-semibold mb-4  text-center">
           Are you sure you want to delete {user?.firstName} {user?.lastName}?
         </h2>
 

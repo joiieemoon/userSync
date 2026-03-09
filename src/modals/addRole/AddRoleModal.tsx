@@ -147,7 +147,7 @@ const EditRole: React.FC = () => {
               onChange={formik.handleChange}
               disabled={role?.roleName === "admin"} // Disable if role is Admin
               placeholder="Enter role name"
-              className="text-3xl font-bold bg-white text-black dark:bg-white border"
+              className="text-3xl font-bold bg-white text-black dark:bg-white "
               required
             />
           </div>

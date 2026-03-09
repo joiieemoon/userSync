@@ -24,7 +24,7 @@ const Dashboard = () => {
   }
   return (
     <>
-      <div className="relative flex min-h-screen overflow-hidden">
+      <div className="relative flex min-h-screen overflow-hidden !bg-white">
         {/* Background */}
         <div
           className="absolute inset-0 bg-cover bg-center"
@@ -35,13 +35,13 @@ const Dashboard = () => {
         />
 
         {/* Sidebar */}
-        <Sidebarmain isOpen={isSidebarOpen} />
+        <Sidebarmain isOpen={isSidebarOpen}  />
         <Navbar toggleSidebar={toggleSidebar} />
 
         {/* Main */}
 
         {!user ? (
-          <div className="flex items-center justify-center min-h-screen">
+          <div className="flex items-center justify-center min-h-screen ">
             <Spinner aria-label="Loading profile" />
           </div>
         ) : (

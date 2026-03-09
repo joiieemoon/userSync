@@ -25,22 +25,30 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
   const { permissions, username } = useSelector(
     (state: RootState) => state.userPermissions,
   );
+
   if (!username) return null;
+
   return (
     <div
       className={`
-        fixed top-0 left-0 h-screen w-64 bg-white 
+        fixed top-0 left-0 h-screen w-64
+        !bg-white 
         shadow-lg transform transition-transform duration-300 ease-in-out z-20 pt-6
         ${isOpen ? "translate-x-0" : "-translate-x-full"}
       `}
     >
-      <Flowbitesidebar >
-        <SidebarItems>
-          <SidebarItemGroup>
+      <Flowbitesidebar className="!bg-white border-r border-gray-200 h-full">
+        <SidebarItems className="!bg-white flex flex-col h-full justify-between">
+          <SidebarItemGroup className="!bg-white">
             <SidebarItem
-              href="dashboard"
+              onClick={() => navigate("/dashboard")}
               icon={HiChartPie}
-              className="hover:text-cyan-500"
+              className={`cursor-pointer !bg-white text-black dark:text-black
+              hover:!bg-gray-100 hover:text-blue-700 ${
+                location.pathname === "/dashboard" || location.pathname === "/"
+                  ? "bg-blue-50 text-blue-600"
+                  : ""
+              }`}
             >
               Dashboard
             </SidebarItem>
@@ -49,7 +57,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
               <SidebarItem
                 onClick={() => navigate("/users")}
                 icon={HiUser}
-                className="hover:text-yellow-500 cursor-pointer"
+                className={`cursor-pointer !bg-white text-black dark:text-black
+              hover:!bg-gray-100 hover:text-blue-700 ${
+                location.pathname === "/users" ? "bg-blue-50 text-blue-600" : ""
+              }`}
               >
                 Users
               </SidebarItem>
@@ -59,41 +70,50 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
               <SidebarItem
                 onClick={() => navigate("/role")}
                 icon={HiShoppingBag}
-                className="hover:text-red-500 cursor-pointer"
+                className={`cursor-pointer !bg-white text-black dark:text-black
+              hover:!bg-gray-100 hover:text-blue-700 ${
+                location.pathname === "/role" ? "bg-white-50 " : ""
+              }`}
               >
                 Role
               </SidebarItem>
             )}
 
-            {canPermit(permissions, "chat", "canView") && (
-              <SidebarItem
-                onClick={() => navigate("/chat")}
-                icon={IoChatbox}
-                className="hover:text-pink-400 cursor-pointer"
-              >
-                Chat
-              </SidebarItem>
-            )}
+            <SidebarItem
+              onClick={() => navigate("/chat")}
+              icon={IoChatbox}
+              className={`cursor-pointer !bg-white text-black dark:text-black
+              hover:!bg-gray-100 hover:text-blue-700 
+                 ${location.pathname === "/chat" ? "bg-blue-50 text-blue-600 " : ""}`}
+            >
+              Chat
+            </SidebarItem>
 
             {canPermit(permissions, "campaign", "canView") && (
               <SidebarItem
                 onClick={() => navigate("/campaign")}
                 icon={MdCampaign}
-                className="hover:text-pink-400"
+                className={`cursor-pointer !bg-white text-black dark:text-black
+              hover:!bg-gray-100 text-black border-none hover:text-purple-500 ${
+                location.pathname === "/campaign"
+                  ? "bg-blue-50 text-blue-600"
+                  : ""
+              }`}
               >
                 Campaign
               </SidebarItem>
             )}
           </SidebarItemGroup>
 
-          <SidebarItemGroup className="mt-auto">
+          <SidebarItemGroup className="outline-none border-none">
             <SidebarItem
               as={Link}
               to={location.pathname === "/profile" ? "/" : "/profile"}
               icon={
                 location.pathname === "/profile" ? IoHomeOutline : TbUserEdit
               }
-              className="bg-amber-300 text-black font-semibold hover:text-blue-300"
+              className=" !bg-white text-black dark:text-black font-medium
+              hover:!bg-gray-100 text-black border-none  "
             >
               {location.pathname === "/profile" ? "Home" : "Edit Profile"}
             </SidebarItem>

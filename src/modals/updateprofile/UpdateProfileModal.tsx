@@ -5,13 +5,14 @@ import { db } from "../../components/firebase/firebase";
 import { updateUser } from "../../redux/store/authSlice";
 import type { AppDispatch } from "../../redux/store/store";
 import { toast } from "react-toastify";
-import { FileInput } from "flowbite-react";
+import { FileInput, fileInputTheme } from "flowbite-react";
 import "react-toastify/dist/ReactToastify.css";
 import { updateProfileValidationSchema } from "../../../src/components/validations/validationSchema";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 // import { avatarTheme } from "flowbite-react";
 import avatar from "../../../public/avtar.png";
 import useTitle from "../../hooks/useTitle/useTitle";
+import { ValidationError } from "yup";
 interface Props {
   user: {
     uid: string;
@@ -86,9 +87,9 @@ export default function UpdateProfileModal({ user, onClose }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 dark:bg-gray-900 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl w-full max-w-3xl p-8 md:p-10 overflow-y-auto max-h-[90vh]">
-        <h2 className="text-2xl md:text-3xl font-bold mb-8 text-gray-900 dark:text-white">
+    <div className="fixed inset-0 bg-black/60  flex items-center justify-center z-50 p-4">
+      <div className="bg-white  rounded-3xl shadow-2xl w-full max-w-3xl p-8 md:p-10 overflow-y-auto max-h-[90vh]">
+        <h2 className="text-2xl md:text-3xl font-bold mb-8 text-gray-900 ">
           Update Profile
         </h2>
 
@@ -97,40 +98,44 @@ export default function UpdateProfileModal({ user, onClose }: Props) {
           validationSchema={updateProfileValidationSchema}
           onSubmit={handleSubmit}
         >
-          {({ values ,isSubmitting}) => (
+          {({ values, isSubmitting,setFieldValue }) => (
             <Form className="space-y-6">
               {/* Avatar */}
               <div className="flex flex-col md:flex-row items-center gap-4 mb-6">
                 <img
                   src={preview || values.profilePhoto || avatar}
-                  className="w-24 h-24 md:w-28 md:h-28 rounded-full object-cover border-2 border-gray-300 dark:border-gray-600"
+                  className="w-24 h-24 md:w-28 md:h-28 rounded-full object-cover border-2 border-gray-300 "
                 />
 
                 <FileInput
                   type="file"
                   accept="image/*"
                   onChange={(e) => {
-                    if (e.target.files?.[0]) {
-                      const file = e.target.files[0];
-                      setSelectedFile(file);
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      setSelectedFile(file); 
                       setPreview(URL.createObjectURL(file));
+                      setFieldValue("profilePhoto", file); 
                     }
                   }}
                   className="text-sm"
                 />
+                <ErrorMessage name="profilePhoto">
+                  {(msg) => <p className="text-red-500 text-xs mt-1">{msg}</p>}
+                </ErrorMessage>
               </div>
 
               {/* Fields */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {["firstName", "lastName", "email", "phone"].map((field) => (
                   <div key={field}>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    <label className="block text-sm font-medium text-gray-700  mb-1">
                       {field}
                     </label>
 
                     <Field
                       name={field}
-                      className="w-full px-4 py-3 bg-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                      className="w-full px-4 py-3 bg-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
 
                     <ErrorMessage name={field}>
@@ -143,7 +148,7 @@ export default function UpdateProfileModal({ user, onClose }: Props) {
 
                 {/* Bio */}
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label className="block text-sm font-medium text-gray-700  mb-1">
                     Bio
                   </label>
 
@@ -151,7 +156,7 @@ export default function UpdateProfileModal({ user, onClose }: Props) {
                     name="bio"
                     as="textarea"
                     rows={4}
-                    className="w-full px-4 py-3 bg-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    className="w-full px-4 py-3 bg-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 border-none"
                   />
 
                   <ErrorMessage name="bio">
@@ -178,7 +183,7 @@ export default function UpdateProfileModal({ user, onClose }: Props) {
                   type="submit"
                   className="px-6 py-3 bg-amber-300 text-black rounded-xl cursor-pointer"
                 >
-                   {isSubmitting?"Saving....":"Save Changes"}
+                  {isSubmitting ? "Saving...." : "Save Changes"}
                 </button>
               </div>
             </Form>

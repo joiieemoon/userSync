@@ -27,3 +27,4 @@ const SearchBar = ({ value, onchange }: SearchBarProps) => {
 };
 
 export default SearchBar;
+  

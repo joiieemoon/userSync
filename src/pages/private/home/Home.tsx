@@ -39,7 +39,7 @@ const Home = () => {
 
   return (
     <div className="flex">
-      <Sidebarmain isOpen={isSidebarOpen} />
+      <Sidebarmain isOpen={isSidebarOpen} className="!bg-white"/>
 
       <div className="flex-1 min-h-screen bg-gray-100 dark:bg-gray-200">
         <Navbar toggleSidebar={toggleSidebar} user={userDetails} />

@@ -65,8 +65,8 @@ const EditUser: React.FC<Props> = ({ isOpen, onClose, user }) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-900 w-96 p-6 rounded-xl shadow-lg">
-        <h2 className="text-xl font-semibold mb-4 dark:text-white">
+      <div className="bg-white  w-96 p-6 rounded-xl shadow-lg">
+        <h2 className="text-xl font-semibold mb-4 ">
           Edit User {user.firstName}
         </h2>
 

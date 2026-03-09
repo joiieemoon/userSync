@@ -79,9 +79,8 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isOpen }) => {
   return (
     <FlowbiteNavbar
       fluid
-      className={`fixed top-0 z-50 w-full bg-white dark:bg-gray-900 text-gray-700 dark:text-white  shadow-md px-6 transition-all duration-300
-        ${isOpen ? "pl-64" : "pl-6"}`}
-      style={{ height: "64px" }}
+      className={`fixed top-0 z-50 w-full !bg-white text-black   shadow-md px-6 transition-all duration-300
+  ${isOpen ? "pl-64" : "pl-6"}`}
     >
       {/* LEFT SECTION */}
       <div className="flex items-center gap-4 border-none">
@@ -99,10 +98,8 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isOpen }) => {
       </div>
 
       <div className="flex items-center gap-6">
-        
-
         <Dropdown
-          className="border-none"
+          className="border-none !bg-white text-black"
           arrowIcon={false}
           inline
           label={
@@ -110,28 +107,28 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isOpen }) => {
           }
         >
           <DropdownHeader>
-            <span className="block text-sm font-semibold">
+            <span className="block text-sm text-black font-semibold">
               {user
                 ? `${user.firstName} ${user.lastName} (${user.role})`
                 : "Guest"}
             </span>
-            <span className="block truncate text-sm text-gray-500">
+            <span className="block truncate text-sm text-black">
               {user?.email}
             </span>
           </DropdownHeader>
 
-          <DropdownItem>
+          <DropdownItem className="!bg-white text-black">
             {location.pathname === "/profile" ? (
               <div
                 onClick={() => navigate("/")}
-                className="flex items-center gap-2 hover:text-green-500 w-full cursor-pointer"
+                className="flex items-center gap-2 hover:text-green-500 w-full cursor-pointer text-black"
               >
                 <IoHomeOutline /> Home
               </div>
             ) : (
               <Link
                 to="/profile"
-                className="flex items-center gap-2 hover:text-blue-300"
+                className="flex items-center gap-2 hover:text-blue-300 text-black "
               >
                 <FaRegUserCircle />
                 Edit Profile
@@ -141,8 +138,8 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isOpen }) => {
 
           <DropdownDivider />
 
-          <DropdownItem onClick={handleLogout}>
-            <div className="flex items-center gap-2 hover:text-red-500 w-full cursor-pointer">
+          <DropdownItem onClick={handleLogout} className="!bg-white">
+            <div className="flex items-center gap-2 text-black hover:text-red-500 w-full cursor-pointer">
               <RiLogoutBoxLine />
               Sign out
             </div>

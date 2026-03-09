@@ -11,6 +11,7 @@ import { auth } from "./components/firebase/firebase";
 const Home = lazy(() => import("./pages/private/home/Home"));
 const Profile = lazy(() => import("./pages/private/profile/Profile"));
 const Users = lazy(() => import("./pages/private/allUsers/Users"));
+
 const Role = lazy(() => import("./pages/private/role/Role"));
 const EditRoleMain = lazy(
   () => import("./pages/private/role/rolemodyul/editRole/EditRoleMain"),
@@ -24,20 +25,18 @@ const App = () => {
   const [user, setUser] = useState<User | null>(null);
   const [authReady, setAuthReady] = useState(false);
 
-
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
       setUser(currentUser);
-      setAuthReady(true); 
+      setAuthReady(true);
     });
     return () => unsubscribe();
   }, []);
 
-
   if (!authReady) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <Spinner aria-label="Loading..." /> 
+        <Spinner aria-label="Loading..." />
       </div>
     );
   }
@@ -63,7 +62,9 @@ const App = () => {
               <Route path="/role/edit" element={<EditRoleMain />} />
               <Route path="/role/edit/:id" element={<EditRoleMain />} />
               <Route path="/chat" element={<ChatLayout />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
+              <Route path="/login" element={<Navigate to="/" replace />} />
+              <Route path="/signup" element={<Navigate to="/" replace />} />
+              <Route path="*" element={<Errorpage />} />
             </>
           )}
         </Routes>

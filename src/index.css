@@ -8,7 +8,10 @@ input::placeholder {
 :root {
   color-scheme: light !important;
 }
-
+/* Force white background on the internal sidebar wrapper */
+.sidebar-bg-white > div:first-child {
+  background-color: white !important;
+}
 .scrollbar-hidden::-webkit-scrollbar {
   display: none;
 }
@@ -16,3 +19,28 @@ input::placeholder {
   -ms-overflow-style: none; /* Internet Explorer 10+ */
   scrollbar-width: none; /* Firefox */
 }
+
+[data-testid="flowbite-sidebar-items"] {
+  background-color: white !important;
+}
+
+[data-testid="flowbite-sidebar-items"] > div {
+  background-color: white !important;
+}
+
+
+.h-full.overflow-y-auto.bg-gray-50 {
+  background-color: white !important;
+}
+
+/* For dark mode too */
+.dark .h-full.overflow-y-auto.bg-gray-50 {
+  background-color: #f9fafb ; /* or any light color you prefer */
+}
+
+
+/* .leading-tight{
+  color: black;
+  background-color: #dce1e6;
+  
+} */
