@@ -16,7 +16,8 @@ import { auth } from "../../../components/firebase/firebase";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../redux/store/store";
-import { IoHomeOutline } from "react-icons/io5";
+
+import { BiSolidLogOut } from "react-icons/bi";
 import avatar from "../../../../public/avtar.png";
 import { setUserPermissions } from "../../../redux/permissionslice/permissionslice";
 import { useDispatch } from "react-redux";
@@ -26,7 +27,7 @@ interface NavbarProps {
   toggleSidebar: () => void;
   isOpen: boolean;
 }
-
+import { IoMdHome } from "react-icons/io";
 const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isOpen }) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -99,38 +100,38 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isOpen }) => {
 
       <div className="flex items-center gap-6">
         <Dropdown
-          className="border-none !bg-white text-black"
+          className="border-none !bg-white text-black "
           arrowIcon={false}
           inline
           label={
             <Avatar alt="User" img={user?.profilePhoto || avatar} rounded />
           }
         >
-          <DropdownHeader>
-            <span className="block text-sm text-black font-semibold">
+          <DropdownHeader className="bg-gray-200">
+            <span className="block text-sm text-black font-semibold  ">
               {user
                 ? `${user.firstName} ${user.lastName} (${user.role})`
                 : "Guest"}
             </span>
-            <span className="block truncate text-sm text-black">
+            <span className="block truncate text-sm text-gray-500">
               {user?.email}
             </span>
           </DropdownHeader>
 
-          <DropdownItem className="!bg-white text-black">
+          <DropdownItem className="!bg-white text-black ">
             {location.pathname === "/profile" ? (
               <div
                 onClick={() => navigate("/")}
-                className="flex items-center gap-2 hover:text-green-500 w-full cursor-pointer text-black"
+                className="flex items-center gap-2 hover:text-green-500 w-full cursor-pointer  text-black "
               >
-                <IoHomeOutline /> Home
+                <IoMdHome className="text-black  " /> Home
               </div>
             ) : (
               <Link
                 to="/profile"
-                className="flex items-center gap-2 hover:text-blue-300 text-black "
+                className="flex items-center gap-2 hover:text-blue-300 text-gray-600 "
               >
-                <FaRegUserCircle />
+                <FaRegUserCircle className="text-xl text-gray-400" />
                 Edit Profile
               </Link>
             )}
@@ -138,9 +139,9 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isOpen }) => {
 
           <DropdownDivider />
 
-          <DropdownItem onClick={handleLogout} className="!bg-white">
-            <div className="flex items-center gap-2 text-black hover:text-red-500 w-full cursor-pointer">
-              <RiLogoutBoxLine />
+          <DropdownItem onClick={handleLogout} className="!bg-white flex items-center ">
+            <div className="flex items-center gap-2   hover:text-red-500 w-full cursor-pointer text-gray-600">
+              <BiSolidLogOut  className="text-xl text-gray-400"/>
               Sign out
             </div>
           </DropdownItem>
