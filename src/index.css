@@ -28,19 +28,28 @@ input::placeholder {
   background-color: white !important;
 }
 
-
 .h-full.overflow-y-auto.bg-gray-50 {
   background-color: white !important;
 }
 
-/* For dark mode too */
+input{
+  background-color: #dce1e6;
+  border: none;
+  color: black;
+}
 .dark .h-full.overflow-y-auto.bg-gray-50 {
-  background-color: #f9fafb ; /* or any light color you prefer */
+  background-color: #f9fafb; 
+}
+/* pagination */
+
+ul > li > button {
+  background-color: #dce1e6 !important;
+  color: #000 !important;
+  border-color: #dce1e6 !important;
 }
 
-
-/* .leading-tight{
-  color: black;
-  background-color: #dce1e6;
-  
-} */
+li[aria-current="page"] > button {
+  background-color: #FFD54F !important;
+  color: rgb(0, 0, 0) !important;
+  border-color: #fad355 !important;
+}
