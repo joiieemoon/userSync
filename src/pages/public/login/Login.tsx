@@ -1,6 +1,5 @@
 import loginCover from "../../../assets/img/logincover.png";
 import { Button, Checkbox, Label, TextInput } from "flowbite-react";
-// import { loginFields } from "../components/formfields/formconfig";
 import { loginFields } from "../../../components/formfields/formconfig";
 import { Link } from "react-router-dom";
 import { Formik, Form } from "formik";
@@ -43,7 +42,7 @@ export const Login = () => {
   const { showPassword, togglePassword } = usepasswordtoggle();
   const [showForgot, setShowForgot] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
-
+  const [isDisable, setisDisable] = useState(false);
   const generateAvatar = (name: string) => {
     return `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(
       name,
@@ -51,7 +50,7 @@ export const Login = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen ">
+    <div className="flex flex-col md:flex-row min-h-screen overflow-hidden ">
       <div className="flex-1 flex items-center justify-center p-6">
         <Formik
           initialValues={{
@@ -72,7 +71,7 @@ export const Login = () => {
               if (user) {
                 // Firestore fetch
                 const snap = await getDoc(doc(db, "Users", user.uid));
-                
+
                 if (snap.exists()) {
                   const data = snap.data();
                   const fullName = `${data.firstName} ${data.lastName}`;
@@ -86,7 +85,7 @@ export const Login = () => {
                     await setDoc(
                       doc(db, "Users", user.uid),
                       { profilePhoto },
-                      { merge: true }, // merge  
+                      { merge: true }, // merge
                     );
                   }
                   let rolePermissions = {};
@@ -104,8 +103,6 @@ export const Login = () => {
                       rolePermissions = roleData.permissions || {};
                     }
                   }
-
-              
 
                   dispatch(
                     setUser({
@@ -133,6 +130,7 @@ export const Login = () => {
 
               toast.success("User Login Successfully!!", {
                 position: "top-center",
+                onClose: () => setisDisable(false), 
               });
 
               // navigate("/", { replace: true });
@@ -140,9 +138,11 @@ export const Login = () => {
               const cleanMessage = error.message
                 .replace("Firebase:", "")
                 .trim();
-
+              setisDisable(true);
               toast.error("Login failed! " + cleanMessage, {
                 position: "top-center",
+                autoClose:2000,
+                onClose: () => setisDisable(false),
               });
             } finally {
               setSubmitting(false);
@@ -161,12 +161,11 @@ export const Login = () => {
           }) => (
             <Form
               onSubmit={handleSubmit}
+              validationSchema={!showForgot ? loginValidationSchema : null}
               className="w-full max-w-md bg-white/80  p-10 rounded-2xl shadow-2xl space-y-5"
             >
               <div className="text-center">
-                <h2 className="text-3xl font-bold ">
-                  Welcome Back
-                </h2>
+                <h2 className="text-3xl font-bold ">Welcome Back</h2>
               </div>
               <ToastContainer position="top-center" />
 
@@ -223,33 +222,27 @@ export const Login = () => {
                   <div className="w-full text-right">
                     <span
                       className="text-blue-500 cursor-pointer text-sm"
-                      onClick={() => setShowForgot(true)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setShowForgot(true);
+                      }}
                     >
                       Forgot Password?
                     </span>
                   </div>
                 </div>
               </div>
-              <ForgotPassword
-                isOpen={showForgot}
-                onClose={() => setShowForgot(false)}
-                onSubmit={(email) => {
-                  console.log("Reset email:", email);
-                  setShowForgot(false);
-                }}
-              />
 
               <Button
                 type="submit"
-                disabled={isSubmitting}
-               
+                disabled={isSubmitting || isDisable}
                 className="w-full mt-0 bg-amber-300 text-black cursor-pointer border-none"
               >
-                {isSubmitting ? "Login..." : "Login"}
+                {isSubmitting || isDisable ? "Login..." : "Login"}
               </Button>
 
               <span className="">
-                New user ?{" "} 
+                New user ?{" "}
                 <Link to="/signup" className="text-blue-600">
                   Sign Up
                 </Link>
@@ -258,12 +251,19 @@ export const Login = () => {
           )}
         </Formik>
       </div>
-
-      <div className="hidden md:flex flex-1">
+      <ForgotPassword
+        isOpen={showForgot}
+        onClose={() => setShowForgot(false)}
+        onSubmit={(email) => {
+          console.log("Reset email:", email);
+          setShowForgot(false);
+        }}
+      />
+      <div className="hidden md:flex flex-1 ">
         <img
           src={loginCover}
           alt="usersync"
-          className="w-full h-full object-cover"
+          className="w-full h-screen object-cover"
         />
       </div>
     </div>

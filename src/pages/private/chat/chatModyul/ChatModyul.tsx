@@ -16,6 +16,8 @@ import dashboardBg from "../../../../../public/dashboardbg.jpg";
 import avtar from "../../../../../public/avtar.png";
 import useUsers from "../../../../hooks/useUser/useUsers";
 import AddNewChatModal from "../../../../modals/AddNewChatModal/AddNewChatModal";
+import Chatpannel from "../noConversation/NoSelectedChat";
+import ConversationLayout from "../Conversation/ConversationLayout";
 
 const ChatModyul = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -91,7 +93,7 @@ const ChatModyul = () => {
                   itemContent={(index, user) => (
                     <div
                       key={user.uid}
-                      className="cursor-pointer rounded-md p-3 m-2 hover:bg-gray-200 flex items-center gap-3 bg-gray-100"
+                      className="cursor-pointer rounded-md p-3 m-2 hover:bg-gray-200 fle  x items-center gap-3 bg-gray-100"
                     >
                       <img
                         src={
@@ -109,7 +111,7 @@ const ChatModyul = () => {
                         </span>
                         <span className="text-xs text-gray-500">
                           {/* {user.email} */}
-                        </span>
+                        </span> 
                       </div>
                     </div>
                   )}
@@ -120,7 +122,7 @@ const ChatModyul = () => {
         </div>
         {/* Main Chat Area */}
         <main className="relative flex-1 p-6 overflow-auto bg-white rounded-2xl shadow ml-4">
-          {/* your chat UI */}
+        
           {/* Background */}
           <div
             className="absolute inset-0 bg-cover bg-center"
@@ -129,10 +131,12 @@ const ChatModyul = () => {
               opacity: 0.15,
             }}
           />
-          <h3 className="text-lg font-semibold mb-4">Select a chat</h3>
-          <p>Chat content will appear here...</p>
+          {/* <h3 className="text-lg font-semibold mb-4">Select a chat</h3>
+          <p>Chat content will appear here...</p> */}
+          {/* <Chatpannel/> */}
+          <ConversationLayout  />
           {/* <Droptest/> */}
-       
+                
         </main>
       </div>
 

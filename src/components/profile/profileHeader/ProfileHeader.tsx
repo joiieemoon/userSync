@@ -11,13 +11,13 @@ export default function ProfileHeader({ onEdit }: Props) {
   // Get user from Redux
   const user = useSelector((state: RootState) => state.auth.user);
 
-  if (!user) return null; // optional: render nothing if user not loaded
+  if (!user) return null; 
 
   const fullName = `${user.firstName} ${user.lastName}`;
 
   return (
     <>
-      <h1 className="mt-12 ml-7 text-3xl font-semibold text-gray-900 ">
+      <h1 className="mt-1 ml-7 text-3xl font-semibold text-gray-900 ">
         My Profile:
       </h1>
 

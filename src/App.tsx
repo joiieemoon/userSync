@@ -1,13 +1,23 @@
 import React, { useState, useEffect, lazy, Suspense } from "react";
-import { Login as Loginmain } from "./pages/public/login/Login";
-import { Signup as Signupmain } from "./pages/public/signup/Signup";
+// import { Login as Loginmain } from "./pages/public/login/Login";
+// import { Signup as Signupmain } from "./pages/public/signup/Signup";
 import { ToastContainer } from "react-toastify";
 import { useSelector } from "react-redux";
-// import type { RootState } from "./redux/store/store";
+
 import { Spinner } from "flowbite-react";
 import { Route, Routes, Navigate } from "react-router-dom";
 import { auth } from "./components/firebase/firebase";
+const Loginmain = lazy(() =>
+  import("./pages/public/login/Login").then((module) => ({
+    default: module.Login,
+  }))
+);
 
+const Signupmain = lazy(() =>
+  import("./pages/public/signup/Signup").then((module) => ({
+    default: module.Signup,
+  }))
+);
 const Home = lazy(() => import("./pages/private/home/Home"));
 const Profile = lazy(() => import("./pages/private/profile/Profile"));
 const Users = lazy(() => import("./pages/private/allUsers/Users"));
@@ -44,7 +54,7 @@ const App = () => {
   return (
     <>
       <ToastContainer style={{ zIndex: 99999 }} />
-      <Suspense fallback={<Spinner size="lg" />}>
+      <Suspense fallback={<div className="w-screen h-screen border flex justify-center items-center"><Spinner size="lg"  /></div> }>
         <Routes>
           {!user ? (
             <>

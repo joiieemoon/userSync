@@ -24,6 +24,7 @@ type NewUserFormProps = {
 const NewUserForm: React.FC<NewUserFormProps> = ({ onClose }) => {
   const { showPassword, togglePassword } = usepasswordtoggle();
   const [isClose, setisClose] = useState(false);
+  const [isDisable, setisDisable] = useState(false);
 
   return (
     <div className="flex justify-center items-center  bg-gray-100  rounded-2xl">
@@ -71,13 +72,16 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onClose }) => {
 
             toast.success("User Registered Successfully!!", {
               position: "top-center",
-              autoClose: 2000,
-              onClose,
+              
+            onClose: () => setisDisable(false),
+            autoClose: 2000,
             });
           } catch (error: any) {
             toast.error(error.message, {
               position: "top-center",
-              autoClose: 2000,
+            
+               onClose: () => setisDisable(false),
+                 autoClose: 3000,
             });
           } finally {
             setSubmitting(false);
@@ -92,6 +96,7 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onClose }) => {
           handleBlur,
           setFieldValue,
           handleSubmit,
+          isSubmitting
         }) => (
           <Form
             onSubmit={handleSubmit}
@@ -190,10 +195,11 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onClose }) => {
 
             {/* Submit Button */}
             <Button
+            disabled={isSubmitting || isDisable}
               type="submit"
               className="w-full bg-amber-300 text-black hover:bg-amber-400 cursor-pointer"
             >
-              Add User
+             {isSubmitting || isDisable ? "Adding..." : "Add"}
             </Button>
           </Form>
         )}

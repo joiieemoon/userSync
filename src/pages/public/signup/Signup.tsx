@@ -13,8 +13,10 @@ import { usepasswordtoggle } from "../../../components/formfields/usepasswordtog
 import { signupvalidationSchema } from "../../../components/validations/validationSchema";
 import { HiEye, HiEyeOff } from "react-icons/hi";
 import { FileInput } from "flowbite-react";
+import { useState } from "react";
 export const Signup = () => {
   const { showPassword, togglePassword } = usepasswordtoggle();
+  const [isDisable, setisDisable] = useState(false);
   const navigate = useNavigate();
   return (
     <div className="flex flex-col md:flex-row min-h-screen ">
@@ -57,12 +59,14 @@ export const Signup = () => {
 
               toast.success("User Registerd Successfully!!", {
                 position: "top-center",
+                onClose: () => setisDisable(false),
               });
               navigate("/");
             } catch (error) {
               console.log(error);
               toast.error(error.message, {
                 position: "top-center",
+                onClose: () => setisDisable(false),
               });
             } finally {
               setSubmitting(false);
@@ -78,7 +82,7 @@ export const Signup = () => {
             handleBlur,
             setFieldValue,
             handleSubmit,
-            isSubmitting
+            isSubmitting,
           }) => (
             <Form
               onSubmit={handleSubmit}
@@ -86,14 +90,11 @@ export const Signup = () => {
             >
               <ToastContainer position="top-center" />
               <div className="text-center">
-                <h2 className="text-3xl font-bold ">
-                  Create Account
-                </h2>
+                <h2 className="text-3xl font-bold ">Create Account</h2>
                 <p className="text-gray-500  text-sm mt-1">
                   Please create your account
                 </p>
               </div>
-             
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-7">
                 {signupFields.map((field) => (
@@ -111,7 +112,6 @@ export const Signup = () => {
                     </Label>
 
                     <TextInput
-                    
                       id={field.name}
                       name={field.name}
                       type={
@@ -149,8 +149,12 @@ export const Signup = () => {
                   </div>
                 ))}
               </div>
-              <Button type="submit"  className="w-full bg-amber-300 text-black">
-                {isSubmitting?"Signing up......":"Signing up"}
+              <Button
+                type="submit"
+                disabled={isSubmitting || isDisable}
+                className="w-full bg-amber-300 text-black cursor-pointer"
+              >
+                {isSubmitting || isDisable ? "Signing up......" : "Signing up"}
               </Button>
 
               <span className="dark:text-black">
@@ -169,7 +173,7 @@ export const Signup = () => {
         <img
           src={loginCover}
           alt="signup cover"
-          className="w-full h-full object-cover"
+          className="w-full h-screen object-cover"
         />
       </div>
     </div>

@@ -182,7 +182,7 @@ export default function UpdateProfileModal({ user, onClose }: Props) {
                   disabled={isSubmitting}
                   type="submit"
                   className="px-6 py-3 bg-amber-300 text-black rounded-xl cursor-pointer"
-                >
+                > 
                   {isSubmitting ? "Saving...." : "Save Changes"}
                 </button>
               </div>

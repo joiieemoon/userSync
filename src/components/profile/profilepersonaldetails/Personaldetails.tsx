@@ -20,11 +20,11 @@ export default function PersonalDetails({ user, onEdit }: Props) {
 
       
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-3">
         <h3 className="text-lg font-semibold text-gray-900 ">
           Personal Information
         </h3>
-        <EditBtn onClick={onEdit} />
+        {/* <EditBtn onClick={onEdit} /> */}
       </div>
 
       {/* Grid */}

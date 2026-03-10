@@ -87,7 +87,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isOpen }) => {
       <div className="flex items-center gap-4 border-none">
         <button
           onClick={toggleSidebar}
-          className="text-2xl hover:text-blue-500 transition"
+          className="text-2xl hover:text-blue-500 transition cursor-pointer"
           aria-label="Toggle sidebar"
         >
           <HiMenuAlt1 />
