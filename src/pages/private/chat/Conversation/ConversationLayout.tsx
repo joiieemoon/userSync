@@ -9,7 +9,7 @@ const ConversationLayout = ({selectedUser,onClose}) => {
   const user = useSelector((state: RootState) => state.auth.user);
 
   return (
-    <div className="flex flex-col  bg-gray-100 h-[calc(100vh-130px)] ">
+    <div className="flex flex-col  bg-gray-100 h-[calc(100vh-130px)] relative ">
       {/* Header */}
       <header className="flex items-center p-4  shadow  w-full  ">
         <Avatar alt="User" img={selectedUser?.profilePhoto} rounded />

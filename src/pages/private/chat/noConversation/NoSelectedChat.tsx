@@ -3,7 +3,7 @@ import nochat from "../../../../../public/nochat.png";
 const NoConversation = () => {
   return (
     <>
-      <div className="p-6 mt-10 rounded-2xl shadow-2xl ">
+      <div className="p-6 mt-10 rounded-2xl shadow-2xl bg-white relative ">
         <div className="flex w-full justify-center items-center">
           <img src={nochat} alt="no convo" />
         </div>
