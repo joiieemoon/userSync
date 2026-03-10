@@ -117,8 +117,8 @@ const ChatModyul = () => {
                 </AccordionContent>
               </AccordionPanel>
             </Accordion>{" "}
-            <Accordion defaultValue="directMessage">
-              <AccordionPanel value="directMessage">
+            <Accordion defaultValue="SpacesMessage">
+              <AccordionPanel value="SpacesMessage">
                 <AccordionTitle className="font-medium text-sm">
                   Spaces
                 </AccordionTitle>
