@@ -19,7 +19,7 @@ import { auth } from "../../components/firebase/firebase";
 
 const AddNewChatModal = () => {
   const { users, loading } = useUsers();
-  const [openModal, setOpenModal] = useState(true);
+  const [openModal, setOpenModal] = useState(false);
   const [modalSize, setModalSize] = useState<string>("md");
   const [searchTerm, setsearchTerm] = useState("");
   const currentUid = auth.currentUser?.uid;

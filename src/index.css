@@ -27,18 +27,17 @@ input::placeholder {
 [data-testid="flowbite-sidebar-items"] > div {
   background-color: white !important;
 }
-
-.h-full.overflow-y-auto.bg-gray-50 {
+[data-test] .h-full.overflow-y-auto.bg-gray-50 {
   background-color: white !important;
 }
 
-input{
+input {
   background-color: #dce1e6;
   border: none;
   color: black;
 }
 .dark .h-full.overflow-y-auto.bg-gray-50 {
-  background-color: #f9fafb; 
+  background-color: #f9fafb;
 }
 /* pagination */
 
@@ -49,7 +48,40 @@ ul > li > button {
 }
 
 li[aria-current="page"] > button {
-  background-color: #FFD54F !important;
+  background-color: #ffd54f !important;
   color: rgb(0, 0, 0) !important;
   border-color: #fad355 !important;
+}
+/* drop */
+/* Force light mode on Flowbite Accordion */
+[data-testid="flowbite-accordion"] {
+  background-color: white !important;
+  color: black !important;
+  outline: none;
+  border: none;
+  focus: none;
+}
+
+[data-testid="flowbite-accordion"] button {
+  background-color: #f3f4f6 !important;
+  color: black !important;
+  outline: none !important;
+  border: none !important;
+}
+[data-testid="flowbite-accordion"] button:focus {
+  outline: none !important;
+  box-shadow: none !important;
+ background-color: #f3f4f6 !important;
+}
+[data-testid="flowbite-accordion"] button:hover {
+  background-color: #f3f4f6 !important; /* light hover */
+  outline: none;
+  border: none;
+}
+
+[data-testid="flowbite-accordion-content"] {
+  background-color: white !important;
+  color: black !important;
+  outline: none;
+  border: none;
 }

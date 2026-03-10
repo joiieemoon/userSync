@@ -16,7 +16,7 @@ const ChatLayout = () => {
   
   return (
     <>
-      <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="flex min-h-screen bg-gray-50 ">
         {/* Sidebar */}
         <Sidebarmain isOpen={isSidebarOpen} />
         {/* Navbar */}
@@ -28,7 +28,7 @@ const ChatLayout = () => {
           }`}
         >
           {/* Content */}
-          <main className="p-10 pt-19 space-y-6">
+          <main className="p-10 pt-19 space-y-7 h-[calc(100vh-80px)]">
          
 
             <ChatModyul/>
