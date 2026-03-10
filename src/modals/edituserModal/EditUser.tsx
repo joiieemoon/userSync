@@ -157,7 +157,7 @@ const EditUser: React.FC<Props> = ({ isOpen, onClose, user }) => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-4 py-2 bg-amber-300 text-black rounded disabled:opacity-50"
+                  className="px-4 py-2 bg-amber-300 text-black rounded disabled:opacity-50 cursor-pointer"
                 >
                   {isSubmitting ? "Saving..." : "Save"}
                 </button>

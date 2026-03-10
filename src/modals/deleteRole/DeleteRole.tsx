@@ -25,12 +25,12 @@ const DeleteRole: React.FC<Props> = ({ isOpen, onClose, role, onConfirm }) => {
 
         <button
           onClick={onConfirm}
-          className="w-full bg-amber-400 text-black font-semibold py-2  rounded mb-2"
+          className="w-full bg-amber-400 text-black font-semibold py-2  rounded mb-2 cursor-pointer"
         >
           Delete Role
         </button>
 
-        <button onClick={onClose} className="w-full text-gray-500">
+        <button onClick={onClose} className="w-full text-gray-500 cursor-pointer">
           Cancel
         </button>
       </div>

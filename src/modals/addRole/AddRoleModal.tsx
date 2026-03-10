@@ -225,9 +225,9 @@ const EditRole: React.FC = () => {
           </div>
 
           {/* Buttons */}
-          <div className="flex justify-end gap-3 mt-6">
+          <div className="flex justify-end gap-3 mt-6 ">
             <Button
-              className="border-none"
+              className="border-none cursor-pointer"
               color="gray"
               type="button"
               onClick={() => navigate("/role")}

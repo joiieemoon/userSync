@@ -183,6 +183,7 @@ export default function UsersDetails() {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={(page) => setCurrentPage(Number(page))}
+          
         />
       )}
 

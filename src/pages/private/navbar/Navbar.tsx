@@ -84,7 +84,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isOpen }) => {
   ${isOpen ? "pl-64" : "pl-6"}`}
     >
       {/* LEFT SECTION */}
-      <div className="flex items-center gap-4 border-none">
+      <div className="flex items-center gap-4 border-none ">
         <button
           onClick={toggleSidebar}
           className="text-2xl hover:text-blue-500 transition cursor-pointer"
@@ -98,9 +98,9 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isOpen }) => {
         </NavbarBrand>
       </div>
 
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-6 cursor-pointer">
         <Dropdown
-          className="border-none !bg-white text-black "
+          className="border-none !bg-white text-black  cursor-pointer "
           arrowIcon={false}
           inline
           label={

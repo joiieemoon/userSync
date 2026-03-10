@@ -72,16 +72,22 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onClose }) => {
 
             toast.success("User Registered Successfully!!", {
               position: "top-center",
-              
-            onClose: () => setisDisable(false),
-            autoClose: 2000,
+              autoClose:1000,
+              onOpen: () => setisDisable(true),
+
+              onClose: () => {
+                setisDisable(false);
+                setisClose(true);
+                onClose();
+              },
             });
           } catch (error: any) {
+            setisDisable(true);
             toast.error(error.message, {
               position: "top-center",
-            
-               onClose: () => setisDisable(false),
-                 autoClose: 3000,
+
+              onOpen: () => setisDisable(true),
+              onClose: () => setisDisable(false),
             });
           } finally {
             setSubmitting(false);
@@ -96,7 +102,7 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onClose }) => {
           handleBlur,
           setFieldValue,
           handleSubmit,
-          isSubmitting
+          isSubmitting,
         }) => (
           <Form
             onSubmit={handleSubmit}
@@ -115,7 +121,7 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onClose }) => {
 
             {/* Header */}
             <div className="text-center">
-              <h2 className="text-3xl font-bold  mb-1">Add Account</h2>
+              <h2 className="text-3xl font-bold  mb-1">Add Account </h2>
               <p className="text-gray-500  text-sm">
                 Please create your account
               </p>
@@ -195,11 +201,11 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onClose }) => {
 
             {/* Submit Button */}
             <Button
-            disabled={isSubmitting || isDisable}
+              disabled={isSubmitting || isDisable}
               type="submit"
               className="w-full bg-amber-300 text-black hover:bg-amber-400 cursor-pointer"
             >
-             {isSubmitting || isDisable ? "Adding..." : "Add"}
+              {isSubmitting || isDisable ? "Adding..." : "Add"}
             </Button>
           </Form>
         )}
