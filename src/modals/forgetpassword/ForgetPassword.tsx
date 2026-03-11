@@ -4,10 +4,12 @@ import { toast } from "react-toastify";
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import EditBtn from "../../components/button/editbutton/Editbtn.tsx";
+import Inputfields from "../../components/formfields/Formfields.tsx";
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
+  onSubmit: () => void;
 };
 
 const forgotPasswordSchema = Yup.object({
@@ -49,21 +51,24 @@ export default function ForgotPassword({ isOpen, onClose }: Props) {
           validationSchema={forgotPasswordSchema}
           onSubmit={handleSubmit}
         >
-          {({ isSubmitting }) => (
+          {({ isSubmitting, values, handleChange, handleBlur }) => (
             <Form>
               <ErrorMessage
                 name="email"
                 component="p"
                 className="text-red-400! text-sm mb-2 "
               />
-              <Field
+
+              <Inputfields
+              label="Email"
                 type="text"
                 name="email"
-                placeholder="Enter registered email"
-                className="w-full  p-2 rounded mb-2"
+                value={values.email}
+                onChange={handleChange}
+                onBlur={handleBlur}
               />
 
-              <div className="flex justify-evenly items-center">
+              <div className="flex justify-evenly items-center mt-7">
                 <EditBtn
                   type="submit"
                   disabled={isSubmitting}

@@ -10,13 +10,14 @@ import {
   where,
 } from "firebase/firestore";
 import { useFormik } from "formik";
-import { Button, Label, Sidebar, TextInput } from "flowbite-react";
+import { Label, TextInput } from "flowbite-react";
 import ToggleSwitch from "../../components/button/toggleSwitch/ToggleSwitch";
 import { toast } from "react-toastify";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../../pages/private/navbar/Navbar";
 import EditBtn from "../../components/button/editbutton/Editbtn";
 import { db } from "../../components/firebase/firebase.ts";
+import Inputfields from "../../components/formfields/Formfields.tsx";
 type Role = {
   id?: string;
   roleName: string;
@@ -137,17 +138,16 @@ const EditRole: React.FC = () => {
 
         <form onSubmit={formik.handleSubmit}>
           <div className="mb-4 ">
-            <Label htmlFor="roleName" className="mb-1 text-md dark:text-black">
-              Role Name
-            </Label>
-            <TextInput
-              id="roleName"
+            <Inputfields
+              type="text"
               name="roleName"
               value={formik.values.roleName}
               onChange={formik.handleChange}
-              disabled={role?.roleName === "admin"} // Disable if role is Admin
+              onBlur={formik.handleBlur}
               placeholder="Enter role name"
-              className="text-3xl font-bold bg-white text-black dark:bg-white "
+              disabled={role?.roleName === "admin"}
+              label="Role Name"
+              className="text-3xl font-bold bg-white text-black dark:bg-white"
               required
             />
           </div>

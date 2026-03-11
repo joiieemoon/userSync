@@ -1,18 +1,18 @@
 import loginCover from "../../../assets/img/logincover.png";
-import { Button, Label, TextInput } from "flowbite-react";
+
 import { signupFields } from "../../../components/formfields/formconfig";
 import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 import { auth, db } from "../../../components/firebase/firebase.ts";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { setDoc, doc, serverTimestamp } from "firebase/firestore";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getStorage } from "firebase/storage";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { usepasswordtoggle } from "../../../components/formfields/usepasswordtoggle.js";
 import { signupvalidationSchema } from "../../../components/validations/validationSchema";
 import { HiEye, HiEyeOff } from "react-icons/hi";
-import { FileInput } from "flowbite-react";
+import Inputfields from "../../../components/formfields/Formfields.tsx";
 import { useState } from "react";
 import EditBtn from "../../../components/button/editbutton/Editbtn.tsx";
 export const Signup = () => {
@@ -104,14 +104,8 @@ export const Signup = () => {
                       field.name === "email" ? "col-span-2" : ""
                     }`}
                   >
-                    <Label
-                      htmlFor={field.name}
-                      className="text-gray-800 dark:text-black"
-                    >
-                      {field.label}
-                    </Label>
-
-                    <TextInput
+                    <Inputfields
+                      label={field.label}
                       id={field.name}
                       name={field.name}
                       type={
@@ -125,38 +119,39 @@ export const Signup = () => {
                       value={values[field.name as keyof typeof values]}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      className="mt-1 bg-gray-100"
+                      disabled={isSubmitting || isDisable}
+                      error={
+                        !!(
+                          errors[field.name as keyof typeof errors] &&
+                          touched[field.name as keyof typeof touched]
+                        )
+                      }
+                      errorMessage={
+                        errors[field.name as keyof typeof errors] as string
+                      }
                     />
-
                     {field.type === "password" && (
                       <button
                         type="button"
-                        onClick={() => {
-                          togglePassword(field.name);
-                        }}
-                        className="absolute right-3 top-10 text-gray-500 cursor-pointer"
+                        onClick={() => togglePassword(field.name)}
+                        className="absolute right-3 top-1/2 border  -translate-y-1/2 text-gray-500 cursor-pointer"
                       >
                         {showPassword[field.name] ? <HiEyeOff /> : <HiEye />}
                       </button>
                     )}
-
-                    {errors[field.name as keyof typeof errors] &&
-                      touched[field.name as keyof typeof touched] && (
-                        <p className="text-red-500 text-sm mt-1">
-                          {errors[field.name as keyof typeof errors]}
-                        </p>
-                      )}
                   </div>
                 ))}
               </div>
-             
-                <EditBtn
-                  type="submit"
-                  disabled={isSubmitting || isDisable}
-                 label={isSubmitting || isDisable ? "Signing up......" : "Signing up"}
-                  icon=""
-                  variant="main"
-                />
+
+              <EditBtn
+                type="submit"
+                disabled={isSubmitting || isDisable}
+                label={
+                  isSubmitting || isDisable ? "Signing up......" : "Signing up"
+                }
+                icon=""
+                variant="main"
+              />
 
               <span className="dark:text-black">
                 Already have an account?{" "}

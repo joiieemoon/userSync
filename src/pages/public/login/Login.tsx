@@ -1,5 +1,5 @@
 import loginCover from "../../../assets/img/logincover.png";
-import { Button, Checkbox, Label, TextInput } from "flowbite-react";
+
 import { loginFields } from "../../../components/formfields/formconfig";
 import { Link } from "react-router-dom";
 import { Formik, Form } from "formik";
@@ -14,10 +14,11 @@ import { HiEye, HiEyeOff } from "react-icons/hi";
 import { useState } from "react";
 import { usepasswordtoggle } from "../../../components/formfields/usepasswordtoggle";
 import ForgotPassword from "../../../modals/forgetpassword/ForgetPassword";
-//redux
+
 import { useDispatch } from "react-redux";
 import { setUser } from "../../../redux/store/authSlice";
 import type { AppDispatch } from "../../../redux/store/store";
+
 import {
   collection,
   doc,
@@ -30,6 +31,7 @@ import {
 import { db } from "../../../components/firebase/firebase.ts";
 import { setUserPermissions } from "../../../redux/permissionslice/permissionslice";
 import EditBtn from "../../../components/button/editbutton/Editbtn.tsx";
+import Inputfields from "../../../components/formfields/Formfields.tsx";
 
 const loginValidationSchema = Yup.object({
   email: Yup.string().email("Invalid email").required("Email is required"),
@@ -70,7 +72,6 @@ export const Login = () => {
               const user = userCredential.user;
 
               if (user) {
-                // Firestore fetch
                 const snap = await getDoc(doc(db, "Users", user.uid));
 
                 if (snap.exists()) {
@@ -82,11 +83,10 @@ export const Login = () => {
                   if (!profilePhoto || profilePhoto.trim() === "") {
                     profilePhoto = generateAvatar(fullName);
 
-                    // Update Firestore with generated avatar
                     await setDoc(
                       doc(db, "Users", user.uid),
                       { profilePhoto },
-                      { merge: true }, // merge
+                      { merge: true },
                     );
                   }
                   let rolePermissions = {};
@@ -133,8 +133,6 @@ export const Login = () => {
                 position: "top-center",
                 onClose: () => setisDisable(false),
               });
-
-              // navigate("/", { replace: true });
             } catch (error) {
               const cleanMessage = error.message
                 .replace("Firebase:", "")
@@ -171,53 +169,45 @@ export const Login = () => {
               <ToastContainer position="top-center" />
 
               {loginFields.map((field) => (
-                <div key={field.name}>
-                  <Label
-                    htmlFor={field.name}
-                    className="text-black dark:text-black"
-                  >
-                    {field.label}
-                  </Label>
-                  <div className="relative mt-1">
-                    <TextInput
-                      id={field.name}
-                      name={field.name}
-                      // type={field.type}
-
-                      type={
-                        field.type === "password"
-                          ? showPassword[field.name]
-                            ? "text"
-                            : "password"
-                          : field.type
-                      }
-                      value={values[field.name as keyof typeof values]}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      placeholder={field.placeholder}
-                      className="mt-1  placeholder-opacity-50"
-                    />
-                    {field.type === "password" && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          togglePassword(field.name);
-                        }}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer"
-                      >
-                        {showPassword[field.name] ? <HiEyeOff /> : <HiEye />}
-                      </button>
-                    )}
-                  </div>
-                  {errors[field.name as keyof typeof errors] &&
-                  touched[field.name as keyof typeof touched] ? (
-                    <p className="text-red-500 text-sm">
-                      {errors[field.name as keyof typeof errors]}
-                    </p>
-                  ) : null}
+                <div key={field.name} className="relative">
+              
+                  <Inputfields
+                    label={field.label}
+                    id={field.name}
+                    name={field.name}
+                    type={
+                      field.type === "password"
+                        ? showPassword[field.name]
+                          ? "text"
+                          : "password"
+                        : field.type
+                    }
+                    value={values[field.name as keyof typeof values]}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    placeholder={field.placeholder}
+                    disabled={isSubmitting || isDisable}
+                    error={
+                      !!(
+                        errors[field.name as keyof typeof errors] &&
+                        touched[field.name as keyof typeof touched]
+                      )
+                    }
+                    errorMessage={
+                      errors[field.name as keyof typeof errors] as string
+                    }
+                  />
+                  {field.type === "password" && (
+                    <button
+                      type="button"
+                      onClick={() => togglePassword(field.name)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer"
+                    >
+                      {showPassword[field.name] ? <HiEyeOff /> : <HiEye />}
+                    </button>
+                  )}
                 </div>
               ))}
-
               <div className="flex items-center justify-between text-sm">
                 <div className="flex items-center ">
                   <div className="w-full text-right">

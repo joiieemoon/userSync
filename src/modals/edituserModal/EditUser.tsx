@@ -5,6 +5,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { updateProfileValidationSchema } from "../../components/validations/validationSchema";
 import { toast } from "react-toastify";
 import useTitle from "../../hooks/useTitle/useTitle";
+import EditBtn from "../../components/button/editbutton/Editbtn.tsx";
 
 type Props = {
   isOpen: boolean;
@@ -53,11 +54,11 @@ const EditUser: React.FC<Props> = ({ isOpen, onClose, user }) => {
   ) => {
     try {
       await updateDoc(doc(db, "Users", user.uid), values);
-      toast.success("User updated successfully", {position: "top-center"});
+      toast.success("User updated successfully", { position: "top-center" });
       onClose();
     } catch (error) {
       console.error("Error updating user:", error);
-      toast.error("Failed to update user", {position: "top-center"});
+      toast.error("Failed to update user", { position: "top-center" });
     } finally {
       setSubmitting(false);
     }
@@ -146,21 +147,22 @@ const EditUser: React.FC<Props> = ({ isOpen, onClose, user }) => {
               </div>
 
               <div className="flex justify-end gap-3">
-                <button
-                  type="button"
+                <EditBtn
                   onClick={onClose}
-                  className="px-4 py-2 bg-gray-300 rounded cursor-pointer"
-                >
-                  Cancel
-                </button>
+                  type="button"
+                  label="cancel"
+                  icon=""
+                  variant="secondary"
+                />
+            
 
-                <button
-                  type="submit"
+                <EditBtn
                   disabled={isSubmitting}
-                  className="px-4 py-2 bg-amber-300 text-black rounded disabled:opacity-50 cursor-pointer"
-                >
-                  {isSubmitting ? "Saving..." : "Save"}
-                </button>
+                  type="submit"
+                  label={isSubmitting ? "Saving..." : "Save"}
+                  icon=""
+                  variant="primary"
+                />
               </div>
             </Form>
           )}

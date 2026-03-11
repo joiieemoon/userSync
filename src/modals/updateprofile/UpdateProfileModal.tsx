@@ -5,7 +5,7 @@ import { db } from "../../components/firebase/firebase.ts";
 import { updateUser } from "../../redux/store/authSlice";
 import type { AppDispatch } from "../../redux/store/store";
 import { toast } from "react-toastify";
-import { FileInput, fileInputTheme } from "flowbite-react";
+import { FileInput } from "flowbite-react";
 import "react-toastify/dist/ReactToastify.css";
 import { updateProfileValidationSchema } from "../../../src/components/validations/validationSchema";
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -14,6 +14,7 @@ import avatar from "../../../public/avtar.png";
 import useTitle from "../../hooks/useTitle/useTitle";
 import { ValidationError } from "yup";
 import EditBtn from "../../components/button/editbutton/Editbtn.tsx";
+import Inputfields from "../../components/formfields/Formfields.tsx";
 interface Props {
   user: {
     uid: string;
@@ -99,15 +100,22 @@ export default function UpdateProfileModal({ user, onClose }: Props) {
           validationSchema={updateProfileValidationSchema}
           onSubmit={handleSubmit}
         >
-          {({ values, isSubmitting, setFieldValue }) => (
+          {({
+            values,
+            handleChange,
+            handleBlur,
+            errors,
+            touched,
+            isSubmitting,
+            setFieldValue,
+          }) => (
             <Form className="space-y-6">
               {/* Avatar */}
               <div className="flex flex-col md:flex-row items-center gap-4 mb-6">
                 <img
                   src={preview || values.profilePhoto || avatar}
-                  className="w-24 h-24 md:w-28 md:h-28 rounded-full object-cover border-2 border-gray-300 "
+                  className="w-24 h-24 md:w-28 md:h-28 rounded-full object-cover border-2 border-gray-300"
                 />
-
                 <FileInput
                   type="file"
                   accept="image/*"
@@ -119,74 +127,68 @@ export default function UpdateProfileModal({ user, onClose }: Props) {
                       setFieldValue("profilePhoto", file);
                     }
                   }}
-                  className="text-sm"
                 />
-                <ErrorMessage name="profilePhoto">
-                  {(msg) => <p className="text-red-500 text-xs mt-1">{msg}</p>}
-                </ErrorMessage>
+                {errors.profilePhoto && touched.profilePhoto && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.profilePhoto}
+                  </p>
+                )}
               </div>
 
-              {/* Fields */}
+              {/* Form Fields */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {["firstName", "lastName", "email", "phone"].map((field) => (
-                  <div key={field}>
-                    <label className="block text-sm font-medium text-gray-700  mb-1">
-                      {field}
-                    </label>
-
-                    <Field
-                      name={field}
-                      className="w-full px-4 py-3 bg-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-
-                    <ErrorMessage name={field}>
-                      {(msg) => (
-                        <p className="text-red-500 text-xs mt-1">{msg}</p>
-                      )}
-                    </ErrorMessage>
-                  </div>
+                  <Inputfields
+                    key={field}
+                    label={field.charAt(0).toUpperCase() + field.slice(1)}
+                    name={field}
+                    type={field === "email" ? "email" : "text"}
+                    placeholder={`Enter your ${field}`}
+                    value={values[field as keyof typeof values]}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={
+                      !!(
+                        errors[field as keyof typeof errors] &&
+                        touched[field as keyof typeof touched]
+                      )
+                    }
+                    errorMessage={
+                      errors[field as keyof typeof errors] as string
+                    }
+                  />
                 ))}
 
-                {/* Bio */}
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700  mb-1">
-                    Bio
-                  </label>
-
-                  <Field
-                    name="bio"
-                    as="textarea"
-                    rows={4}
-                    className="w-full px-4 py-3 bg-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 border-none"
-                  />
-
-                  <ErrorMessage name="bio">
-                    {(msg) => (
-                      <p className="text-red-500 text-xs mt-1">{msg}</p>
-                    )}
-                  </ErrorMessage>
-                </div>
+                <Inputfields
+                  label="Bio"
+                  name="bio"
+                  as="textarea"
+                  rows={4}
+                  placeholder="Tell us about yourself"
+                  value={values.bio}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={!!(errors.bio && touched.bio)}
+                  errorMessage={errors.bio as string}
+                />
               </div>
 
               {/* Buttons */}
               <div className="flex justify-end gap-4">
                 <EditBtn
+                  type="button"
                   onClick={onClose}
-                  label="cancel"
+                  label="Cancel"
                   icon=""
                   variant="secondary"
                 />
 
                 <EditBtn
-                icon=""
-                type="submit"
-                  label={isSubmitting ? "Saving...." : "Save Changes"}
+                  icon=""
+                  type="submit"
+                  label={isSubmitting ? "Saving..." : "Save Changes"}
                   disabled={isSubmitting}
-                >
-                  {" "}
-                  {isSubmitting ? "Saving...." : "Save Changes"}
-                </EditBtn>
-              
+                />
               </div>
             </Form>
           )}

@@ -1,21 +1,17 @@
 import React, { useState } from "react";
 import { auth, db } from "../firebase/firebase.ts";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { ToastContainer, toast } from "react-toastify";
 import { HiEye, HiEyeOff } from "react-icons/hi";
 import { signupvalidationSchema } from "../../components/validations/validationSchema";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { Formik, Form } from "formik";
-import { Button, Label, TextInput } from "flowbite-react";
-import { Link } from "react-router-dom";
 import { signupFields } from "../../components/formfields/formconfig";
 import { usepasswordtoggle } from "../../components/formfields/usepasswordtoggle.js";
 import { setDoc, doc, serverTimestamp } from "firebase/firestore";
-import { IoClose } from "react-icons/io5";
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { FileInput } from "flowbite-react";
 import EditBtn from "../button/editbutton/Editbtn.tsx";
+import Inputfields from "../formfields/Formfields.tsx";
 
 type NewUserFormProps = {
   onClose: () => void;
@@ -109,14 +105,7 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onClose }) => {
           >
             <ToastContainer position="top-center" />
 
-            {/* Close Button */}
-            <button
-              type="button"
-              onClick={onClose}
-              className="absolute top-4 right-4 text-gray-500 hover:text-red-500 transition cursor-pointer"
-            >
-              <IoClose className="text-2xl" />
-            </button>
+           
 
             {/* Header */}
             <div className="text-center">
@@ -129,75 +118,52 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onClose }) => {
             {/* Form Fields */}
             {signupFields.map((field) => (
               <div key={field.name} className="relative">
-                <Label
-                  htmlFor={field.name}
-                  className="text-black dark:text-black "
-                >
-                  {field.label}
-                </Label>
+                <Inputfields
+                  id={field.name}
+                  name={field.name}
+                  type={
+                    field.type === "password"
+                      ? showPassword[field.name]
+                        ? "text"
+                        : "password"
+                      : field.type
+                  }
+                  placeholder={field.placeholder}
+                  value={values[field.name as keyof typeof values]}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  label={field.label}
+                  error={
+                    !!(
+                      errors[field.name as keyof typeof errors] &&
+                      touched[field.name as keyof typeof touched]
+                    )
+                  }
+                  errorMessage={
+                    errors[field.name as keyof typeof errors] as string
+                  }
+                  className="mt-1"
+                />
 
-                {field.type === "file" ? (
-                  <FileInput
-                    id={field.name}
-                    name={field.name}
-                    accept="image/*"
-                    onChange={(e) =>
-                      setFieldValue(field.name, e.currentTarget.files?.[0])
-                    }
-                    className="
-    mt-1
-    !bg-white
-    !text-black
-    !border-gray-300
-    dark:!bg-white
-    dark:!text-black
-    dark:!border-gray-300
-  "
-                  />
-                ) : (
-                  <TextInput
-                    id={field.name}
-                    name={field.name}
-                    type={
-                      field.type === "password"
-                        ? showPassword[field.name]
-                          ? "text"
-                          : "password"
-                        : field.type
-                    }
-                    placeholder={field.placeholder}
-                    value={values[field.name as keyof typeof values]}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    className="
-    mt-1
-    !bg-white !text-black !border-gray-300 !placeholder-gray-400
-    dark:!bg-white dark:!text-black dark:!border-gray-300 dark:!placeholder-gray-400
-  "
-                  />
-                )}
-
-                {/* Password Toggle */}
+                {/* Password toggle button */}
                 {field.type === "password" && (
-                  <button
+                  <div
                     type="button"
                     onClick={() => togglePassword(field.name)}
-                    className="absolute right-3 top-10 text-gray-500 hover:text-gray-700  cursor-pointer transition"
+                    className="absolute right-3 top-10 text-gray-500 hover:text-gray-700 cursor-pointer transition"
                   >
                     {showPassword[field.name] ? <HiEyeOff /> : <HiEye />}
-                  </button>
+                  </div>
                 )}
-
-                {/* Validation Error */}
-                {errors[field.name as keyof typeof errors] &&
-                  touched[field.name as keyof typeof touched] && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors[field.name as keyof typeof errors]}
-                    </p>
-                  )}
               </div>
             ))}
-
+            <div className="flex w-full justify-evenly">  <EditBtn
+              onClick={onClose}
+              type="button"
+              label="cancel"
+              icon=""
+              variant="secondary"
+            />
             {/* Submit Button */}
 
             <EditBtn
@@ -205,8 +171,9 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onClose }) => {
               disabled={isSubmitting || isDisable}
               label={isSubmitting || isDisable ? "Adding..." : "Add"}
               icon=""
-              variant="main"
-            />
+              variant="primary"
+            /></div>
+          
           </Form>
         )}
       </Formik>

@@ -2,7 +2,7 @@ import type React from "react";
 import type { FC } from "react";
 
 interface InputProps {
-  type?: "text" | "number" | "email" | "password" | "date" | "time" | string;
+  type?: "text" | "number" | "email" | "password"| "time" | string;
   id?: string;
   name?: string;
   placeholder?: string;
@@ -26,9 +26,7 @@ const Input: FC<InputProps> = ({
   value,
   onChange,
   className = "",
-  min,
-  max,
-  step,
+
   disabled = false,
   success = false,
   error = false,
@@ -55,9 +53,7 @@ const Input: FC<InputProps> = ({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        min={min}
-        max={max}
-        step={step}
+
         disabled={disabled}
         className={inputClasses}
       />
