@@ -1,7 +1,5 @@
-// import React from 'react';
 import React, { useState } from "react";
-
-import { auth, db } from "../../components/firebase/firebase.js";
+import { auth, db } from "../firebase/firebase.ts";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { ToastContainer, toast } from "react-toastify";
 import { HiEye, HiEyeOff } from "react-icons/hi";
@@ -17,6 +15,7 @@ import { IoClose } from "react-icons/io5";
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { FileInput } from "flowbite-react";
+import EditBtn from "../button/editbutton/Editbtn.tsx";
 
 type NewUserFormProps = {
   onClose: () => void;
@@ -72,7 +71,7 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onClose }) => {
 
             toast.success("User Registered Successfully!!", {
               position: "top-center",
-              autoClose:1000,
+              autoClose: 1000,
               onOpen: () => setisDisable(true),
 
               onClose: () => {
@@ -200,13 +199,14 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onClose }) => {
             ))}
 
             {/* Submit Button */}
-            <Button
-              disabled={isSubmitting || isDisable}
+
+            <EditBtn
               type="submit"
-              className="w-full bg-amber-300 text-black hover:bg-amber-400 cursor-pointer"
-            >
-              {isSubmitting || isDisable ? "Adding..." : "Add"}
-            </Button>
+              disabled={isSubmitting || isDisable}
+              label={isSubmitting || isDisable ? "Adding..." : "Add"}
+              icon=""
+              variant="main"
+            />
           </Form>
         )}
       </Formik>

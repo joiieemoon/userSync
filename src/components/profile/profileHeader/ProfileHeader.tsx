@@ -2,7 +2,7 @@ import EditBtn from "../../button/editbutton/Editbtn";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../redux/store/store";
 import avtar from "../../../../public/avtar.png";
-
+import { MdOutlineEdit } from "react-icons/md";
 interface Props {
   onEdit?: () => void;
 }
@@ -11,7 +11,7 @@ export default function ProfileHeader({ onEdit }: Props) {
   // Get user from Redux
   const user = useSelector((state: RootState) => state.auth.user);
 
-  if (!user) return null; 
+  if (!user) return null;
 
   const fullName = `${user.firstName} ${user.lastName}`;
 
@@ -35,12 +35,8 @@ export default function ProfileHeader({ onEdit }: Props) {
           />
 
           <div>
-            <h2 className="text-xl font-semibold text-gray-900 ">
-              {fullName}
-            </h2>
-            <p className="text-gray-600  text-sm">
-              {user.email}
-            </p>
+            <h2 className="text-xl font-semibold text-gray-900 ">{fullName}</h2>
+            <p className="text-gray-600  text-sm">{user.email}</p>
             <p className="text-gray-600  text-sm mt-1">
               Role: {user.role || "User"}
             </p>
@@ -48,7 +44,11 @@ export default function ProfileHeader({ onEdit }: Props) {
         </div>
 
         {/* RIGHT */}
-        <EditBtn onClick={onEdit} />
+        <EditBtn
+          onClick={onEdit}
+          icon={<MdOutlineEdit className="text-xl" />}
+          label="edit"
+        />
       </div>
     </>
   );

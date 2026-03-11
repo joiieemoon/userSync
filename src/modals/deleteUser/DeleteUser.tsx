@@ -1,6 +1,6 @@
 import React from "react";
 import { doc, deleteDoc } from "firebase/firestore";
-import { db } from "../../components/firebase/firebase";
+import { db } from "../../components/firebase/firebase.ts";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { PiWarningCircle } from "react-icons/pi";

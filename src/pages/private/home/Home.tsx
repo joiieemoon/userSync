@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../navbar/Navbar";
 import { Sidebarmain } from "../../../components/sidebar/Sidebar";
-import { auth, db } from "../../../components/firebase/firebase";
+import { auth, db } from "../../../components/firebase/firebase.ts";
 import { doc, getDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import Dashboard from "../dashboard/Dashboard";
-import { Spinner } from "flowbite-react/components/Spinner";
+
+import Spinnerring from "../../../components/spinner/Spinnerring.tsx";
 const Home = () => {
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -39,7 +40,7 @@ const Home = () => {
 
   return (
     <div className="flex">
-      <Sidebarmain isOpen={isSidebarOpen} className="!bg-white"/>
+      <Sidebarmain isOpen={isSidebarOpen} className="!bg-white" />
 
       <div className="flex-1 min-h-screen bg-gray-100 dark:bg-gray-200">
         <Navbar toggleSidebar={toggleSidebar} user={userDetails} />
@@ -50,11 +51,7 @@ const Home = () => {
           <div className="">
             <h1 className="text-center h-screen mt-7 p-7 flex justify-center items-center border  text-5xl">
               {" "}
-              <Spinner
-                color="success"
-                aria-label="Success spinner example "
-                className="w-15 h-15  "
-              />
+              <Spinnerring />
             </h1>
           </div>
         )}

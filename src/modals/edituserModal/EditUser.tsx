@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { db } from "../../components/firebase/firebase";
+import { db } from "../../components/firebase/firebase.ts";
 import { updateDoc, doc, collection, getDocs } from "firebase/firestore";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { updateProfileValidationSchema } from "../../components/validations/validationSchema";

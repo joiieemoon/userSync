@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { db } from "../../components/firebase/firebase";
 import {
   collection,
   addDoc,
@@ -16,7 +15,8 @@ import ToggleSwitch from "../../components/button/toggleSwitch/ToggleSwitch";
 import { toast } from "react-toastify";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../../pages/private/navbar/Navbar";
-
+import EditBtn from "../../components/button/editbutton/Editbtn";
+import { db } from "../../components/firebase/firebase.ts";
 type Role = {
   id?: string;
   roleName: string;
@@ -226,20 +226,17 @@ const EditRole: React.FC = () => {
 
           {/* Buttons */}
           <div className="flex justify-end gap-3 mt-6 ">
-            <Button
-              className="border-none cursor-pointer"
-              color="gray"
-              type="button"
+            <EditBtn
               onClick={() => navigate("/role")}
-            >
-              Cancel
-            </Button>
-            <Button
+              label="cancel"
+              icon=""
+              variant="secondary"
+            />
+            <EditBtn
+              icon=""
               type="submit"
-              className="bg-amber-300 text-black border-none outline-none focus:ring-0 cursor-pointer"
-            >
-              {id ? "Save Changes" : "Add Role"}
-            </Button>
+              label={id ? "Save Changes" : "Add Role"}
+            />
           </div>
         </form>
       </div>

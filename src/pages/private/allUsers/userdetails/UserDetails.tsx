@@ -3,7 +3,7 @@ import { MdAdd } from "react-icons/md";
 import { FaRegEdit, FaSortAlphaDown, FaSortAlphaDownAlt } from "react-icons/fa";
 import { AiOutlineUserDelete } from "react-icons/ai";
 import { useState, useEffect } from "react";
-import { auth } from "../../../../components/firebase/firebase";
+import { auth } from "../../../../components/firebase/firebase.ts";
 import SearchBar from "../../../../components/SearchBar/SearchBar";
 import EditBtn from "../../../../components/button/editbutton/Editbtn";
 import AddNewuserModal from "../../../../modals/addNewuserModal/AddNewuserModal";
@@ -11,9 +11,9 @@ import DeleteUser from "../../../../modals/deleteUser/DeleteUser";
 import EditUser from "../../../../modals/edituserModal/EditUser";
 import { PaginationMain } from "../../../../components/pagination/Pagination";
 import { canPermit } from "../../../../helper/canPermit/canpermit";
-import { Spinner } from "flowbite-react/components/Spinner";
 import { MdDeleteOutline } from "react-icons/md";
 import { MdOutlineEdit } from "react-icons/md";
+import Spinnerring from "../../../../components/spinner/Spinnerring.tsx";
 export default function UsersDetails() {
   const { users, loading } = useUsers();
   const [userToDelete, setUserToDelete] = useState(null);
@@ -33,21 +33,16 @@ export default function UsersDetails() {
 
   if (loading)
     return (
-      <div className="p-6 flex justify-center items-center">
-        Loading...
-        <Spinner color="success" aria-label="Success spinner example" />
-      </div>
+      <Spinnerring/>
     );
 
   const currentUid = auth.currentUser?.uid;
   const currentUser = users.find((u) => u.uid === currentUid);
   const currentUserPermissions = currentUser?.permissions || {};
-  // console.log("Current user permissions:", currentUserPermissions);
-  // console.log("Current user object:", currentUser);
-  // console.log("Current user permissions:", currentUser?.permissions);
+ 
   const isAdmin = currentUser?.role === "admin";
 
-  // Filter users (exclude current user and search)
+  
   const filteredUsers = users
     .filter((u) => u.uid !== currentUid)
     .filter((u) =>

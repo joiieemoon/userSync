@@ -12,7 +12,7 @@ import {
 import { RiLogoutBoxLine } from "react-icons/ri";
 import { FaRegUserCircle } from "react-icons/fa";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { auth } from "../../../components/firebase/firebase";
+import { auth } from "../../../components/firebase/firebase.ts";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../redux/store/store";

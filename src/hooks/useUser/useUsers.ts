@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { db } from "../../components/firebase/firebase";
+import { db } from "../../components/firebase/firebase.ts";
 import { collection, onSnapshot, Timestamp } from "firebase/firestore";
 
 const useUsers = () => {
@@ -40,7 +40,7 @@ const useUsers = () => {
               ? data.createdAt.toDate().toLocaleDateString()
               : "-";
 
-          //  Match role === roleName
+
           const roleKey = data.role?.toLowerCase();
 
           const roleInfo = rolesMap[roleKey] || {

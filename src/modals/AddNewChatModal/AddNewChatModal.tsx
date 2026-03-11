@@ -6,7 +6,7 @@ import {
   ModalFooter,
   ModalHeader,
   Select,
-  Spinner,
+  
 } from "flowbite-react";
 import { Virtuoso } from "react-virtuoso";
 import avtar from "../../../public/avtar.png";
@@ -15,7 +15,8 @@ import { useState } from "react";
 import useUsers from "../../hooks/useUser/useUsers";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import EditBtn from "../../components/button/editbutton/Editbtn";
-import { auth } from "../../components/firebase/firebase";
+import { auth } from "../../components/firebase/firebase.ts";
+import Spinnerring from "../../components/spinner/Spinnerring.tsx";
 
 const AddNewChatModal = () => {
   const { users, loading } = useUsers();
@@ -33,13 +34,7 @@ const AddNewChatModal = () => {
         .toLowerCase()
         .includes(searchTerm.toLowerCase()),
     );
-  if (loading)
-    return (
-      <div className="p-6 flex justify-center items-center">
-        Loading...
-        <Spinner color="success" aria-label="Success spinner example" />
-      </div>
-    );
+  if (loading) return  <Spinnerring />;
   return (
     <>
       <div className="flex flex-wrap gap-4 ">

@@ -8,7 +8,7 @@ import {
   Spinner,
 } from "flowbite-react";
 import { Virtuoso } from "react-virtuoso";
-import { auth } from "../../../../components/firebase/firebase";
+import { auth } from "../../../../components/firebase/firebase.ts";
 import SearchBar from "../../../../components/SearchBar/SearchBar";
 import type { RootState } from "../../../../redux/store/store";
 import { useSelector } from "react-redux";
@@ -16,7 +16,7 @@ import dashboardBg from "../../../../../public/dashboardbg.jpg";
 import avtar from "../../../../../public/avtar.png";
 import useUsers from "../../../../hooks/useUser/useUsers";
 import AddNewChatModal from "../../../../modals/AddNewChatModal/AddNewChatModal";
-import Chatpannel from "../noConversation/NoSelectedChat";
+// import Chatpannel from "../noConversation/NoSelectedChat";
 import ConversationLayout from "../Conversation/ConversationLayout";
 import {
   Accordion,
@@ -25,20 +25,23 @@ import {
   AccordionTitle,
 } from "flowbite-react";
 import NoConversation from "../noConversation/NoSelectedChat";
-const ChatModyul = () => {
-  const [isOpen, setIsOpen] = useState(false);
+import Spinnerring from "../../../../components/spinner/Spinnerring.tsx";
 
-  const handleClose = () => setIsOpen(false);
-  const handleOpen = () => setIsOpen(true);
+const ChatModyul = () => {
   const [searchTerm, setsearchTerm] = useState("");
   const currentUid = auth.currentUser?.uid;
 
   const { users, loading } = useUsers();
   const currentUser = users.find((u) => u.uid === currentUid);
   const [selectedUser, setSelectedUser] = useState(null);
+
+  if (loading) {
+    return <Spinnerring />;
+  }
+
   const closeChat = () => {
-  setSelectedUser(null);
-};
+    setSelectedUser(null);
+  };
   const filteredUsers = users
     .filter((u) => u.uid !== currentUid)
     .filter((u) =>
@@ -143,14 +146,14 @@ const ChatModyul = () => {
             }}
           />
 
-          {/* <Chatpannel/> */}
           {selectedUser ? (
-            <ConversationLayout selectedUser={selectedUser} onClose={closeChat} />
+            <ConversationLayout
+              selectedUser={selectedUser}
+              onClose={closeChat}
+            />
           ) : (
             <NoConversation />
           )}
-        
-          {/* <NoConversation/> */}
         </main>
       </div>
     </>

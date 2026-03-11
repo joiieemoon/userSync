@@ -3,7 +3,7 @@ import { Button, Label, TextInput } from "flowbite-react";
 import { signupFields } from "../../../components/formfields/formconfig";
 import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
-import { auth, db } from "../../../components/firebase/firebase.js";
+import { auth, db } from "../../../components/firebase/firebase.ts";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { setDoc, doc, serverTimestamp } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -14,6 +14,7 @@ import { signupvalidationSchema } from "../../../components/validations/validati
 import { HiEye, HiEyeOff } from "react-icons/hi";
 import { FileInput } from "flowbite-react";
 import { useState } from "react";
+import EditBtn from "../../../components/button/editbutton/Editbtn.tsx";
 export const Signup = () => {
   const { showPassword, togglePassword } = usepasswordtoggle();
   const [isDisable, setisDisable] = useState(false);
@@ -49,7 +50,7 @@ export const Signup = () => {
                   firstName: values.firstName,
                   lastname: values.lastName,
                   password: values.password,
-                  // profilePhoto:photoURl,
+
                   role: "user",
                   profilePhoto: "", //temp
                   createdAt: serverTimestamp(),
@@ -71,7 +72,6 @@ export const Signup = () => {
             } finally {
               setSubmitting(false);
             }
-            // console.log("signup values", values)
           }}
         >
           {({
@@ -149,13 +149,14 @@ export const Signup = () => {
                   </div>
                 ))}
               </div>
-              <Button
-                type="submit"
-                disabled={isSubmitting || isDisable}
-                className="w-full bg-amber-300 text-black cursor-pointer"
-              >
-                {isSubmitting || isDisable ? "Signing up......" : "Signing up"}
-              </Button>
+             
+                <EditBtn
+                  type="submit"
+                  disabled={isSubmitting || isDisable}
+                 label={isSubmitting || isDisable ? "Signing up......" : "Signing up"}
+                  icon=""
+                  variant="main"
+                />
 
               <span className="dark:text-black">
                 Already have an account?{" "}

@@ -1,7 +1,7 @@
 // src/hooks/useAuthListener.ts
 import { useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth, db } from "../../components/firebase/firebase";
+import { auth, db } from "../../components/firebase/firebase.ts";
 import { useDispatch } from "react-redux";
 import { setUser, clearUser } from "../store/authSlice";
 import { doc, getDoc } from "firebase/firestore";
@@ -18,21 +18,21 @@ export const useAuthListener = () => {
         if (snap.exists()) {
           const data = snap.data();
           dispatch(
-  setUser({
-    uid: firebaseUser.uid,
-    firstName: data.firstName || "",
-    lastName: data.lastname || "",
-    email: data.email || "",
-    profilePhoto: data.profilePhoto || "",
-    phone: data.phone || "",
-    role: data.role || "",
-    bio: data.bio || "",
-  })
-);      
+            setUser({
+              uid: firebaseUser.uid,
+              firstName: data.firstName || "",
+              lastName: data.lastname || "",
+              email: data.email || "",
+              profilePhoto: data.profilePhoto || "",
+              phone: data.phone || "",
+              role: data.role || "",
+              bio: data.bio || "",
+            })
+          );
 
         }
       } else {
-        dispatch(clearUser());  
+        dispatch(clearUser());
       }
     });
 

@@ -1,8 +1,9 @@
 import { sendPasswordResetEmail } from "firebase/auth";
-import { auth } from "../../components/firebase/firebase";
+import { auth } from "../../components/firebase/firebase.ts";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import EditBtn from "../../components/button/editbutton/Editbtn.tsx";
 
 type Props = {
   isOpen: boolean;
@@ -50,11 +51,11 @@ export default function ForgotPassword({ isOpen, onClose }: Props) {
         >
           {({ isSubmitting }) => (
             <Form>
-                <ErrorMessage
-                  name="email"
-                  component="p"
-                  className="text-red-400! text-sm mb-2 "
-                />
+              <ErrorMessage
+                name="email"
+                component="p"
+                className="text-red-400! text-sm mb-2 "
+              />
               <Field
                 type="text"
                 name="email"
@@ -62,21 +63,22 @@ export default function ForgotPassword({ isOpen, onClose }: Props) {
                 className="w-full  p-2 rounded mb-2"
               />
 
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-amber-300 text-black py-2 rounded mb-2 cursor-pointer"
-              >
-                {isSubmitting ? "Sending..." : "Send Reset Link"}
-              </button>
+              <div className="flex justify-evenly items-center">
+                <EditBtn
+                  type="submit"
+                  disabled={isSubmitting}
+                  icon=""
+                  label={isSubmitting ? "Sending..." : "Send Reset Link"}
+                />
 
-              <button
-                type="button"
-                onClick={onClose}
-                className="w-full text-gray-500 cursor-pointer"
-              >
-                Cancel
-              </button>
+                <EditBtn
+                  onClick={onClose}
+                  type="button"
+                  label="cancel"
+                  icon=""
+                  variant="secondary"
+                />
+              </div>
             </Form>
           )}
         </Formik>

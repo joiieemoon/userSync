@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { doc, updateDoc } from "firebase/firestore";
-import { db } from "../../components/firebase/firebase";
+import { db } from "../../components/firebase/firebase.ts";
 import { updateUser } from "../../redux/store/authSlice";
 import type { AppDispatch } from "../../redux/store/store";
 import { toast } from "react-toastify";
@@ -13,6 +13,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import avatar from "../../../public/avtar.png";
 import useTitle from "../../hooks/useTitle/useTitle";
 import { ValidationError } from "yup";
+import EditBtn from "../../components/button/editbutton/Editbtn.tsx";
 interface Props {
   user: {
     uid: string;
@@ -98,7 +99,7 @@ export default function UpdateProfileModal({ user, onClose }: Props) {
           validationSchema={updateProfileValidationSchema}
           onSubmit={handleSubmit}
         >
-          {({ values, isSubmitting,setFieldValue }) => (
+          {({ values, isSubmitting, setFieldValue }) => (
             <Form className="space-y-6">
               {/* Avatar */}
               <div className="flex flex-col md:flex-row items-center gap-4 mb-6">
@@ -113,9 +114,9 @@ export default function UpdateProfileModal({ user, onClose }: Props) {
                   onChange={(e) => {
                     const file = e.target.files?.[0];
                     if (file) {
-                      setSelectedFile(file); 
+                      setSelectedFile(file);
                       setPreview(URL.createObjectURL(file));
-                      setFieldValue("profilePhoto", file); 
+                      setFieldValue("profilePhoto", file);
                     }
                   }}
                   className="text-sm"
@@ -169,22 +170,23 @@ export default function UpdateProfileModal({ user, onClose }: Props) {
 
               {/* Buttons */}
               <div className="flex justify-end gap-4">
-                <button
-                  type="button"
+                <EditBtn
                   onClick={onClose}
-                  className="px-6 py-3 bg-gray-200 rounded-xl"
-                >
-                  Cancel
-                </button>
+                  label="cancel"
+                  icon=""
+                  variant="secondary"
+                />
 
-                <button
-                  // type="submit"
+                <EditBtn
+                icon=""
+                type="submit"
+                  label={isSubmitting ? "Saving...." : "Save Changes"}
                   disabled={isSubmitting}
-                  type="submit"
-                  className="px-6 py-3 bg-amber-300 text-black rounded-xl cursor-pointer"
-                > 
+                >
+                  {" "}
                   {isSubmitting ? "Saving...." : "Save Changes"}
-                </button>
+                </EditBtn>
+              
               </div>
             </Form>
           )}

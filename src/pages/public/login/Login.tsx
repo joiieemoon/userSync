@@ -4,7 +4,7 @@ import { loginFields } from "../../../components/formfields/formconfig";
 import { Link } from "react-router-dom";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { auth } from "../../../components/firebase/firebase";
+import { auth } from "../../../components/firebase/firebase.ts";
 import { loginvalidationSchema } from "../../../components/validations/validationSchema";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { ToastContainer, toast } from "react-toastify";
@@ -27,8 +27,9 @@ import {
   setDoc,
   where,
 } from "firebase/firestore";
-import { db } from "../../../components/firebase/firebase";
+import { db } from "../../../components/firebase/firebase.ts";
 import { setUserPermissions } from "../../../redux/permissionslice/permissionslice";
+import EditBtn from "../../../components/button/editbutton/Editbtn.tsx";
 
 const loginValidationSchema = Yup.object({
   email: Yup.string().email("Invalid email").required("Email is required"),
@@ -130,7 +131,7 @@ export const Login = () => {
 
               toast.success("User Login Successfully!!", {
                 position: "top-center",
-                onClose: () => setisDisable(false), 
+                onClose: () => setisDisable(false),
               });
 
               // navigate("/", { replace: true });
@@ -141,7 +142,7 @@ export const Login = () => {
               setisDisable(true);
               toast.error("Login failed! " + cleanMessage, {
                 position: "top-center",
-                autoClose:2000,
+                autoClose: 2000,
                 onClose: () => setisDisable(false),
               });
             } finally {
@@ -232,14 +233,15 @@ export const Login = () => {
                   </div>
                 </div>
               </div>
-
-              <Button
-                type="submit"
-                disabled={isSubmitting || isDisable}
-                className="w-full mt-0 bg-amber-300 text-black cursor-pointer border-none"
-              >
-                {isSubmitting || isDisable ? "Login..." : "Login"}
-              </Button>
+              <div className="flex justify-center items-center">
+                <EditBtn
+                  type="submit"
+                  disabled={isSubmitting || isDisable}
+                  label={isSubmitting || isDisable ? "Login..." : "Login"}
+                  icon=""
+                  variant="main"
+                />
+              </div>
 
               <span className="">
                 New user ?{" "}

@@ -17,7 +17,7 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import { MdOutlineEdit } from "react-icons/md";
-import { db } from "../../../../components/firebase/firebase";
+import { db } from "../../../../components/firebase/firebase.ts";
 import useUsers from "../../../../hooks/useUser/useUsers";
 import SearchBar from "../../../../components/SearchBar/SearchBar";
 import EditBtn from "../../../../components/button/editbutton/Editbtn";

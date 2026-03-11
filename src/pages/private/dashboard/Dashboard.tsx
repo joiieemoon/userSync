@@ -6,7 +6,8 @@ import { Sidebarmain } from "../../../components/sidebar/Sidebar";
 import dashboardBg from "../../../../public/dashboardbg.jpg";
 import avatar from "../../../../public/avtar.png";
 import useTitle from "../../../hooks/useTitle/useTitle";
-import { Spinner } from "flowbite-react";
+
+import Spinnerring from "../../../components/spinner/Spinnerring";
 
 const Dashboard = () => {
   const user = useSelector((state: RootState) => state.auth.user);
@@ -16,10 +17,7 @@ const Dashboard = () => {
   useTitle("User Sync-Dashboard");
   if (!user) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        {/* <p>Loading profile...</p> */}
-        <Spinner aria-label="Loading profile" />
-      </div>
+      <Spinnerring/>
     );
   }
   return (

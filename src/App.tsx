@@ -1,12 +1,8 @@
 import React, { useState, useEffect, lazy, Suspense } from "react";
-// import { Login as Loginmain } from "./pages/public/login/Login";
-// import { Signup as Signupmain } from "./pages/public/signup/Signup";
 import { ToastContainer } from "react-toastify";
-import { useSelector } from "react-redux";
-
 import { Spinner } from "flowbite-react";
 import { Route, Routes, Navigate } from "react-router-dom";
-import { auth } from "./components/firebase/firebase";
+import { auth } from "./components/firebase/firebase.ts";
 const Loginmain = lazy(() =>
   import("./pages/public/login/Login").then((module) => ({
     default: module.Login,

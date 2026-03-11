@@ -1,9 +1,5 @@
-// formconfig.ts
 
-// import { FormField } from "../../../components/formfields/formtypes";
 import type { FormField } from "./formtypes";
-
-
 export const signupFields: FormField[] = [
   {
     name: "firstName",
@@ -23,12 +19,6 @@ export const signupFields: FormField[] = [
     type: "text",
     placeholder: "joiie@yopmail.com",
   },
-  // {
-  //   name: "profilePhoto",
-  //   label: "Profile Photo",
-  //   type: "file",
-  //   accept: "image/*"
-  // },
 
   {
     name: "password",
