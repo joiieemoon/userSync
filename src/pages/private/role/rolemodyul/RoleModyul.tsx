@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { MdAdd } from "react-icons/md";
-import { CiEdit } from "react-icons/ci";
 import { MdDeleteOutline } from "react-icons/md";
 import { FaSortAlphaDown, FaSortAlphaDownAlt } from "react-icons/fa";
 import { canPermit } from "../../../../helper/canPermit/canpermit";
-
 import {
   collection,
   getDocs,
@@ -18,7 +16,6 @@ import {
 } from "firebase/firestore";
 import { MdOutlineEdit } from "react-icons/md";
 import { db } from "../../../../components/firebase/firebase.ts";
-import useUsers from "../../../../hooks/useUser/useUsers";
 import SearchBar from "../../../../components/SearchBar/SearchBar";
 import EditBtn from "../../../../components/button/editbutton/Editbtn";
 import { useNavigate } from "react-router-dom";
@@ -78,9 +75,7 @@ const RoleModyul = () => {
 
       await deleteDoc(doc(db, "roles", roleId));
       console.log("delte role ", roleName);
-      // toast.success(
-      //   `Role '${roleName}' deleted and users updated to 'No Role'.`,
-      // );
+     
       toast.success(
         `Role '${roleName}' deleted successfully! Users have been updated to 'No Role'.`,
         { position: "top-center" },
@@ -172,19 +167,19 @@ const RoleModyul = () => {
                   canPermit(currentUserPermissions, "role", "canDelete")) && (
                   <td className="p-2 flex gap-2">
                     {canPermit(currentUserPermissions, "role", "canEdit") && (
-                      <button
+                      <div
                         onClick={() => navigation(`/role/edit/${role.id}`)}
                       >
                         <MdOutlineEdit className="text-2xl cursor-pointer" />
-                      </button>
+                      </div>
                     )}
                     {canPermit(currentUserPermissions, "role", "canDelete") && (
-                      <button
-                        // onClick={() => removeRole(role.id, role.roleName)}
+                      <div
+                      
                         onClick={() => setRoleToDelete(role)}
                       >
                         <MdDeleteOutline className="text-2xl cursor-pointer" />
-                      </button>
+                      </div>
                     )}
                   </td>
                 )}

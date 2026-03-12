@@ -5,7 +5,6 @@ export const canPermit = (
 ) => {
     const modulekey=module.toLowerCase();
     const result = permissions?.[modulekey]?.[action] === true;
-    // console.log(`canPermit -> module: ${module}, action: ${action}, result: ${result}`);
-    // return permissions?.[modulekey]?.[action] === true;
+  
     return result;
 };

@@ -8,11 +8,9 @@ import { toast } from "react-toastify";
 import { FileInput } from "flowbite-react";
 import "react-toastify/dist/ReactToastify.css";
 import { updateProfileValidationSchema } from "../../../src/components/validations/validationSchema";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-// import { avatarTheme } from "flowbite-react";
+import { Formik, Form, } from "formik";;
 import avatar from "../../../public/avtar.png";
 import useTitle from "../../hooks/useTitle/useTitle";
-import { ValidationError } from "yup";
 import EditBtn from "../../components/button/editbutton/Editbtn.tsx";
 import Inputfields from "../../components/formfields/Formfields.tsx";
 interface Props {
@@ -110,7 +108,7 @@ export default function UpdateProfileModal({ user, onClose }: Props) {
             setFieldValue,
           }) => (
             <Form className="space-y-6">
-              {/* Avatar */}
+        
               <div className="flex flex-col md:flex-row items-center gap-4 mb-6">
                 <img
                   src={preview || values.profilePhoto || avatar}
@@ -135,7 +133,7 @@ export default function UpdateProfileModal({ user, onClose }: Props) {
                 )}
               </div>
 
-              {/* Form Fields */}
+             
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {["firstName", "lastName", "email", "phone"].map((field) => (
                   <Inputfields
@@ -173,7 +171,7 @@ export default function UpdateProfileModal({ user, onClose }: Props) {
                 />
               </div>
 
-              {/* Buttons */}
+          
               <div className="flex justify-end gap-4">
                 <EditBtn
                   type="button"

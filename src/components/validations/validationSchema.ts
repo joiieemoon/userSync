@@ -1,12 +1,19 @@
 import * as yup from "yup";
 import { errorMessage } from "./errorMessage";
 
-const passwordRegx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
 const letterRegx = /^[A-Za-z]+$/;
 
 export const loginvalidationSchema = yup.object().shape({
   email: yup.string().email(errorMessage.email).required(errorMessage.email),
-  password: yup.string().matches(passwordRegx, errorMessage.passwordStrength).required(errorMessage.password)
+  password: yup
+    .string()
+    .required(errorMessage.required)
+    .min(4, errorMessage.passwordMin)
+    .matches(/[A-Z]/, errorMessage.passwordUpper)
+    .matches(/[a-z]/, errorMessage.passwordLower)
+    .matches(/[0-9]/, errorMessage.passwordNumber)
+    .matches(/[@$!%*?&]/, errorMessage.passwordSpecial),
 })
 
 export const signupvalidationSchema = yup.object().shape({
@@ -51,8 +58,8 @@ export const updateProfileValidationSchema = yup.object().shape({
   profilePhoto: yup
     .mixed()
     .test("fileSize", "File size is too large", (value) => {
-      if (!value) return true; 
-      return value.size <1 * 1024 * 1024; // 2MB limit
+      if (!value) return true;
+      return value.size < 1 * 1024 * 1024; // 2MB limit
     })
     .test("fileFormat", "Unsupported Format", (value) => {
       if (!value) return true;

@@ -10,11 +10,9 @@ import {
   where,
 } from "firebase/firestore";
 import { useFormik } from "formik";
-import { Label, TextInput } from "flowbite-react";
 import ToggleSwitch from "../../components/button/toggleSwitch/ToggleSwitch";
 import { toast } from "react-toastify";
 import { useParams, useNavigate } from "react-router-dom";
-import Navbar from "../../pages/private/navbar/Navbar";
 import EditBtn from "../../components/button/editbutton/Editbtn";
 import { db } from "../../components/firebase/firebase.ts";
 import Inputfields from "../../components/formfields/Formfields.tsx";
@@ -118,7 +116,7 @@ const EditRole: React.FC = () => {
         }
         navigate("/role");
       } catch (error) {
-        console.error("Error saving role:", error);
+        
         toast.error("Error saving role!", { position: "top-center" });
       }
     },

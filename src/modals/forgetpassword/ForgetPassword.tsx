@@ -2,14 +2,14 @@ import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../../components/firebase/firebase.ts";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, } from "formik";
 import EditBtn from "../../components/button/editbutton/Editbtn.tsx";
 import Inputfields from "../../components/formfields/Formfields.tsx";
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: () => void;
+  onSubmit: (email:string) => void;
 };
 
 const forgotPasswordSchema = Yup.object({
@@ -34,7 +34,7 @@ export default function ForgotPassword({ isOpen, onClose }: Props) {
 
       resetForm();
       onClose();
-    } catch (error: any) {
+    } catch (error) {
       toast.error(error.message, {
         position: "top-center",
       });
@@ -53,11 +53,7 @@ export default function ForgotPassword({ isOpen, onClose }: Props) {
         >
           {({ isSubmitting, values, handleChange, handleBlur }) => (
             <Form>
-              <ErrorMessage
-                name="email"
-                component="p"
-                className="text-red-400! text-sm mb-2 "
-              />
+           
 
               <Inputfields
               label="Email"

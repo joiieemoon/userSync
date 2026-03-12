@@ -3,11 +3,11 @@ import { Sidebarmain } from "../../../components/sidebar/Sidebar";
 import Navbar from "../navbar/Navbar";
 import RoleModyul from "./rolemodyul/RoleModyul";
 import useTitle from "../../../hooks/useTitle/useTitle";
-// import EditRole from "../../../modals/addRoleModal/AddRoleModal";
+
 
 const Role = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  //   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  
   useTitle("User Sync-Roles");
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -28,7 +28,7 @@ const Role = () => {
         {/* Content */}
         <main className="p-8 pt-19 space-y-6">
           <RoleModyul />
-          {/* <EditRole /> */}
+         
         </main>
       </div>
     </div>

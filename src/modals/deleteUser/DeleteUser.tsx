@@ -30,6 +30,7 @@ const DeleteUser: React.FC<Props> = ({ isOpen, onClose, user }) => {
       onClose();
     } catch (error) {
       console.error("Error deleting user:", error);
+      
     }
   };
 

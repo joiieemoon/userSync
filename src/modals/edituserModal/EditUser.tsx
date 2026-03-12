@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../../components/firebase/firebase.ts";
 import { updateDoc, doc, collection, getDocs } from "firebase/firestore";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form } from "formik";
 import { updateProfileValidationSchema } from "../../components/validations/validationSchema";
 import { toast } from "react-toastify";
-import useTitle from "../../hooks/useTitle/useTitle";
 import EditBtn from "../../components/button/editbutton/Editbtn.tsx";
+import Inputfields from "../../components/formfields/Formfields.tsx";
+import { editUserFields } from "../../components/formfields/formconfig.ts";
 
 type Props = {
   isOpen: boolean;
@@ -20,33 +21,29 @@ type Props = {
 };
 
 const EditUser: React.FC<Props> = ({ isOpen, onClose, user }) => {
-  const [roles, setRoles] = useState<any[]>([]);
-  // useTitle("User Sync-Edit User");
+  const [roles, setRoles] = useState<{ id: string; roleName: string }[]>([]);
+
   useEffect(() => {
     const fetchRoles = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, "roles"));
-        const roleList = querySnapshot.docs.map((docSnap) => ({
-          id: docSnap.id,
-          roleName: docSnap.data().roleName,
-        }));
-        setRoles(roleList);
-      } catch (error) {
-        console.error("Error fetching roles:", error);
-      }
+      const querySnapshot = await getDocs(collection(db, "roles"));
+      const roleList = querySnapshot.docs.map((docSnap) => ({
+        id: docSnap.id,
+        roleName: docSnap.data().roleName,
+      }));
+      setRoles(roleList);
     };
-
     fetchRoles();
   }, []);
 
   if (!isOpen || !user) return null;
 
-  const initialValues = {
-    firstName: user.firstName || "",
-    lastName: user.lastName || "",
-    email: user.email || "",
-    role: user.role || "",
-  };
+  const initialValues = editUserFields.reduce(
+    (acc, field) => ({
+      ...acc,
+      [field.name]: user[field.name as keyof typeof user] || "",
+    }),
+    {} as Record<string, string>,
+  );
 
   const handleSubmit = async (
     values: typeof initialValues,
@@ -66,8 +63,8 @@ const EditUser: React.FC<Props> = ({ isOpen, onClose, user }) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white  w-96 p-6 rounded-xl shadow-lg">
-        <h2 className="text-xl font-semibold mb-4 ">
+      <div className="bg-white w-96 p-6 rounded-xl shadow-lg">
+        <h2 className="text-xl font-semibold mb-4">
           Edit User {user.firstName}
         </h2>
 
@@ -77,85 +74,62 @@ const EditUser: React.FC<Props> = ({ isOpen, onClose, user }) => {
           validationSchema={updateProfileValidationSchema}
           onSubmit={handleSubmit}
         >
-          {({ isSubmitting }) => (
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            isSubmitting,
+          }) => (
             <Form className="space-y-4">
-              <div>
-                <Field
-                  type="text"
-                  name="firstName"
-                  placeholder="First Name"
-                  className="w-full bg-gray-300 p-2 rounded border-none"
-                />
-                <ErrorMessage
-                  name="firstName"
-                  component="div"
-                  className="text-red-500 text-sm"
-                />
-              </div>
-
-              <div>
-                <Field
-                  type="text"
-                  name="lastName"
-                  placeholder="Last Name"
-                  className="w-full bg-gray-300 p-2 rounded border-none"
-                />
-                <ErrorMessage
-                  name="lastName"
-                  component="div"
-                  className="text-red-500 text-sm"
-                />
-              </div>
-
-              <div>
-                <Field
-                  type="email"
-                  name="email"
-                  placeholder="Email"
-                  className="w-full bg-gray-300 p-2 rounded border-none"
-                />
-                <ErrorMessage
-                  name="email"
-                  component="div"
-                  className="text-red-500 text-sm"
-                />
-              </div>
-
-              {/*  Dynamic Role Dropdown */}
-              <div>
-                <Field
-                  as="select"
-                  name="role"
-                  className="w-full bg-gray-300 p-2 rounded border-none"
-                  disabled={user.role === "admin"}
-                >
-                  <option value="">Select Role</option>
-                  {roles
-                    .filter((role) => role.roleName.toLowerCase() !== "admin")
-                    .map((role) => (
-                      <option key={role.id} value={role.roleName}>
-                        {role.roleName}
-                      </option>
-                    ))}
-                </Field>
-
-                <ErrorMessage
-                  name="role"
-                  component="div"
-                  className="text-red-500 text-sm"
-                />
-              </div>
+              {editUserFields.map((field) =>
+                field.name === "role" ? (
+                  <Inputfields
+                    key={field.name}
+                    label={field.label}
+                    name={field.name}
+                    as="select"
+                    value={values.role}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={!!touched.role && !!errors.role}
+                    errorMessage={errors.role}
+                    disabled={user.role === "admin"}
+                  >
+                    <option value="">Select Role</option>
+                    {roles
+                      .filter((r) => r.roleName.toLowerCase() !== "admin")
+                      .map((role) => (
+                        <option key={role.id} value={role.roleName}>
+                          {role.roleName}
+                        </option>
+                      ))}
+                  </Inputfields>
+                ) : (
+                  <Inputfields
+                    key={field.name}
+                    label={field.label}
+                    name={field.name}
+                    type={field.type}
+                    placeholder={field.placeholder}
+                    value={values[field.name]}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={!!touched[field.name] && !!errors[field.name]}
+                    errorMessage={errors[field.name]}
+                  />
+                ),
+              )}
 
               <div className="flex justify-end gap-3">
                 <EditBtn
                   onClick={onClose}
                   type="button"
-                  label="cancel"
+                  label="Cancel"
                   icon=""
                   variant="secondary"
                 />
-            
-
                 <EditBtn
                   disabled={isSubmitting}
                   type="submit"

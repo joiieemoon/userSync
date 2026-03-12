@@ -1,7 +1,7 @@
 import useUsers from "../../../../hooks/useUser/useUsers";
 import { MdAdd } from "react-icons/md";
-import { FaRegEdit, FaSortAlphaDown, FaSortAlphaDownAlt } from "react-icons/fa";
-import { AiOutlineUserDelete } from "react-icons/ai";
+import {  FaSortAlphaDown, FaSortAlphaDownAlt } from "react-icons/fa";
+
 import { useState, useEffect } from "react";
 import { auth } from "../../../../components/firebase/firebase.ts";
 import SearchBar from "../../../../components/SearchBar/SearchBar";
@@ -134,21 +134,21 @@ export default function UsersDetails() {
                   canPermit(currentUserPermissions, "user", "canDelete")) && (
                   <td className="p-2 flex gap-2">
                     {canPermit(currentUserPermissions, "user", "canEdit") && (
-                      <button
+                      <div
                         onClick={() => setUserToEdit(u)}
                         className="cursor-pointer"
                       >
                         <MdOutlineEdit className="text-black text-2xl" />
-                      </button>
+                      </div>
                     )}
 
                     {canPermit(currentUserPermissions, "user", "canDelete") && (
-                      <button
+                      <div
                         onClick={() => setUserToDelete(u)}
                         className="cursor-pointer"
                       >
                         <MdDeleteOutline className="text-black text-2xl " />
-                      </button>
+                      </div>
                     )}
                   </td>
                 )}

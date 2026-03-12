@@ -1,13 +1,11 @@
 import loginCover from "../../../assets/img/logincover.png";
-
 import { signupFields } from "../../../components/formfields/formconfig";
 import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 import { auth, db } from "../../../components/firebase/firebase.ts";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { setDoc, doc, serverTimestamp } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { usepasswordtoggle } from "../../../components/formfields/usepasswordtoggle.js";
 import { signupvalidationSchema } from "../../../components/validations/validationSchema";
@@ -21,7 +19,7 @@ export const Signup = () => {
   const navigate = useNavigate();
   return (
     <div className="flex flex-col md:flex-row min-h-screen ">
-      {/* Form Side */}
+   
       <div className="flex-1 flex items-center justify-center p-6">
         <Formik
           initialValues={{
@@ -35,6 +33,7 @@ export const Signup = () => {
           }}
           validationSchema={signupvalidationSchema}
           onSubmit={async (values, { setSubmitting }) => {
+            
             try {
               const userCreadential = await createUserWithEmailAndPassword(
                 auth,
@@ -43,12 +42,11 @@ export const Signup = () => {
               );
               const user = userCreadential.user;
 
-              const storage = getStorage();
               if (user) {
                 await setDoc(doc(db, "Users", user.uid), {
                   email: user.email,
                   firstName: values.firstName,
-                  lastname: values.lastName,
+                  lastName: values.lastName,
                   password: values.password,
 
                   role: "user",
@@ -56,6 +54,7 @@ export const Signup = () => {
                   createdAt: serverTimestamp(),
                 });
               }
+             
               console.log("user registerd", user);
 
               toast.success("User Registerd Successfully!!", {
@@ -80,15 +79,15 @@ export const Signup = () => {
             touched,
             handleChange,
             handleBlur,
-            setFieldValue,
+          
             handleSubmit,
             isSubmitting,
           }) => (
             <Form
+            
               onSubmit={handleSubmit}
               className="w-full max-w-md bg-white/80  p-9  rounded-2xl shadow-2xl space-y-5 relative"
             >
-              <ToastContainer position="top-center" />
               <div className="text-center">
                 <h2 className="text-3xl font-bold ">Create Account</h2>
                 <p className="text-gray-500  text-sm mt-1">
@@ -105,6 +104,7 @@ export const Signup = () => {
                     }`}
                   >
                     <Inputfields
+                  
                       label={field.label}
                       id={field.name}
                       name={field.name}

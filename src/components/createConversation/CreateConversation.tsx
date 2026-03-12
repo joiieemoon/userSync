@@ -24,7 +24,7 @@ export const createConversation = async (
       seenBy: user2,
     },
   );
-  console.log("this is work ");
+
   alert(`message recives from ${user2}`);
   return (docRef.id, conversation.id);
 };

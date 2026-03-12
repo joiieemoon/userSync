@@ -76,7 +76,7 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onClose }) => {
                 onClose();
               },
             });
-          } catch (error: any) {
+          } catch (error) {
             setisDisable(true);
             toast.error(error.message, {
               position: "top-center",

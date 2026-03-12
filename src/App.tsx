@@ -1,18 +1,17 @@
 import React, { useState, useEffect, lazy, Suspense } from "react";
 import { ToastContainer } from "react-toastify";
-import { Spinner } from "flowbite-react";
 import { Route, Routes, Navigate } from "react-router-dom";
 import { auth } from "./components/firebase/firebase.ts";
 const Loginmain = lazy(() =>
   import("./pages/public/login/Login").then((module) => ({
     default: module.Login,
-  }))
+  })),
 );
 
 const Signupmain = lazy(() =>
   import("./pages/public/signup/Signup").then((module) => ({
     default: module.Signup,
-  }))
+  })),
 );
 const Home = lazy(() => import("./pages/private/home/Home"));
 const Profile = lazy(() => import("./pages/private/profile/Profile"));
@@ -22,10 +21,11 @@ const Role = lazy(() => import("./pages/private/role/Role"));
 const EditRoleMain = lazy(
   () => import("./pages/private/role/rolemodyul/editRole/EditRoleMain"),
 );
-import ChatLayout from "./pages/private/chat/Layout/ChatLayout";
+const ChatLayout = lazy(() => import("./pages/private/chat/Layout/ChatLayout"));
 const Errorpage = lazy(() => import("./pages/public/404ErrorPage/Errorpage"));
 
 import type { User } from "firebase/auth";
+import Spinnerring from "./components/spinner/Spinnerring.tsx";
 
 const App = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -40,17 +40,13 @@ const App = () => {
   }, []);
 
   if (!authReady) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <Spinner aria-label="Loading..." />
-      </div>
-    );
+    return <Spinnerring />;
   }
 
   return (
     <>
       <ToastContainer style={{ zIndex: 99999 }} />
-      <Suspense fallback={<div className="w-screen h-screen border flex justify-center items-center"><Spinner size="lg"  /></div> }>
+      <Suspense fallback={<Spinnerring />}>
         <Routes>
           {!user ? (
             <>

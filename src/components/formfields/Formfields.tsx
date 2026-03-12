@@ -19,8 +19,8 @@ type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   error?: boolean;
   label?: string;
   errorMessage?: string;
-  as?: "input" | "textarea";
-  rows?: number; // for textarea
+  as?: "input" | "textarea" | "select";
+  rows?: number; 
 };
 
 const Inputfields: FC<InputProps> = ({
@@ -60,7 +60,20 @@ const Inputfields: FC<InputProps> = ({
           {label}
         </label>
       )}
-      {as === "textarea" ? (
+      {as === "select" ? (
+        <select
+          id={id}
+          name={name}
+          value={value}
+          onChange={onChange}
+          onBlur={onBlur}
+          disabled={disabled}
+          className={inputClasses}
+          {...rest}
+        >
+          {rest.children}
+        </select>
+      ) : as === "textarea" ? (
         <textarea
           id={id}
           name={name}

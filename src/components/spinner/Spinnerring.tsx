@@ -9,7 +9,6 @@ const Spinnerring = () => {
           aria-label="Success spinner example "
           className="w-15 h-15   "
         />{" "}
- 
       </div>
     </div>
   );

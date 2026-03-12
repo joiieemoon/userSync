@@ -1,20 +1,16 @@
 import loginCover from "../../../assets/img/logincover.png";
-
 import { loginFields } from "../../../components/formfields/formconfig";
 import { Link } from "react-router-dom";
 import { Formik, Form } from "formik";
-import * as Yup from "yup";
 import { auth } from "../../../components/firebase/firebase.ts";
 import { loginvalidationSchema } from "../../../components/validations/validationSchema";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router-dom";
 import { HiEye, HiEyeOff } from "react-icons/hi";
 import { useState } from "react";
 import { usepasswordtoggle } from "../../../components/formfields/usepasswordtoggle";
 import ForgotPassword from "../../../modals/forgetpassword/ForgetPassword";
-
 import { useDispatch } from "react-redux";
 import { setUser } from "../../../redux/store/authSlice";
 import type { AppDispatch } from "../../../redux/store/store";
@@ -33,15 +29,7 @@ import { setUserPermissions } from "../../../redux/permissionslice/permissionsli
 import EditBtn from "../../../components/button/editbutton/Editbtn.tsx";
 import Inputfields from "../../../components/formfields/Formfields.tsx";
 
-const loginValidationSchema = Yup.object({
-  email: Yup.string().email("Invalid email").required("Email is required"),
-  password: Yup.string()
-    .min(6, "Password must be at least 6 characters")
-    .required("Password is required"),
-});
-
 export const Login = () => {
-  const navigate = useNavigate();
   const { showPassword, togglePassword } = usepasswordtoggle();
   const [showForgot, setShowForgot] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
@@ -60,7 +48,7 @@ export const Login = () => {
             email: "",
             password: "",
           }}
-          validationSchema={loginValidationSchema}
+          validationSchema={loginvalidationSchema}
           onSubmit={async (values, { setSubmitting }) => {
             try {
               const userCredential = await signInWithEmailAndPassword(
@@ -114,7 +102,7 @@ export const Login = () => {
                       profilePhoto:
                         data.profilePhoto?.trim() ||
                         generateAvatar(`${data.firstName} ${data.lastName}`),
-                      role: data.role || "User", // default role
+                      role: data.role || "User",
                       phone: data.phone || "",
                       bio: data.bio || "",
                     }),
@@ -136,7 +124,7 @@ export const Login = () => {
             } catch (error) {
               const cleanMessage = error.message
                 .replace("Firebase:", "")
-                .trim();
+                .trim();  
               setisDisable(true);
               toast.error("Login failed! " + cleanMessage, {
                 position: "top-center",
@@ -160,7 +148,7 @@ export const Login = () => {
           }) => (
             <Form
               onSubmit={handleSubmit}
-              validationSchema={!showForgot ? loginValidationSchema : null}
+              
               className="w-full max-w-md bg-white/80  p-10 rounded-2xl shadow-2xl space-y-5"
             >
               <div className="text-center">
@@ -170,7 +158,6 @@ export const Login = () => {
 
               {loginFields.map((field) => (
                 <div key={field.name} className="relative">
-              
                   <Inputfields
                     label={field.label}
                     id={field.name}

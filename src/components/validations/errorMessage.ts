@@ -1,13 +1,13 @@
 export const errorMessage = {
   required: "This field is required.",
-  letter:"this field only conatain letter",
+  letter: "this field only conatain letter",
   firstname: "Please enter first name.",
   lastname: "Please enter last name.",
   email: "Please enter a  email address.",
   minLength: "This field must contain at least 6 characters.",
   password: "Please enter a  password.",
   cpasswordmatch: "Password and Confirm Password must match.",
- 
+  passwordStrength: "Password must contain uppercase, lowercase, number, special character and be at least 8 characters",
   passwordMin: "Password must be at least 4 characters long.",
   passwordUpper: "Password must contain at least one uppercase letter.",
   passwordLower: "Password must contain at least one lowercase letter.",

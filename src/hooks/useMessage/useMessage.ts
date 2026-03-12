@@ -6,7 +6,7 @@ type Message = {
     id: string;
     senderId: string;
     text: string;
-    createdAt: any;
+    createdAt: string;
     seenBy: string[];
 };
 
@@ -26,7 +26,7 @@ export const useMessage = (conversationId: string) => {
                 id: doc.id,
                 ...doc.data()
             }));
-            console.log("Messages:", msgs);
+       
             setMessages(msgs);
         });
 
