@@ -28,6 +28,8 @@ import { db } from "../../../components/firebase/firebase.ts";
 import { setUserPermissions } from "../../../redux/permissionslice/permissionslice";
 import EditBtn from "../../../components/button/editbutton/Editbtn.tsx";
 import Inputfields from "../../../components/formfields/Formfields.tsx";
+import { TbEyeBitcoin } from "react-icons/tb";
+import Eyebtn from "../../../components/button/eyebtn/Eyebtn.tsx";
 
 export const Login = () => {
   const { showPassword, togglePassword } = usepasswordtoggle();
@@ -124,7 +126,7 @@ export const Login = () => {
             } catch (error) {
               const cleanMessage = error.message
                 .replace("Firebase:", "")
-                .trim();  
+                .trim();
               setisDisable(true);
               toast.error("Login failed! " + cleanMessage, {
                 position: "top-center",
@@ -148,7 +150,6 @@ export const Login = () => {
           }) => (
             <Form
               onSubmit={handleSubmit}
-              
               className="w-full max-w-md bg-white/80  p-10 rounded-2xl shadow-2xl space-y-5"
             >
               <div className="text-center">
@@ -185,13 +186,11 @@ export const Login = () => {
                     }
                   />
                   {field.type === "password" && (
-                    <button
-                      type="button"
+                    <Eyebtn
                       onClick={() => togglePassword(field.name)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer"
-                    >
-                      {showPassword[field.name] ? <HiEyeOff /> : <HiEye />}
-                    </button>
+                      icon={showPassword[field.name] ? <HiEyeOff /> : <HiEye />}
+                      className="absolute right-3 top-1/2 -translate-y-1/2"
+                    />
                   )}
                 </div>
               ))}

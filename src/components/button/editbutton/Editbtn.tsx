@@ -14,6 +14,7 @@ const EditBtn = ({
   variant = "primary",
   type = "button",
   disabled = false,
+  className = "",
   ...rest
 }: EditBtnProps) => {
   const baseStyle =
@@ -35,7 +36,7 @@ const EditBtn = ({
         disabled
           ? "opacity-50 cursor-not-allowed hover:scale-100 hover:translate-y-0"
           : "cursor-pointer"
-      }`}
+      } ${className}`}
     >
       {icon && <span>{icon}</span>}
       {label}
