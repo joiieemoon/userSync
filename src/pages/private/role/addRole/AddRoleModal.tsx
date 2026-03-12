@@ -10,44 +10,55 @@ import {
   where,
 } from "firebase/firestore";
 import { useFormik } from "formik";
-import ToggleSwitch from "../../components/button/toggleSwitch/ToggleSwitch";
 import { toast } from "react-toastify";
 import { useParams, useNavigate } from "react-router-dom";
-import EditBtn from "../../components/button/editbutton/Editbtn";
-import { db } from "../../components/firebase/firebase.ts";
-import Inputfields from "../../components/formfields/Formfields.tsx";
+import EditBtn from "../../../../components/button/editbutton/Editbtn";
+import { db } from "../../../../components/firebase/firebase";
+import FormController from "../../../../components/form-controller";
+
+type Permission = {
+  canView: boolean;
+  canAdd: boolean;
+  canEdit: boolean;
+  canDelete: boolean;
+};
+
 type Role = {
   id?: string;
   roleName: string;
   permissions: {
-    [module: string]: {
-      canView: boolean;
-      canAdd: boolean;
-      canEdit: boolean;
-      canDelete: boolean;
-    };
+    [module: string]: Permission;
   };
 };
 
 const modulesList = ["user", "role", "chat", "campaign"];
-const permissionKeys = ["canView", "canAdd", "canEdit", "canDelete"];
+
+const permissionKeys: (keyof Permission)[] = [
+  "canView",
+  "canAdd",
+  "canEdit",
+  "canDelete",
+];
 
 const EditRole: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+
   const [role, setRole] = useState<Role | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Fetch role if editing
+  // Fetch Role for edit
   useEffect(() => {
     const fetchRole = async () => {
       if (id) {
         const roleRef = doc(db, "roles", id);
         const snap = await getDoc(roleRef);
+
         if (snap.exists()) {
           setRole({ id: snap.id, ...snap.data() } as Role);
         }
       }
+
       setLoading(false);
     };
 
@@ -56,6 +67,7 @@ const EditRole: React.FC = () => {
 
   // Initialize permissions
   const initialPermissions: Role["permissions"] = {};
+
   modulesList.forEach((mod) => {
     initialPermissions[mod] = role?.permissions?.[mod] || {
       canView: false,
@@ -71,26 +83,27 @@ const EditRole: React.FC = () => {
       roleName: role?.roleName || "",
       permissions: initialPermissions,
     },
+
     onSubmit: async (values) => {
       try {
         if (id) {
-          // Edit existing role
           const roleRef = doc(db, "roles", id);
-          const oldRoleSnap = await getDoc(roleRef);
-          const oldRoleName = oldRoleSnap?.data()?.roleName;
 
-          // Update role document
+          const oldRoleSnap = await getDoc(roleRef);
+          const oldRoleName = oldRoleSnap.data()?.roleName;
+
           await updateDoc(roleRef, {
             roleName: values.roleName,
             permissions: values.permissions,
           });
 
-          // Update all users with the old role
+          // Update users with same role
           if (oldRoleName) {
             const usersQuery = query(
               collection(db, "Users"),
               where("role", "==", oldRoleName),
             );
+
             const usersSnap = await getDocs(usersQuery);
 
             const updatePromises = usersSnap.docs.map((userDoc) =>
@@ -98,26 +111,30 @@ const EditRole: React.FC = () => {
                 role: values.roleName,
               }),
             );
+
             await Promise.all(updatePromises);
           }
-          // await Promise.all(updatePromises);
 
-          toast.success("Role updated successfully!", {
+          toast.success("Role updated successfully", {
             position: "top-center",
           });
         } else {
-          // Add new role
           await addDoc(collection(db, "roles"), {
             roleName: values.roleName,
             permissions: values.permissions,
             createdAt: new Date(),
           });
-          toast.success("Role added successfully!", { position: "top-center" });
+
+          toast.success("Role added successfully", {
+            position: "top-center",
+          });
         }
+
         navigate("/role");
       } catch (error) {
-        
-        toast.error("Error saving role!", { position: "top-center" });
+        toast.error("Error saving role", {
+          position: "top-center",
+        });
       }
     },
   });
@@ -125,8 +142,8 @@ const EditRole: React.FC = () => {
   if (loading) return <div className="p-10 text-center">Loading...</div>;
 
   return (
-    <div className="w-full  rounded-xl mt-20 flex shadow-xl justify-center z-50">
-      <div className="bg-white p-6 rounded-xl w-full  ">
+    <div className="w-full rounded-xl mt-20 flex shadow-xl justify-center">
+      <div className="bg-white p-6 rounded-xl w-full">
         {/* Header */}
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-semibold">
@@ -135,17 +152,17 @@ const EditRole: React.FC = () => {
         </div>
 
         <form onSubmit={formik.handleSubmit}>
-          <div className="mb-4 ">
-            <Inputfields
+          <div className="mb-4">
+            <FormController
+              control="input"
               type="text"
               name="roleName"
+              label="Role Name"
+              placeholder="Enter role name"
               value={formik.values.roleName}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              placeholder="Enter role name"
               disabled={role?.roleName === "admin"}
-              label="Role Name"
-              className="text-3xl font-bold bg-white text-black dark:bg-white"
               required
             />
           </div>
@@ -155,6 +172,7 @@ const EditRole: React.FC = () => {
               <thead>
                 <tr className="bg-amber-300">
                   <th className="p-2 text-left">Module</th>
+
                   {permissionKeys.map((perm) => (
                     <th key={perm} className="p-2 text-center">
                       {perm.replace("can", "")}
@@ -162,58 +180,54 @@ const EditRole: React.FC = () => {
                   ))}
                 </tr>
               </thead>
+
               <tbody>
                 {modulesList.map((mod) => (
                   <tr key={mod}>
                     <td className="p-2 bg-gray-200 font-medium capitalize">
                       {mod}
                     </td>
+
                     {permissionKeys.map((perm) => (
-                      <td key={perm} className="p-4 border-b text-center ">
-                        <div className="flex justify-center items-center">
-                          <ToggleSwitch
-                            checked={formik.values.permissions[mod][perm]}
-                            onChange={() => {
-                              const currentPermissions =
-                                formik.values.permissions[mod];
+                      <td key={perm} className="p-4 border-b text-center">
+                        <FormController
+                          control="checkbox"
+                          checked={formik.values.permissions[mod][perm]}
+                          onChange={() => {
+                            const currentPermissions =
+                              formik.values.permissions[mod];
 
-                              // CASE 1: If toggling canView
-                              if (perm === "canView") {
-                                const hasOtherPermissions =
-                                  currentPermissions.canAdd ||
-                                  currentPermissions.canEdit ||
-                                  currentPermissions.canDelete;
+                            if (perm === "canView") {
+                              const hasOtherPermissions =
+                                currentPermissions.canAdd ||
+                                currentPermissions.canEdit ||
+                                currentPermissions.canDelete;
 
-                                // Allow toggle only if no other permission is ON
-                                if (!hasOtherPermissions) {
-                                  formik.setFieldValue(
-                                    `permissions.${mod}.canView`,
-                                    !currentPermissions.canView,
-                                  );
-                                }
-
-                                return;
-                              }
-
-                              //  CASE 2: If toggling Add / Edit / Delete
-                              const newValue = !currentPermissions[perm];
-
-                              // Update that permission
-                              formik.setFieldValue(
-                                `permissions.${mod}.${perm}`,
-                                newValue,
-                              );
-
-                              // If turning ON  force canView = true
-                              if (newValue) {
+                              if (!hasOtherPermissions) {
                                 formik.setFieldValue(
                                   `permissions.${mod}.canView`,
-                                  true,
+                                  !currentPermissions.canView,
                                 );
                               }
-                            }}
-                          />
-                        </div>
+
+                              return;
+                            }
+
+                            const newValue = !currentPermissions[perm];
+
+                            formik.setFieldValue(
+                              `permissions.${mod}.${perm}`,
+                              newValue,
+                            );
+
+                            if (newValue) {
+                              formik.setFieldValue(
+                                `permissions.${mod}.canView`,
+                                true,
+                              );
+                            }
+                          }}
+                        />
                       </td>
                     ))}
                   </tr>
@@ -223,18 +237,15 @@ const EditRole: React.FC = () => {
           </div>
 
           {/* Buttons */}
-          <div className="flex justify-end gap-3 mt-6 ">
+
+          <div className="flex justify-end gap-3 mt-6">
             <EditBtn
-              onClick={() => navigate("/role")}
-              label="cancel"
-              icon=""
+              label="Cancel"
               variant="secondary"
+              onClick={() => navigate("/role")}
             />
-            <EditBtn
-              icon=""
-              type="submit"
-              label={id ? "Save Changes" : "Add Role"}
-            />
+
+            <EditBtn type="submit" label={id ? "Save Changes" : "Add Role"} />
           </div>
         </form>
       </div>

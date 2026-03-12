@@ -3,9 +3,9 @@ import { auth } from "../../components/firebase/firebase.ts";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
 import { Formik, Form } from "formik";
-import EditBtn from "../../components/button/editbutton/Editbtn.tsx";
-import Inputfields from "../../components/formfields/Formfields.tsx";
-import CommonModal from "../common-modal/index.tsx";
+
+import CommonModal from "../../components/common-modal/index.tsx";
+import FormController from "../../components/form-controller/index.tsx";
 
 type Props = {
   isOpen: boolean;
@@ -44,8 +44,6 @@ export default function ForgotPassword({ isOpen, onClose }: Props) {
 
   return (
     <>
-  
-
       <Formik
         initialValues={{ email: "" }}
         validationSchema={forgotPasswordSchema}
@@ -55,17 +53,21 @@ export default function ForgotPassword({ isOpen, onClose }: Props) {
           <CommonModal
             isOpen={isOpen}
             onClose={onClose}
-            onSubmit={submitForm} 
+            onSubmit={submitForm}
             submitLabel={isSubmitting ? "Sending..." : "Send Reset Link"}
             cancelLabel="Cancel"
-            title={<div className="flex flex-col items-center">
-                        <span>Forget Password</span>
-                      </div>}
+            title={
+              <div className="flex flex-col items-center">
+                <span>Forget Password</span>
+              </div>
+            }
           >
             <Form>
-              <Inputfields
+             
+              <FormController
+                control="input"
                 label="Email"
-                type="text"
+                type="email"
                 name="email"
                 value={values.email}
                 onChange={handleChange}

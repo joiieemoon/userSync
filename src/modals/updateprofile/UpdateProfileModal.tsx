@@ -12,8 +12,8 @@ import { Formik, Form } from "formik";
 import avatar from "../../../public/avtar.png";
 
 
-import Inputfields from "../../components/formfields/Formfields.tsx";
-import CommonModal from "../common-modal/index.tsx";
+import CommonModal from "../../components/common-modal/index.tsx";
+import FormController from "../../components/form-controller/index.tsx";
 interface Props {
   user: {
     uid: string;
@@ -27,7 +27,6 @@ interface Props {
   };
   onClose: () => void;
 }
-
 
 export default function UpdateProfileModal({ user, onClose }: Props) {
   const dispatch = useDispatch<AppDispatch>();
@@ -110,7 +109,7 @@ export default function UpdateProfileModal({ user, onClose }: Props) {
             {/* Profile Image */}
             <div className="flex flex-col md:flex-row items-center gap-4">
               <img
-              alt="profilePhoto"
+                alt="profilePhoto"
                 src={preview || values.profilePhoto || avatar}
                 className="w-24 h-24 rounded-full object-cover border"
               />
@@ -135,8 +134,9 @@ export default function UpdateProfileModal({ user, onClose }: Props) {
             {/* Fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {["firstName", "lastName", "email", "phone"].map((field) => (
-                <Inputfields
+                <FormController
                   key={field}
+                  control="input"
                   label={field.charAt(0).toUpperCase() + field.slice(1)}
                   name={field}
                   type={field === "email" ? "email" : "text"}
@@ -153,10 +153,10 @@ export default function UpdateProfileModal({ user, onClose }: Props) {
                 />
               ))}
 
-              <Inputfields
+              <FormController
+                control="textarea"
                 label="Bio"
                 name="bio"
-                as="textarea"
                 rows={4}
                 value={values.bio}
                 onChange={handleChange}

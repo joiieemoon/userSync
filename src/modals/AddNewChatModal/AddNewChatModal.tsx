@@ -7,7 +7,7 @@ import SearchBar from "../../components/SearchBar/SearchBar";
 import EditBtn from "../../components/button/editbutton/Editbtn";
 import { auth } from "../../components/firebase/firebase.ts";
 import Spinnerring from "../../components/spinner/Spinnerring.tsx";
-import CommonModal from "../../modals/common-modal";
+import CommonModal from "../../components/common-modal/index.tsx";
 
 const AddNewChatModal = () => {
   const { users, loading } = useUsers();

@@ -1,13 +1,11 @@
 // import React from "react";
-import React, { useState,} from "react";
+import React, { useState } from "react";
 
 import Navbar from "../../../../../pages/private/navbar/Navbar";
 import { Sidebarmain } from "../../../../../components/sidebar/Sidebar";
-import EditRole from "../../../../../modals/addRole/AddRoleModal";
+import EditRole from "../../addRole/AddRoleModal";
 
 function UsersSkeleton() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
   return (
     <div className="space-y-4 mt-40">
       {[...Array(10)].map((_, i) => (
@@ -30,7 +28,7 @@ const EditRoleMain = () => {
       <div className="flex min-h-screen bg-gray-50 ">
         {/* Sidebar */}
         <Sidebarmain isOpen={isSidebarOpen} />
-   <Navbar toggleSidebar={toggleSidebar} isOpen={isSidebarOpen} />
+        <Navbar toggleSidebar={toggleSidebar} isOpen={isSidebarOpen} />
 
         {/* Main layout */}
         <div
@@ -39,7 +37,7 @@ const EditRoleMain = () => {
           }`}
         >
           {/* Navbar */}
-       
+
           {/* Content */}
           <main className="p-8 pt-19 space-y-6">
             {/* <RoleModyul /> */}

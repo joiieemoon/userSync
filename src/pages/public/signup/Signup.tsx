@@ -7,19 +7,17 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { setDoc, doc, serverTimestamp } from "firebase/firestore";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { usepasswordtoggle } from "../../../components/formfields/usepasswordtoggle.js";
+
 import { signupvalidationSchema } from "../../../components/validations/validationSchema";
-import { HiEye, HiEyeOff } from "react-icons/hi";
-import Inputfields from "../../../components/formfields/Formfields.tsx";
 import { useState } from "react";
 import EditBtn from "../../../components/button/editbutton/Editbtn.tsx";
+import FormController from "../../../components/form-controller/index.tsx";
 export const Signup = () => {
-  const { showPassword, togglePassword } = usepasswordtoggle();
+
   const [isDisable, setisDisable] = useState(false);
   const navigate = useNavigate();
   return (
     <div className="flex flex-col md:flex-row min-h-screen ">
-   
       <div className="flex-1 flex items-center justify-center p-6">
         <Formik
           initialValues={{
@@ -33,7 +31,6 @@ export const Signup = () => {
           }}
           validationSchema={signupvalidationSchema}
           onSubmit={async (values, { setSubmitting }) => {
-            
             try {
               const userCreadential = await createUserWithEmailAndPassword(
                 auth,
@@ -54,7 +51,7 @@ export const Signup = () => {
                   createdAt: serverTimestamp(),
                 });
               }
-             
+
               console.log("user registerd", user);
 
               toast.success("User Registerd Successfully!!", {
@@ -79,12 +76,11 @@ export const Signup = () => {
             touched,
             handleChange,
             handleBlur,
-          
+
             handleSubmit,
             isSubmitting,
           }) => (
             <Form
-            
               onSubmit={handleSubmit}
               className="w-full max-w-md bg-white/80  p-9  rounded-2xl shadow-2xl space-y-5 relative"
             >
@@ -103,18 +99,12 @@ export const Signup = () => {
                       field.name === "email" ? "col-span-2" : ""
                     }`}
                   >
-                    <Inputfields
-                  
+                    <FormController
+                      control="input"
                       label={field.label}
                       id={field.name}
                       name={field.name}
-                      type={
-                        field.type === "password"
-                          ? showPassword[field.name]
-                            ? "text"
-                            : "password"
-                          : field.type
-                      }
+                      type={field.type}
                       placeholder={field.placeholder}
                       value={values[field.name as keyof typeof values]}
                       onChange={handleChange}
@@ -130,15 +120,6 @@ export const Signup = () => {
                         errors[field.name as keyof typeof errors] as string
                       }
                     />
-                    {field.type === "password" && (
-                      <button
-                        type="button"
-                        onClick={() => togglePassword(field.name)}
-                        className="absolute right-3 top-1/2 border  -translate-y-1/2 text-gray-500 cursor-pointer"
-                      >
-                        {showPassword[field.name] ? <HiEyeOff /> : <HiEye />}
-                      </button>
-                    )}
                   </div>
                 ))}
               </div>
@@ -146,9 +127,7 @@ export const Signup = () => {
               <EditBtn
                 type="submit"
                 disabled={isSubmitting || isDisable}
-                label={
-                  isSubmitting || isDisable ? "Sign up......" : "Sign up"
-                }
+                label={isSubmitting || isDisable ? "Sign up......" : "Sign up"}
                 icon=""
                 variant="main"
               />

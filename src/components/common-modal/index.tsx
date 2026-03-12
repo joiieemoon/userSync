@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import EditBtn from "../../components/button/editbutton/Editbtn.tsx";
+import EditBtn from "../button/editbutton/Editbtn.tsx";
 
 type CommonModalProps = {
   isOpen: boolean;
@@ -11,7 +11,7 @@ type CommonModalProps = {
   submitLabel?: string;
   cancelLabel?: string;
   className?: string;
-  submitDisabled?:boolean;
+  submitDisabled?: boolean;
 };
 
 const CommonModal: React.FC<CommonModalProps> = ({
@@ -57,7 +57,6 @@ const CommonModal: React.FC<CommonModalProps> = ({
               icon=""
             />
             <EditBtn
-            
               type="button"
               label={submitLabel}
               variant="primary"

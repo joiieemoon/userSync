@@ -22,7 +22,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { Spinner } from "flowbite-react/components/Spinner";
-import DeleteRole from "../../../../modals/deleteRole/DeleteRole";
+
+import DeleteItemModal from "../../../../components/comman-delete-modal/index.tsx";
 const RoleModyul = () => {
   const [roles, setRoles] = useState<any[]>([]);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
@@ -75,7 +76,7 @@ const RoleModyul = () => {
 
       await deleteDoc(doc(db, "roles", roleId));
       console.log("delte role ", roleName);
-     
+
       toast.success(
         `Role '${roleName}' deleted successfully! Users have been updated to 'No Role'.`,
         { position: "top-center" },
@@ -167,17 +168,12 @@ const RoleModyul = () => {
                   canPermit(currentUserPermissions, "role", "canDelete")) && (
                   <td className="p-2 flex gap-2">
                     {canPermit(currentUserPermissions, "role", "canEdit") && (
-                      <div
-                        onClick={() => navigation(`/role/edit/${role.id}`)}
-                      >
+                      <div onClick={() => navigation(`/role/edit/${role.id}`)}>
                         <MdOutlineEdit className="text-2xl cursor-pointer" />
                       </div>
                     )}
                     {canPermit(currentUserPermissions, "role", "canDelete") && (
-                      <div
-                      
-                        onClick={() => setRoleToDelete(role)}
-                      >
+                      <div onClick={() => setRoleToDelete(role)}>
                         <MdDeleteOutline className="text-2xl cursor-pointer" />
                       </div>
                     )}
@@ -202,16 +198,12 @@ const RoleModyul = () => {
           )}
         </tbody>
       </table>
-      <DeleteRole
+
+      <DeleteItemModal
         isOpen={!!roleToDelete}
-        role={roleToDelete}
         onClose={() => setRoleToDelete(null)}
-        onConfirm={async () => {
-          if (roleToDelete) {
-            await removeRole(roleToDelete.id, roleToDelete.roleName);
-            setRoleToDelete(null);
-          }
-        }}
+        collectionName="roles"
+        item={roleToDelete ? { id: roleToDelete.id } : null}
       />
     </div>
   );

@@ -6,15 +6,13 @@ import { useState, useEffect } from "react";
 import { auth } from "../../../../components/firebase/firebase.ts";
 import SearchBar from "../../../../components/SearchBar/SearchBar";
 import EditBtn from "../../../../components/button/editbutton/Editbtn";
-import DeleteUser from "../../../../modals/deleteUser/DeleteUser";
-import EditUser from "../../../../modals/edituserModal/EditUser";
 import { PaginationMain } from "../../../../components/pagination/Pagination";
 import { canPermit } from "../../../../helper/canPermit/canpermit";
 import { MdDeleteOutline } from "react-icons/md";
 import { MdOutlineEdit } from "react-icons/md";
 import Spinnerring from "../../../../components/spinner/Spinnerring.tsx";
-
-import NewUserModal from "../../../../modals/newuser-modal/NewUserForm.tsx";
+import UserModal from "../../../../modals/add-edit-usermodal/index.tsx";
+import DeleteItemModal from "../../../../components/comman-delete-modal/index.tsx";
 export default function UsersDetails() {
   const { users, loading } = useUsers();
   const [userToDelete, setUserToDelete] = useState(null);
@@ -68,7 +66,6 @@ export default function UsersDetails() {
   return (
     <div className="p-6 mt-10 rounded-2xl shadow-2xl">
       <h2 className="text-3xl mt-2 font-semibold mb-2 ">All Users</h2>
-
       {/* Search + Add User */}
       <div className="flex mt-5 justify-between items-center mb-3">
         <SearchBar
@@ -83,13 +80,7 @@ export default function UsersDetails() {
             onClick={() => setIsAddUserOpen(true)}
           />
         )}
-
-        <NewUserModal
-          isOpen={isAddUserOpen}
-          onClose={() => setIsAddUserOpen(false)}
-        />
       </div>
-
       {/* Users Table */}
       <table className="w-full bg-white rounded-xl shadow-2xl">
         <thead className=" bg-amber-300 rounded-2xl">
@@ -166,7 +157,6 @@ export default function UsersDetails() {
           )}
         </tbody>
       </table>
-
       {/* Pagination */}
       {totalPages > 1 && (
         <PaginationMain
@@ -175,16 +165,19 @@ export default function UsersDetails() {
           onPageChange={(page) => setCurrentPage(Number(page))}
         />
       )}
-
-      {/* Modals */}
-      <DeleteUser
+      <DeleteItemModal
         isOpen={!!userToDelete}
         onClose={() => setUserToDelete(null)}
-        user={userToDelete}
+        collectionName="Users"
+        item={userToDelete ? { id: userToDelete.uid } : null}
       />
-      <EditUser
-        isOpen={!!userToEdit}
-        onClose={() => setUserToEdit(null)}
+
+      <UserModal
+        isOpen={isAddUserOpen || !!userToEdit}
+        onClose={() => {
+          setIsAddUserOpen(false);
+          setUserToEdit(null);
+        }}
         user={userToEdit}
       />
     </div>

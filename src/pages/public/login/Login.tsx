@@ -7,9 +7,9 @@ import { loginvalidationSchema } from "../../../components/validations/validatio
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { HiEye, HiEyeOff } from "react-icons/hi";
+
 import { useState } from "react";
-import { usepasswordtoggle } from "../../../components/formfields/usepasswordtoggle";
+
 import ForgotPassword from "../../../modals/forgetpassword/ForgetPassword";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../../redux/store/authSlice";
@@ -27,12 +27,10 @@ import {
 import { db } from "../../../components/firebase/firebase.ts";
 import { setUserPermissions } from "../../../redux/permissionslice/permissionslice";
 import EditBtn from "../../../components/button/editbutton/Editbtn.tsx";
-import Inputfields from "../../../components/formfields/Formfields.tsx";
-import { TbEyeBitcoin } from "react-icons/tb";
-import Eyebtn from "../../../components/button/eyebtn/Eyebtn.tsx";
+
+import FormController from "../../../components/form-controller/index.tsx";
 
 export const Login = () => {
-  const { showPassword, togglePassword } = usepasswordtoggle();
   const [showForgot, setShowForgot] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const [isDisable, setisDisable] = useState(false);
@@ -159,17 +157,12 @@ export const Login = () => {
 
               {loginFields.map((field) => (
                 <div key={field.name} className="relative">
-                  <Inputfields
+                  <FormController
+                    control="input"
                     label={field.label}
                     id={field.name}
                     name={field.name}
-                    type={
-                      field.type === "password"
-                        ? showPassword[field.name]
-                          ? "text"
-                          : "password"
-                        : field.type
-                    }
+                    type={field.type}
                     value={values[field.name as keyof typeof values]}
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -185,13 +178,6 @@ export const Login = () => {
                       errors[field.name as keyof typeof errors] as string
                     }
                   />
-                  {field.type === "password" && (
-                    <Eyebtn
-                      onClick={() => togglePassword(field.name)}
-                      icon={showPassword[field.name] ? <HiEyeOff /> : <HiEye />}
-                      className="absolute right-3 top-1/2 -translate-y-1/2"
-                    />
-                  )}
                 </div>
               ))}
               <div className="flex items-center justify-between text-sm">
