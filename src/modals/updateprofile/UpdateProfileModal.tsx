@@ -8,11 +8,12 @@ import { toast } from "react-toastify";
 import { FileInput } from "flowbite-react";
 import "react-toastify/dist/ReactToastify.css";
 import { updateProfileValidationSchema } from "../../../src/components/validations/validationSchema";
-import { Formik, Form, } from "formik";;
+import { Formik, Form } from "formik";
 import avatar from "../../../public/avtar.png";
-import useTitle from "../../hooks/useTitle/useTitle";
-import EditBtn from "../../components/button/editbutton/Editbtn.tsx";
+
+
 import Inputfields from "../../components/formfields/Formfields.tsx";
+import CommonModal from "../common-modal/index.tsx";
 interface Props {
   user: {
     uid: string;
@@ -27,12 +28,13 @@ interface Props {
   onClose: () => void;
 }
 
+
 export default function UpdateProfileModal({ user, onClose }: Props) {
   const dispatch = useDispatch<AppDispatch>();
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  useTitle("User Sync-Update Profile");
+
   const initialValues = {
     firstName: user.firstName || "",
     lastName: user.lastName || "",
@@ -43,7 +45,6 @@ export default function UpdateProfileModal({ user, onClose }: Props) {
     profilePhoto: user.profilePhoto || "",
   };
 
-  //  Convert image → base64
   const convertToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -54,12 +55,9 @@ export default function UpdateProfileModal({ user, onClose }: Props) {
   };
 
   const handleSubmit = async (values: typeof initialValues) => {
-    if (!user.uid) return;
-    console.log("Submitting...", values);
     try {
       let photoURL = values.profilePhoto;
 
-      //  If new image selected → convert to base64
       if (selectedFile) {
         photoURL = await convertToBase64(selectedFile);
       }
@@ -69,10 +67,7 @@ export default function UpdateProfileModal({ user, onClose }: Props) {
         profilePhoto: photoURL,
       };
 
-      // Firestore update
       await updateDoc(doc(db, "Users", user.uid), updatedData);
-
-      // Redux update
       dispatch(updateUser(updatedData));
 
       toast.success("Profile updated successfully!", {
@@ -81,117 +76,98 @@ export default function UpdateProfileModal({ user, onClose }: Props) {
 
       onClose();
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to update profile", { position: "top-center" });
+      toast.error("Failed to update profile");
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60  flex items-center justify-center z-50 p-4">
-      <div className="bg-white  rounded-3xl shadow-2xl w-full max-w-3xl p-8 md:p-10 overflow-y-auto max-h-[90vh]">
-        <h2 className="text-2xl md:text-3xl font-bold mb-8 text-gray-900 ">
-          Update Profile
-        </h2>
-
-        <Formik
-          initialValues={initialValues}
-          validationSchema={updateProfileValidationSchema}
+    <Formik
+      initialValues={initialValues}
+      validationSchema={updateProfileValidationSchema}
+      onSubmit={handleSubmit}
+    >
+      {({
+        values,
+        handleChange,
+        handleBlur,
+        errors,
+        touched,
+        setFieldValue,
+        handleSubmit,
+        isSubmitting,
+      }) => (
+        <CommonModal
+          isOpen={true}
+          onClose={onClose}
           onSubmit={handleSubmit}
+          submitLabel={isSubmitting ? "Saving..." : "Save Changes"}
+          cancelLabel="Cancel"
+          submitDisabled={isSubmitting}
+          className="max-w-3xl w-full overflow-y-auto"
+          title="Update Profile"
         >
-          {({
-            values,
-            handleChange,
-            handleBlur,
-            errors,
-            touched,
-            isSubmitting,
-            setFieldValue,
-          }) => (
-            <Form className="space-y-6">
-        
-              <div className="flex flex-col md:flex-row items-center gap-4 mb-6">
-                <img
-                  src={preview || values.profilePhoto || avatar}
-                  className="w-24 h-24 md:w-28 md:h-28 rounded-full object-cover border-2 border-gray-300"
-                />
-                <FileInput
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      setSelectedFile(file);
-                      setPreview(URL.createObjectURL(file));
-                      setFieldValue("profilePhoto", file);
-                    }
-                  }}
-                />
-                {errors.profilePhoto && touched.profilePhoto && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.profilePhoto}
-                  </p>
-                )}
-              </div>
+          <Form className="space-y-6">
+            {/* Profile Image */}
+            <div className="flex flex-col md:flex-row items-center gap-4">
+              <img
+              alt="profilePhoto"
+                src={preview || values.profilePhoto || avatar}
+                className="w-24 h-24 rounded-full object-cover border"
+              />
 
-             
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                {["firstName", "lastName", "email", "phone"].map((field) => (
-                  <Inputfields
-                    key={field}
-                    label={field.charAt(0).toUpperCase() + field.slice(1)}
-                    name={field}
-                    type={field === "email" ? "email" : "text"}
-                    placeholder={`Enter your ${field}`}
-                    value={values[field as keyof typeof values]}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={
-                      !!(
-                        errors[field as keyof typeof errors] &&
-                        touched[field as keyof typeof touched]
-                      )
-                    }
-                    errorMessage={
-                      errors[field as keyof typeof errors] as string
-                    }
-                  />
-                ))}
+              <FileInput
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setSelectedFile(file);
+                    setPreview(URL.createObjectURL(file));
+                    setFieldValue("profilePhoto", file);
+                  }
+                }}
+              />
 
+              {errors.profilePhoto && touched.profilePhoto && (
+                <p className="text-red-500 text-xs">{errors.profilePhoto}</p>
+              )}
+            </div>
+
+            {/* Fields */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              {["firstName", "lastName", "email", "phone"].map((field) => (
                 <Inputfields
-                  label="Bio"
-                  name="bio"
-                  as="textarea"
-                  rows={4}
-                  placeholder="Tell us about yourself"
-                  value={values.bio}
+                  key={field}
+                  label={field.charAt(0).toUpperCase() + field.slice(1)}
+                  name={field}
+                  type={field === "email" ? "email" : "text"}
+                  value={values[field as keyof typeof values]}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  error={!!(errors.bio && touched.bio)}
-                  errorMessage={errors.bio as string}
+                  error={
+                    !!(
+                      errors[field as keyof typeof errors] &&
+                      touched[field as keyof typeof touched]
+                    )
+                  }
+                  errorMessage={errors[field as keyof typeof errors] as string}
                 />
-              </div>
+              ))}
 
-          
-              <div className="flex justify-end gap-4">
-                <EditBtn
-                  type="button"
-                  onClick={onClose}
-                  label="Cancel"
-                  icon=""
-                  variant="secondary"
-                />
-
-                <EditBtn
-                  icon=""
-                  type="submit"
-                  label={isSubmitting ? "Saving..." : "Save Changes"}
-                  disabled={isSubmitting}
-                />
-              </div>
-            </Form>
-          )}
-        </Formik>
-      </div>
-    </div>
+              <Inputfields
+                label="Bio"
+                name="bio"
+                as="textarea"
+                rows={4}
+                value={values.bio}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={!!(errors.bio && touched.bio)}
+                errorMessage={errors.bio as string}
+              />
+            </div>
+          </Form>
+        </CommonModal>
+      )}
+    </Formik>
   );
 }

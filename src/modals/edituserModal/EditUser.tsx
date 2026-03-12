@@ -4,9 +4,9 @@ import { updateDoc, doc, collection, getDocs } from "firebase/firestore";
 import { Formik, Form } from "formik";
 import { updateProfileValidationSchema } from "../../components/validations/validationSchema";
 import { toast } from "react-toastify";
-import EditBtn from "../../components/button/editbutton/Editbtn.tsx";
 import Inputfields from "../../components/formfields/Formfields.tsx";
 import { editUserFields } from "../../components/formfields/formconfig.ts";
+import CommonModal from "../common-modal/index.tsx";
 
 type Props = {
   isOpen: boolean;
@@ -22,6 +22,7 @@ type Props = {
 
 const EditUser: React.FC<Props> = ({ isOpen, onClose, user }) => {
   const [roles, setRoles] = useState<{ id: string; roleName: string }[]>([]);
+  const [submitForm, setSubmitForm] = useState<() => void>(() => {});
 
   useEffect(() => {
     const fetchRoles = async () => {
@@ -52,9 +53,9 @@ const EditUser: React.FC<Props> = ({ isOpen, onClose, user }) => {
     try {
       await updateDoc(doc(db, "Users", user.uid), values);
       toast.success("User updated successfully", { position: "top-center" });
+      console.log("hiudsif");
       onClose();
     } catch (error) {
-      console.error("Error updating user:", error);
       toast.error("Failed to update user", { position: "top-center" });
     } finally {
       setSubmitting(false);
@@ -62,26 +63,31 @@ const EditUser: React.FC<Props> = ({ isOpen, onClose, user }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white w-96 p-6 rounded-xl shadow-lg">
-        <h2 className="text-xl font-semibold mb-4">
-          Edit User {user.firstName}
-        </h2>
+    <CommonModal
+      isOpen={isOpen}
+      onClose={onClose}
+      onSubmit={() => submitForm()}
+      submitLabel="Save"
+      cancelLabel="Cancel"
+      title={`Edit User ${user.firstName}`}
+    >
+      <Formik
+        initialValues={initialValues}
+        enableReinitialize
+        validationSchema={updateProfileValidationSchema}
+        onSubmit={handleSubmit}
+      >
+        {({
+          values,
+          errors,
+          touched,
+          handleChange,
+          handleBlur,
+          submitForm,
+        }) => {
+          setSubmitForm(() => submitForm);
 
-        <Formik
-          initialValues={initialValues}
-          enableReinitialize
-          validationSchema={updateProfileValidationSchema}
-          onSubmit={handleSubmit}
-        >
-          {({
-            values,
-            errors,
-            touched,
-            handleChange,
-            handleBlur,
-            isSubmitting,
-          }) => (
+          return (
             <Form className="space-y-4">
               {editUserFields.map((field) =>
                 field.name === "role" ? (
@@ -121,28 +127,11 @@ const EditUser: React.FC<Props> = ({ isOpen, onClose, user }) => {
                   />
                 ),
               )}
-
-              <div className="flex justify-end gap-3">
-                <EditBtn
-                  onClick={onClose}
-                  type="button"
-                  label="Cancel"
-                  icon=""
-                  variant="secondary"
-                />
-                <EditBtn
-                  disabled={isSubmitting}
-                  type="submit"
-                  label={isSubmitting ? "Saving..." : "Save"}
-                  icon=""
-                  variant="primary"
-                />
-              </div>
             </Form>
-          )}
-        </Formik>
-      </div>
-    </div>
+          );
+        }}
+      </Formik>
+    </CommonModal>
   );
 };
 

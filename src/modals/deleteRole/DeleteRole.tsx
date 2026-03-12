@@ -1,7 +1,7 @@
 import React from "react";
-// import { PiWarningThin } from "react-icons/pi";
 import { PiWarningCircle } from "react-icons/pi";
-import EditBtn from "../../components/button/editbutton/Editbtn";
+import CommonModal from "../common-modal";
+import DeleteConfirmCommanModal from "../comman-delete-modal";
 interface Props {
   isOpen: boolean;
   onClose: () => void;
@@ -13,34 +13,16 @@ const DeleteRole: React.FC<Props> = ({ isOpen, onClose, role, onConfirm }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white w-80 p-6  rounded-xl shadow-lg">
-        <PiWarningCircle className="text-red-500 text-8xl mr-2 text-center font-bold w-full" />
-        <div className="flex items-center mb-4">
-          <h2 className="text-lg font-semibold  text-center    ">
-            Are you sure you want to delete role{" "}
-            <span className="font-bold">{role?.roleName}</span>?
-          </h2>
-        </div>
-        <div className="flex justify-between ">
-          <EditBtn
-            onClick={onClose}
-            type="button"
-            label="cancel"
-            icon=""
-            variant="secondary"
-          />
-
-          <EditBtn
-            onClick={onConfirm}
-            type="button"
-            label=" Delete User"
-            icon=""
-            variant="primary"
-          />
-        </div>
-      </div>
-    </div>
+    <>
+      {" "}
+      
+      <DeleteConfirmCommanModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onConfirm={onConfirm}
+        title={`Are you sure you want to delete role ${role?.roleName} role?`}
+      />
+    </>
   );
 };
 

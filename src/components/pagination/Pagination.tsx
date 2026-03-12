@@ -6,12 +6,14 @@ interface PaginationMainProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
+  extraProps?: Partial<React.ComponentProps<typeof Pagination>>;
 }
 
 export function PaginationMain({
   currentPage,
   totalPages,
   onPageChange,
+  ...rest
 }: PaginationMainProps) {
   return (
     <div className="flex justify-center mt-6 overflow-x-auto   ">
@@ -20,7 +22,7 @@ export function PaginationMain({
         totalPages={totalPages}
         showIcons
         onPageChange={(page) => onPageChange(Number(page))}
-    
+        {...rest}
       />
     </div>
   );

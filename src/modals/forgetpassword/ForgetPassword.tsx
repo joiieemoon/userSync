@@ -2,14 +2,15 @@ import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../../components/firebase/firebase.ts";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
-import { Formik, Form, } from "formik";
+import { Formik, Form } from "formik";
 import EditBtn from "../../components/button/editbutton/Editbtn.tsx";
 import Inputfields from "../../components/formfields/Formfields.tsx";
+import CommonModal from "../common-modal/index.tsx";
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (email:string) => void;
+  onSubmit: (email: string) => void;
 };
 
 const forgotPasswordSchema = Yup.object({
@@ -42,48 +43,38 @@ export default function ForgotPassword({ isOpen, onClose }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white w-80 p-6 rounded-xl shadow-lg">
-        <h2 className="text-lg font-semibold mb-4">Forgot Password</h2>
+    <>
+  
 
-        <Formik
-          initialValues={{ email: "" }}
-          validationSchema={forgotPasswordSchema}
-          onSubmit={handleSubmit}
-        >
-          {({ isSubmitting, values, handleChange, handleBlur }) => (
+      <Formik
+        initialValues={{ email: "" }}
+        validationSchema={forgotPasswordSchema}
+        onSubmit={handleSubmit}
+      >
+        {({ isSubmitting, values, handleChange, handleBlur, submitForm }) => (
+          <CommonModal
+            isOpen={isOpen}
+            onClose={onClose}
+            onSubmit={submitForm} 
+            submitLabel={isSubmitting ? "Sending..." : "Send Reset Link"}
+            cancelLabel="Cancel"
+            title={<div className="flex flex-col items-center">
+                        <span>Forget Password</span>
+                      </div>}
+          >
             <Form>
-           
-
               <Inputfields
-              label="Email"
+                label="Email"
                 type="text"
                 name="email"
                 value={values.email}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
-
-              <div className="flex justify-evenly items-center mt-7">
-                <EditBtn
-                  type="submit"
-                  disabled={isSubmitting}
-                  icon=""
-                  label={isSubmitting ? "Sending..." : "Send Reset Link"}
-                />
-
-                <EditBtn
-                  onClick={onClose}
-                  type="button"
-                  label="cancel"
-                  icon=""
-                  variant="secondary"
-                />
-              </div>
             </Form>
-          )}
-        </Formik>
-      </div>
-    </div>
+          </CommonModal>
+        )}
+      </Formik>
+    </>
   );
 }

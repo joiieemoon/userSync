@@ -147,7 +147,7 @@ export const Signup = () => {
                 type="submit"
                 disabled={isSubmitting || isDisable}
                 label={
-                  isSubmitting || isDisable ? "Signing up......" : "Signing up"
+                  isSubmitting || isDisable ? "Sign up......" : "Sign up"
                 }
                 icon=""
                 variant="main"

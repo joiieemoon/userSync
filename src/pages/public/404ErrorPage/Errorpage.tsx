@@ -1,9 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import EditBtn from "../../../components/button/editbutton/Editbtn";
 
 const Errorpage = () => {
-  const navigate=useNavigate();
-  
+  const navigate = useNavigate();
+
   return (
     <div>
       <section className="bg-white ">
@@ -20,14 +21,12 @@ const Errorpage = () => {
               home page.
             </p>
 
-            <button
+            <EditBtn label="Back to Homepage"
               onClick={() => navigate("/")}
               className="inline-flex text-black bg-amber-300 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 cursor-pointer text-center dark:focus:ring-primary-900 my-4"
             >
-              Back to Homepage
-            </button>
-
-
+             
+            </EditBtn>
           </div>
         </div>
       </section>

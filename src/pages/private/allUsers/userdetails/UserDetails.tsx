@@ -1,12 +1,11 @@
 import useUsers from "../../../../hooks/useUser/useUsers";
 import { MdAdd } from "react-icons/md";
-import {  FaSortAlphaDown, FaSortAlphaDownAlt } from "react-icons/fa";
+import { FaSortAlphaDown, FaSortAlphaDownAlt } from "react-icons/fa";
 
 import { useState, useEffect } from "react";
 import { auth } from "../../../../components/firebase/firebase.ts";
 import SearchBar from "../../../../components/SearchBar/SearchBar";
 import EditBtn from "../../../../components/button/editbutton/Editbtn";
-import AddNewuserModal from "../../../../modals/addNewuserModal/AddNewuserModal";
 import DeleteUser from "../../../../modals/deleteUser/DeleteUser";
 import EditUser from "../../../../modals/edituserModal/EditUser";
 import { PaginationMain } from "../../../../components/pagination/Pagination";
@@ -14,6 +13,8 @@ import { canPermit } from "../../../../helper/canPermit/canpermit";
 import { MdDeleteOutline } from "react-icons/md";
 import { MdOutlineEdit } from "react-icons/md";
 import Spinnerring from "../../../../components/spinner/Spinnerring.tsx";
+
+import NewUserModal from "../../../../modals/newuser-modal/NewUserForm.tsx";
 export default function UsersDetails() {
   const { users, loading } = useUsers();
   const [userToDelete, setUserToDelete] = useState(null);
@@ -31,18 +32,14 @@ export default function UsersDetails() {
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
 
-  if (loading)
-    return (
-      <Spinnerring/>
-    );
+  if (loading) return <Spinnerring />;
 
   const currentUid = auth.currentUser?.uid;
   const currentUser = users.find((u) => u.uid === currentUid);
   const currentUserPermissions = currentUser?.permissions || {};
- 
+
   const isAdmin = currentUser?.role === "admin";
 
-  
   const filteredUsers = users
     .filter((u) => u.uid !== currentUid)
     .filter((u) =>
@@ -70,9 +67,7 @@ export default function UsersDetails() {
 
   return (
     <div className="p-6 mt-10 rounded-2xl shadow-2xl">
-      <h2 className="text-3xl mt-2 font-semibold mb-2 ">
-        All Users
-      </h2>
+      <h2 className="text-3xl mt-2 font-semibold mb-2 ">All Users</h2>
 
       {/* Search + Add User */}
       <div className="flex mt-5 justify-between items-center mb-3">
@@ -89,7 +84,7 @@ export default function UsersDetails() {
           />
         )}
 
-        <AddNewuserModal  
+        <NewUserModal
           isOpen={isAddUserOpen}
           onClose={() => setIsAddUserOpen(false)}
         />
@@ -174,11 +169,10 @@ export default function UsersDetails() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <PaginationMain 
+        <PaginationMain
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={(page) => setCurrentPage(Number(page))}
-          
         />
       )}
 

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { HiMenuAlt1, HiBell, HiMoon, HiSun } from "react-icons/hi";
+import React, { useEffect } from "react";
+import { HiMenuAlt1, } from "react-icons/hi";
 import {
   Avatar,
   Dropdown,
@@ -9,7 +9,6 @@ import {
   Navbar as FlowbiteNavbar,
   NavbarBrand,
 } from "flowbite-react";
-import { RiLogoutBoxLine } from "react-icons/ri";
 import { FaRegUserCircle } from "react-icons/fa";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { auth } from "../../../components/firebase/firebase.ts";
