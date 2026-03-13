@@ -58,12 +58,14 @@ export const updateProfileValidationSchema = yup.object().shape({
   profilePhoto: yup
     .mixed()
     .test("fileSize", "File size is too large", (value) => {
-      if (!value) return true;
+      if (!value || typeof value === "string") return true;
       return value.size < 1 * 1024 * 1024; // 1MB limit
     })
     .test("fileFormat", "Unsupported Format", (value) => {
-      if (!value) return true;
+      if (!value || typeof value === "string") return true;
       return ["image/jpeg", "image/png", "image/gif"].includes(value.type);
     })
 });
+
+
 
