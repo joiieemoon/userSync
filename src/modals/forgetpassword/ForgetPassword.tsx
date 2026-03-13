@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import * as Yup from "yup";
 import { Formik, Form } from "formik";
 
-import CommonModal from "../../modals/forgetpassword/ForgetPassword";
+import CommonModal from "../../components/comman-modal/common-modal";
 import FormController from "../../components/form-controller/index.tsx";
 
 type Props = {
@@ -49,7 +49,15 @@ export default function ForgotPassword({ isOpen, onClose }: Props) {
         validationSchema={forgotPasswordSchema}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting, values, handleChange, handleBlur, submitForm }) => (
+        {({
+          isSubmitting,
+          values,
+          handleChange,
+          handleBlur,
+          submitForm,
+          errors,
+          touched,
+        }) => (
           <CommonModal
             isOpen={isOpen}
             onClose={onClose}
@@ -71,6 +79,8 @@ export default function ForgotPassword({ isOpen, onClose }: Props) {
                 value={values.email}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                error={touched.email && Boolean(errors.email)}
+                errorMessage={errors.email}
               />
             </Form>
           </CommonModal>

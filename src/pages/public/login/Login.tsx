@@ -9,8 +9,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { useState } from "react";
-
-import ForgotPassword from "../../../modals/forgetpassword/ForgetPassword";
+import ForgotPassword from "../../../modals/forgetpassword/ForgetPassword.tsx";
+// import ForgotPassword from "../../../../modals/forgetpassword";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../../redux/store/authSlice";
 import type { AppDispatch } from "../../../redux/store/store";
