@@ -5,19 +5,29 @@ import { RiChatNewLine } from "react-icons/ri";
 import useUsers from "../../hooks/useUser/useUsers";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import EditBtn from "../../components/button/editbutton/Editbtn";
-import { auth } from "../../services/firebase/firebase.ts";
+
 import Spinnerring from "../../components/spinner/Spinnerring.tsx";
 import CommonModal from "../../components/comman-modal/common-modal";
-
-const AddNewChatModal = () => {
-  const { users, loading } = useUsers();
+import useChats from "../../hooks/useChat/useChat.tsx";
+interface User {
+  uid: string;
+  firstName: string;
+  lastName?: string;
+  email: string;
+  profilePhoto?: string;
+}
+interface AddNewChatModal {
+  setSelectedUser: (user: User | null) => void;
+}
+const AddNewChatModal: React.FC<AddNewChatModal> = ({ setSelectedUser }) => {
+  const { users } = useUsers();
   const [openModal, setOpenModal] = useState(false);
   const [searchTerm, setsearchTerm] = useState("");
-
-  const currentUid = auth.currentUser?.uid;
+  const { chats, loading, existingChatUserIds, currentUid, } = useChats();
 
   const filteredUsers = users
     .filter((u) => u.uid !== currentUid)
+    .filter((u) => !existingChatUserIds.includes(u.uid))
     .filter((u) =>
       [u.firstName, u.email]
         .join(" ")
@@ -26,7 +36,9 @@ const AddNewChatModal = () => {
     );
 
   if (loading) return <Spinnerring />;
-
+  const closeChat = () => {
+    setSelectedUser(null);
+  };
   return (
     <>
       <EditBtn
@@ -63,6 +75,10 @@ const AddNewChatModal = () => {
             itemContent={(index, user) => (
               <div
                 key={user.uid}
+                onClick={() => {
+                  setSelectedUser(user);
+                  setOpenModal(false);
+                }}
                 className="cursor-pointer rounded-md p-3 m-2 hover:bg-gray-200 flex items-center gap-3 bg-gray-100"
               >
                 <img

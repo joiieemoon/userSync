@@ -6,6 +6,7 @@ export const createConversation = async (
   user2: string,
   lastMessage: string,
 ) => {
+ 
   const docRef = await addDoc(collection(db, "chats"), {
     type: "private",
     participants: [user1, user2],
@@ -15,16 +16,22 @@ export const createConversation = async (
     createdBy: user1,
   });
 
-  const conversation = await addDoc(
+  
+  const messageRef = await addDoc(
     collection(db, "chats", docRef.id, "messages"),
     {
       senderId: user1,
       text: lastMessage,
       createdAt: Timestamp.now(),
-      seenBy: user2,
+      seenBy: [user1],
     },
   );
 
-  alert(`message recives from ${user2}`);
-  return (docRef.id, conversation.id);
+  alert(`Message sent to ${user2}`);
+
+
+  return {
+    chatId: docRef.id,
+    messageId: messageRef.id,
+  };
 };
