@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import * as Yup from "yup";
 import { Formik, Form } from "formik";
 
-import CommonModal from "../../components/comman-modal/comman-delete-modal";
+import CommonModal from "../../modals/forgetpassword/ForgetPassword";
 import FormController from "../../components/form-controller/index.tsx";
 
 type Props = {
