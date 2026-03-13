@@ -5,9 +5,9 @@ import { RiChatNewLine } from "react-icons/ri";
 import useUsers from "../../hooks/useUser/useUsers";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import EditBtn from "../../components/button/editbutton/Editbtn";
-import { auth } from "../../components/firebase/firebase.ts";
+import { auth } from "../../services/firebase/firebase.ts";
 import Spinnerring from "../../components/spinner/Spinnerring.tsx";
-import CommonModal from "../../components/common-modal/index.tsx";
+import CommonModal from "../../components/comman-modal/common-modal";
 
 const AddNewChatModal = () => {
   const { users, loading } = useUsers();
@@ -49,7 +49,9 @@ const AddNewChatModal = () => {
       >
         <SearchBar
           value={searchTerm}
-          onchange={(e) => setsearchTerm(e.target.value)}
+          onChange={(e) => setsearchTerm(e.target.value)}
+          placeholder="Search users..."
+          name="searchUser"
         />
 
         {filteredUsers.length === 0 ? (

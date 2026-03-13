@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { doc, updateDoc } from "firebase/firestore";
-import { db } from "../../components/firebase/firebase.ts";
+import { db } from "../../services/firebase/firebase.ts";
 import { updateUser } from "../../redux/store/authSlice";
 import type { AppDispatch } from "../../redux/store/store";
 import { toast } from "react-toastify";
@@ -11,8 +11,7 @@ import { updateProfileValidationSchema } from "../../../src/components/validatio
 import { Formik, Form } from "formik";
 import avatar from "../../../public/avtar.png";
 
-
-import CommonModal from "../../components/common-modal/index.tsx";
+import CommonModal from "../../components/comman-modal/common-modal";
 import FormController from "../../components/form-controller/index.tsx";
 interface Props {
   user: {

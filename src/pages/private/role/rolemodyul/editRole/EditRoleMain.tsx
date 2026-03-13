@@ -1,4 +1,4 @@
-// import React from "react";
+
 import React, { useState } from "react";
 
 import Navbar from "../../../../../pages/private/navbar/Navbar";
@@ -19,7 +19,7 @@ function UsersSkeleton() {
 }
 const EditRoleMain = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  //   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };

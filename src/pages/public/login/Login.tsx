@@ -2,7 +2,7 @@ import loginCover from "../../../assets/img/logincover.png";
 import { loginFields } from "../../../components/formfields/formconfig";
 import { Link } from "react-router-dom";
 import { Formik, Form } from "formik";
-import { auth } from "../../../components/firebase/firebase.ts";
+import { auth } from "../../../services/firebase/firebase.ts";
 import { loginvalidationSchema } from "../../../components/validations/validationSchema";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { ToastContainer, toast } from "react-toastify";
@@ -24,7 +24,7 @@ import {
   setDoc,
   where,
 } from "firebase/firestore";
-import { db } from "../../../components/firebase/firebase.ts";
+import { db } from "../../../services/firebase/firebase.ts";
 import { setUserPermissions } from "../../../redux/permissionslice/permissionslice";
 import EditBtn from "../../../components/button/editbutton/Editbtn.tsx";
 
@@ -153,7 +153,6 @@ export const Login = () => {
               <div className="text-center">
                 <h2 className="text-3xl font-bold ">Welcome Back</h2>
               </div>
-              <ToastContainer position="top-center" />
 
               {loginFields.map((field) => (
                 <div key={field.name} className="relative">

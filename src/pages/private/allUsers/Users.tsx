@@ -11,7 +11,7 @@ const UsersDetails = lazy(
 
 // Skeleton loader
 function UsersSkeleton() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
 
   return (
     <div className="space-y-4 mt-40">

@@ -13,7 +13,7 @@ import { useFormik } from "formik";
 import { toast } from "react-toastify";
 import { useParams, useNavigate } from "react-router-dom";
 import EditBtn from "../../../../components/button/editbutton/Editbtn";
-import { db } from "../../../../components/firebase/firebase";
+import { db } from "../../../../services/firebase/firebase";
 import FormController from "../../../../components/form-controller";
 
 type Permission = {

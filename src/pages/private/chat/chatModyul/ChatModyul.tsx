@@ -1,23 +1,14 @@
 import React, { useState } from "react";
-import logo from "../../../../../public/logo.png";
-import {
-  Button,
-  Drawer,
-  DrawerHeader,
-  DrawerItems,
-  Spinner,
-} from "flowbite-react";
+
 import { Virtuoso } from "react-virtuoso";
-import { auth } from "../../../../components/firebase/firebase.ts";
+import { auth } from "../../../../services/firebase/firebase.ts";
 import SearchBar from "../../../../components/SearchBar/SearchBar";
-import type { RootState } from "../../../../redux/store/store";
-import { useSelector } from "react-redux";
+
 import dashboardBg from "../../../../../public/dashboardbg.jpg";
 import avtar from "../../../../../public/avtar.png";
 import useUsers from "../../../../hooks/useUser/useUsers";
 import AddNewChatModal from "../../../../modals/AddNewChatModal/AddNewChatModal";
-// import Chatpannel from "../noConversation/NoSelectedChat";
-import ConversationLayout from "../Conversation/ConversationLayout";
+
 import {
   Accordion,
   AccordionContent,
@@ -32,7 +23,7 @@ const ChatModyul = () => {
   const currentUid = auth.currentUser?.uid;
 
   const { users, loading } = useUsers();
-  const currentUser = users.find((u) => u.uid === currentUid);
+
   const [selectedUser, setSelectedUser] = useState(null);
 
   if (loading) {
@@ -50,13 +41,7 @@ const ChatModyul = () => {
         .toLowerCase()
         .includes(searchTerm.toLowerCase()),
     );
-  if (loading)
-    return (
-      <div className="p-6 flex justify-center items-center">
-        Loading...
-        <Spinner color="success" aria-label="Success spinner example" />
-      </div>
-    );
+
   return (
     <>
       {/* Desktop layout: sidebar + chat content */}
@@ -72,7 +57,7 @@ const ChatModyul = () => {
               <div className="">
                 <SearchBar
                   value={searchTerm}
-                  onchange={(e) => setsearchTerm(e.target.value)}
+                  onChange={(e) => setsearchTerm(e.target.value)}
                 />
               </div>
             </div>
@@ -146,14 +131,7 @@ const ChatModyul = () => {
             }}
           />
 
-          {selectedUser ? (
-            <ConversationLayout
-              selectedUser={selectedUser}
-              onClose={closeChat}
-            />
-          ) : (
-            <NoConversation />
-          )}
+          <NoConversation />
         </main>
       </div>
     </>

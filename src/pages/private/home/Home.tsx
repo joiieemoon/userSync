@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../navbar/Navbar";
 import { Sidebarmain } from "../../../components/sidebar/Sidebar";
-import { auth, db } from "../../../components/firebase/firebase.ts";
+import { auth, db } from "../../../services/firebase/firebase.ts";
 import { doc, getDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import Dashboard from "../dashboard/Dashboard";

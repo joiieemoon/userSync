@@ -15,7 +15,7 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import { MdOutlineEdit } from "react-icons/md";
-import { db } from "../../../../components/firebase/firebase.ts";
+import { db } from "../../../../services/firebase/firebase.ts";
 import SearchBar from "../../../../components/SearchBar/SearchBar";
 import EditBtn from "../../../../components/button/editbutton/Editbtn";
 import { useNavigate } from "react-router-dom";
@@ -23,7 +23,7 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { Spinner } from "flowbite-react/components/Spinner";
 
-import DeleteItemModal from "../../../../components/comman-delete-modal/index.tsx";
+import DeleteItemModal from "../../../../components/comman-modal/comman-delete-modal/index.tsx";
 const RoleModyul = () => {
   const [roles, setRoles] = useState<any[]>([]);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
@@ -111,13 +111,13 @@ const RoleModyul = () => {
       <div className="mb-3 flex justify-between items-center">
         <SearchBar
           value={searchTerm}
-          onchange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
         {canPermit(currentUserPermissions, "role", "canAdd") && (
           <EditBtn
             label="Add Role"
             icon={<MdAdd className="text-xl" />}
-            onClick={() => navigation("/role/edit")}
+            onClick={() => navigation("/role/add")}
           />
         )}
       </div>

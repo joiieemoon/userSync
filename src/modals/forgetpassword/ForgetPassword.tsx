@@ -1,10 +1,10 @@
 import { sendPasswordResetEmail } from "firebase/auth";
-import { auth } from "../../components/firebase/firebase.ts";
+import { auth } from "../../services/firebase/firebase.ts";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
 import { Formik, Form } from "formik";
 
-import CommonModal from "../../components/common-modal/index.tsx";
+import CommonModal from "../../components/comman-modal/comman-delete-modal";
 import FormController from "../../components/form-controller/index.tsx";
 
 type Props = {
@@ -63,7 +63,6 @@ export default function ForgotPassword({ isOpen, onClose }: Props) {
             }
           >
             <Form>
-             
               <FormController
                 control="input"
                 label="Email"

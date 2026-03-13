@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { db } from "../../components/firebase/firebase.ts";
+import { db } from "../../services/firebase/firebase.ts";
 import { collection, onSnapshot, Timestamp } from "firebase/firestore";
 
 const useUsers = () => {
@@ -7,7 +7,7 @@ const useUsers = () => {
   const [rolesMap, setRolesMap] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState(true);
 
-  //
+
   useEffect(() => {
     const unsubscribeRoles = onSnapshot(collection(db, "roles"), (snapshot) => {
       const map: Record<string, any> = {};

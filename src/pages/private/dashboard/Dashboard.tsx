@@ -54,7 +54,7 @@ const Dashboard = () => {
                 {/* Avatar */}
                 <div className="flex justify-center mb-6">
                   <img
-                    // src={avatar}
+                
                     src={
                       user?.profilePhoto && user.profilePhoto !== ""
                         ? user.profilePhoto
@@ -65,7 +65,6 @@ const Dashboard = () => {
                   />
                 </div>
 
-                {/* Welcome */}
                 <h2 className="text-4xl md:text-5xl font-bold text-black mb-3">
                   Welcome, {user?.firstName || "User"}
                 </h2>

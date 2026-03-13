@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { HiMenuAlt1, } from "react-icons/hi";
+import { HiMenuAlt1 } from "react-icons/hi";
 import {
   Avatar,
   Dropdown,
@@ -11,7 +11,7 @@ import {
 } from "flowbite-react";
 import { FaRegUserCircle } from "react-icons/fa";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { auth } from "../../../components/firebase/firebase.ts";
+import { auth } from "../../../services/firebase/firebase.ts";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../redux/store/store";
@@ -138,9 +138,12 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isOpen }) => {
 
           <DropdownDivider />
 
-          <DropdownItem onClick={handleLogout} className="!bg-white flex items-center ">
+          <DropdownItem
+            onClick={handleLogout}
+            className="!bg-white flex items-center "
+          >
             <div className="flex items-center gap-2   hover:text-red-500 w-full cursor-pointer text-gray-600">
-              <BiSolidLogOut  className="text-xl text-gray-400"/>
+              <BiSolidLogOut className="text-xl text-gray-400" />
               Sign out
             </div>
           </DropdownItem>

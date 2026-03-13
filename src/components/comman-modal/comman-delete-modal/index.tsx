@@ -1,10 +1,10 @@
 import React from "react";
 import { doc, deleteDoc } from "firebase/firestore";
-import { db } from "../firebase/firebase.ts";
+import { db } from "../../../services/firebase/firebase.ts";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import CommonModal from "../common-modal/index.tsx";
+import CommonModal from "../common-modal";
 import { PiWarningCircle } from "react-icons/pi";
 
 type DeleteItemModalProps = {

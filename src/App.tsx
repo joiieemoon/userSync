@@ -1,7 +1,7 @@
 import React, { useState, useEffect, lazy, Suspense } from "react";
 import { ToastContainer } from "react-toastify";
 import { Route, Routes, Navigate } from "react-router-dom";
-import { auth } from "./components/firebase/firebase.ts";
+import { auth } from "./services/firebase/firebase.ts";
 const Loginmain = lazy(() =>
   import("./pages/public/login/Login").then((module) => ({
     default: module.Login,
@@ -61,7 +61,7 @@ const App = () => {
               <Route path="/users" element={<Users />} />
               <Route path="/dashboard" element={<Home />} />
               <Route path="/role" element={<Role />} />
-              <Route path="/role/edit" element={<EditRoleMain />} />
+              <Route path="/role/add" element={<EditRoleMain />} />
               <Route path="/role/edit/:id" element={<EditRoleMain />} />
               <Route path="/chat" element={<ChatLayout />} />
               <Route path="/login" element={<Navigate to="/" replace />} />

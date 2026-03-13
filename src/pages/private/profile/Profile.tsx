@@ -1,4 +1,4 @@
-import React, { use, useState } from "react";
+import React, {  useState } from "react";
 import { useSelector } from "react-redux";
 
 import ProfileHeader from "../../../components/profile/profileHeader/ProfileHeader";
@@ -37,7 +37,7 @@ useTitle("User Sync-Profile");
     <div className="flex min-h-screen bg-gray-50 ">
       {/* Sidebar */}
       <Sidebarmain isOpen={isSidebarOpen} />
-      <Navbar toggleSidebar={toggleSidebar} />
+      <Navbar toggleSidebar={toggleSidebar} isOpen={open} />
 
       {/* Main Layout */}
       <div

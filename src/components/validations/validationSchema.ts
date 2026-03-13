@@ -59,7 +59,7 @@ export const updateProfileValidationSchema = yup.object().shape({
     .mixed()
     .test("fileSize", "File size is too large", (value) => {
       if (!value) return true;
-      return value.size < 1 * 1024 * 1024; // 2MB limit
+      return value.size < 1 * 1024 * 1024; // 1MB limit
     })
     .test("fileFormat", "Unsupported Format", (value) => {
       if (!value) return true;

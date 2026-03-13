@@ -2,7 +2,7 @@ import loginCover from "../../../assets/img/logincover.png";
 import { signupFields } from "../../../components/formfields/formconfig";
 import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
-import { auth, db } from "../../../components/firebase/firebase.ts";
+import { auth, db } from "../../../services/firebase/firebase.ts";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { setDoc, doc, serverTimestamp } from "firebase/firestore";
 import { toast } from "react-toastify";
@@ -13,7 +13,6 @@ import { useState } from "react";
 import EditBtn from "../../../components/button/editbutton/Editbtn.tsx";
 import FormController from "../../../components/form-controller/index.tsx";
 export const Signup = () => {
-
   const [isDisable, setisDisable] = useState(false);
   const navigate = useNavigate();
   return (
@@ -47,7 +46,7 @@ export const Signup = () => {
                   password: values.password,
 
                   role: "user",
-                  profilePhoto: "", //temp
+                  profilePhoto: "",
                   createdAt: serverTimestamp(),
                 });
               }

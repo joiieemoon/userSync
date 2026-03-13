@@ -1,7 +1,7 @@
-// src/hooks/useAuthListener.ts
+
 import { useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth, db } from "../../components/firebase/firebase.ts";
+import { auth, db } from "../../services/firebase/firebase.ts";
 import { useDispatch } from "react-redux";
 import { setUser, clearUser } from "../store/authSlice";
 import { doc, getDoc } from "firebase/firestore";

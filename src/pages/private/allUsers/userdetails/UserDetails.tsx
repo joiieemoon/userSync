@@ -3,7 +3,7 @@ import { MdAdd } from "react-icons/md";
 import { FaSortAlphaDown, FaSortAlphaDownAlt } from "react-icons/fa";
 
 import { useState, useEffect } from "react";
-import { auth } from "../../../../components/firebase/firebase.ts";
+import { auth } from "../../../../services/firebase/firebase.ts";
 import SearchBar from "../../../../components/SearchBar/SearchBar";
 import EditBtn from "../../../../components/button/editbutton/Editbtn";
 import { PaginationMain } from "../../../../components/pagination/Pagination";
@@ -12,7 +12,7 @@ import { MdDeleteOutline } from "react-icons/md";
 import { MdOutlineEdit } from "react-icons/md";
 import Spinnerring from "../../../../components/spinner/Spinnerring.tsx";
 import UserModal from "../../../../modals/add-edit-usermodal/index.tsx";
-import DeleteItemModal from "../../../../components/comman-delete-modal/index.tsx";
+import DeleteItemModal from "../../../../components/comman-modal/comman-delete-modal/index.tsx";
 export default function UsersDetails() {
   const { users, loading } = useUsers();
   const [userToDelete, setUserToDelete] = useState(null);
@@ -68,11 +68,13 @@ export default function UsersDetails() {
       <h2 className="text-3xl mt-2 font-semibold mb-2 ">All Users</h2>
       {/* Search + Add User */}
       <div className="flex mt-5 justify-between items-center mb-3">
+    
         <SearchBar
           value={searchTerm}
-          onchange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Search users..."
+          name="searchUser"
         />
-
         {canPermit(currentUserPermissions, "user", "canAdd") && (
           <EditBtn
             label="Add User"

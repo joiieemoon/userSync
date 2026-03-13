@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { db, auth } from "../../components/firebase/firebase.ts";
+import { db, auth } from "../../services/firebase/firebase.ts";
 import {
   setDoc,
   doc,
@@ -12,7 +12,7 @@ import {
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { Formik, Form } from "formik";
 import { toast } from "react-toastify";
-import CommonModal from "../../components/common-modal/index.tsx";
+import CommonModal from "../../components/comman-modal/common-modal";
 
 import {
   editUserFields,
@@ -47,7 +47,7 @@ const UserModal: React.FC<UserModalProps> = ({
   const isEditMode = !!user;
   const [roles, setRoles] = useState<{ id: string; roleName: string }[]>([]);
   const [submitForm, setSubmitForm] = useState<() => void>(() => {});
-  const { showPassword, togglePassword } = usepasswordtoggle();
+  
   const [isDisable, setIsDisable] = useState(false);
 
   useEffect(() => {
