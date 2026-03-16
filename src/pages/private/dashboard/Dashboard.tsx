@@ -5,7 +5,7 @@ import Navbar from "../navbar/Navbar";
 import { Sidebarmain } from "../../../components/sidebar/Sidebar";
 import dashboardBg from "../../../../public/dashboardbg.jpg";
 import avatar from "../../../../public/avtar.png";
-import useTitle from "../../../hooks/useTitle/useTitle";
+import useTitle from "../../../hooks/use-title/useTitle";
 
 import Spinnerring from "../../../components/spinner/Spinnerring";
 
@@ -16,9 +16,7 @@ const Dashboard = () => {
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
   useTitle("User Sync-Dashboard");
   if (!user) {
-    return (
-      <Spinnerring/>
-    );
+    return <Spinnerring />;
   }
   return (
     <>
@@ -33,7 +31,7 @@ const Dashboard = () => {
         />
 
         {/* Sidebar */}
-        <Sidebarmain isOpen={isSidebarOpen}  />
+        <Sidebarmain isOpen={isSidebarOpen} />
         <Navbar toggleSidebar={toggleSidebar} />
 
         {/* Main */}
@@ -54,7 +52,6 @@ const Dashboard = () => {
                 {/* Avatar */}
                 <div className="flex justify-center mb-6">
                   <img
-                
                     src={
                       user?.profilePhoto && user.profilePhoto !== ""
                         ? user.profilePhoto
@@ -73,7 +70,6 @@ const Dashboard = () => {
                   Manage your profile, explore users, and control your dashboard
                   from here.
                 </p>
-
               </div>
             </main>
           </div>

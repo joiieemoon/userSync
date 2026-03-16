@@ -1,8 +1,8 @@
 import React, { useState, lazy, Suspense, use } from "react";
-import useUsers from "../../../hooks/useUser/useUsers";
+import useUsers from "../../../hooks/use-user/useUsers";
 import Navbar from "../navbar/Navbar";
 import { Sidebarmain } from "../../../components/sidebar/Sidebar";
-import useTitle from "../../../hooks/useTitle/useTitle";
+import useTitle from "../../../hooks/use-title/useTitle";
 
 // Lazy load only
 const UsersDetails = lazy(
@@ -11,8 +11,6 @@ const UsersDetails = lazy(
 
 // Skeleton loader
 function UsersSkeleton() {
-
-
   return (
     <div className="space-y-4 mt-40">
       {[...Array(10)].map((_, i) => (

@@ -3,6 +3,7 @@ import Inputfields from "../formfields/Formfields";
 interface Props {
   control: "input" | "textarea" | "select" | "checkbox";
   [key: string]: any;
+  
 }
 
 const FormController = ({ control, ...props }: Props) => {

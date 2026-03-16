@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { Virtuoso } from "react-virtuoso";
 import avtar from "../../../public/avtar.png";
 import { RiChatNewLine } from "react-icons/ri";
-import useUsers from "../../hooks/useUser/useUsers";
+import useUsers from "../../hooks/use-user/useUsers.ts";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import EditBtn from "../../components/button/editbutton/Editbtn";
 
 import Spinnerring from "../../components/spinner/Spinnerring.tsx";
 import CommonModal from "../../components/comman-modal/common-modal";
-import useChats from "../../hooks/useChat/useChat.tsx";
+import useChats from "../../hooks/use-chat/useChat.tsx";
 interface User {
   uid: string;
   firstName: string;
@@ -23,7 +23,7 @@ const AddNewChatModal: React.FC<AddNewChatModal> = ({ setSelectedUser }) => {
   const { users } = useUsers();
   const [openModal, setOpenModal] = useState(false);
   const [searchTerm, setsearchTerm] = useState("");
-  const { chats, loading, existingChatUserIds, currentUid, } = useChats();
+  const { chats, loading, existingChatUserIds, currentUid } = useChats();
 
   const filteredUsers = users
     .filter((u) => u.uid !== currentUid)
@@ -58,6 +58,7 @@ const AddNewChatModal: React.FC<AddNewChatModal> = ({ setSelectedUser }) => {
           setOpenModal(false);
         }}
         className="max-w-md"
+        footer={<></>}
       >
         <SearchBar
           value={searchTerm}
@@ -76,9 +77,11 @@ const AddNewChatModal: React.FC<AddNewChatModal> = ({ setSelectedUser }) => {
               <div
                 key={user.uid}
                 onClick={() => {
-                  setSelectedUser(user);
+                  setSelectedUser(null); 
+                  setTimeout(() => setSelectedUser(user), 0);
                   setOpenModal(false);
                 }}
+               
                 className="cursor-pointer rounded-md p-3 m-2 hover:bg-gray-200 flex items-center gap-3 bg-gray-100"
               >
                 <img

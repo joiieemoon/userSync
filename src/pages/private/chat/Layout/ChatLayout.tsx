@@ -3,9 +3,8 @@ import React, { useState } from "react";
 import Navbar from "../../navbar/Navbar";
 import { Sidebarmain } from "../../../../components/sidebar/Sidebar";
 import ChatModyul from "../chatModyul/ChatModyul";
-import useTitle from "../../../../hooks/useTitle/useTitle";
+import useTitle from "../../../../hooks/use-title/useTitle";
 const ChatLayout = () => {
-  
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
@@ -13,7 +12,6 @@ const ChatLayout = () => {
   };
   useTitle("User Sync-Chat");
 
-  
   return (
     <>
       <div className="flex min-h-screen bg-gray-50 ">
@@ -29,9 +27,7 @@ const ChatLayout = () => {
         >
           {/* Content */}
           <main className="p-10 pt-19 space-y-7 h-[calc(100vh-80px)]">
-         
-
-            <ChatModyul/>
+            <ChatModyul />
           </main>
         </div>
       </div>

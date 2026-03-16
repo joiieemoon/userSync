@@ -20,7 +20,7 @@ import { BiSolidLogOut } from "react-icons/bi";
 import avatar from "../../../../public/avtar.png";
 import { setUserPermissions } from "../../../redux/permissionslice/permissionslice";
 import { useDispatch } from "react-redux";
-import useUsers from "../../../hooks/useUser/useUsers";
+import useUsers from "../../../hooks/use-user/useUsers.ts";
 import { setUser } from "../../../redux/store/authSlice";
 interface NavbarProps {
   toggleSidebar: () => void;

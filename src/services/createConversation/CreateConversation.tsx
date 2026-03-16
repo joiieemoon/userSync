@@ -1,4 +1,4 @@
-import { auth, db } from "../firebase/firebase.ts";
+import { db } from "../firebase/firebase.ts";
 import { addDoc, collection, Timestamp } from "firebase/firestore";
 
 export const createConversation = async (
@@ -6,7 +6,6 @@ export const createConversation = async (
   user2: string,
   lastMessage: string,
 ) => {
- 
   const docRef = await addDoc(collection(db, "chats"), {
     type: "private",
     participants: [user1, user2],
@@ -16,7 +15,6 @@ export const createConversation = async (
     createdBy: user1,
   });
 
-  
   const messageRef = await addDoc(
     collection(db, "chats", docRef.id, "messages"),
     {
@@ -26,9 +24,6 @@ export const createConversation = async (
       seenBy: [user1],
     },
   );
-
-  alert(`Message sent to ${user2}`);
-
 
   return {
     chatId: docRef.id,

@@ -1,4 +1,4 @@
-import useUsers from "../../../../hooks/useUser/useUsers";
+import useUsers from "../../../../hooks/use-user/useUsers.ts";
 import { MdAdd } from "react-icons/md";
 import { FaSortAlphaDown, FaSortAlphaDownAlt } from "react-icons/fa";
 
@@ -68,7 +68,6 @@ export default function UsersDetails() {
       <h2 className="text-3xl mt-2 font-semibold mb-2 ">All Users</h2>
       {/* Search + Add User */}
       <div className="flex mt-5 justify-between items-center mb-3">
-    
         <SearchBar
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
