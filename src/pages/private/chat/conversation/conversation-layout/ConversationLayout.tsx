@@ -9,6 +9,7 @@ import { sendMessage } from "../../../../../services/newMessage/sendMessage";
 import useMessages from "../../../../../hooks/use-message/useMessage";
 import { Virtuoso } from "react-virtuoso";
 import type { conversationProps } from "../Conversation";
+import useChats from "../../../../../hooks/use-chat/useChat";
 
 const ConversationLayout: React.FC<conversationProps> = ({
   selectedUser,
@@ -18,19 +19,29 @@ const ConversationLayout: React.FC<conversationProps> = ({
   const [searchTerm, setSearchTerm] = useState("");
   const [chatId, setChatId] = useState<string | null>(null);
 
-  const { messages, markAsSeen } = useMessages(chatId, currentUid);
+  const { messages, markAsSeen ,} = useMessages(chatId, currentUid);
+  const {chats}=useChats()
 
   useEffect(() => {
     if (!selectedUser) return;
 
     if (selectedUser.isGroup) {
-      setChatId(selectedUser.uid); // existing group chat
+      setChatId(selectedUser.uid);
       return;
     }
 
     // Check if a private chat exists with this user
-    const q = selectedUser.chatId || null;
-    setChatId(q);
+    // const q = selectedUser.chatId || null;
+    // setChatId(q);
+
+    const existingChat = chats.find(
+      (chat) =>
+        chat.type === "private" &&
+        chat.participants.includes(selectedUser.uid) &&
+        chat.participants.includes(currentUid),
+    );
+
+    setChatId(existingChat?.id || null);
   }, [selectedUser]);
 
   useEffect(() => {

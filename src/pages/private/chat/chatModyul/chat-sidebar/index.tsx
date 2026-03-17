@@ -97,7 +97,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
             Direct Messages
           </AccordionTitle>
           <AccordionContent className="p-0">
-            <div className="flex flex-col h-[300px] overflow-y-auto bg-white">
+ ``           <div className="flex flex-col h-[300px] overflow-y-auto bg-white">
               {filteredUsers.length > 0 ? (
                 <Virtuoso
                   style={{ height: "100%" }}
