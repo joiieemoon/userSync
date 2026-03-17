@@ -21,6 +21,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
   loading,
   currentUid,
   setSelectedUser,
+  
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [unreadCounts, setUnreadCounts] = useState<Record<string, number>>({});
@@ -53,7 +54,6 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
 
   if (loading) return <Spinnerring />;
 
-  // Filter users for search bar
   const filteredUsers = users.filter(
     (u) =>
       u.uid !== currentUid &&
@@ -97,7 +97,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
             Direct Messages
           </AccordionTitle>
           <AccordionContent className="p-0">
- ``           <div className="flex flex-col h-[300px] overflow-y-auto bg-white">
+            <div className="flex flex-col h-[300px] overflow-y-auto bg-white">
               {filteredUsers.length > 0 ? (
                 <Virtuoso
                   style={{ height: "100%" }}

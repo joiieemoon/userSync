@@ -36,7 +36,7 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = () => {
 
   if (loading) return null;
 
-  // Filter users to show only those not in existing chats and not current user
+ 
   const filteredUsers = users
     .filter((u) => u.uid !== currentUid)
     // .filter((u) => !existingChatUserIds.includes(u.uid))
@@ -59,7 +59,7 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = () => {
     if (selectedUsers.length === 0) return;
 
     if (selectedUsers.length === 1) {
-      // Private chat
+  
       createChat("private", [currentUid, selectedUsers[0].uid], currentUid, "");
     } else {
      
@@ -86,11 +86,7 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = () => {
           label=""
           icon={<RiChatNewLine />}
         />
-        {/* <EditBtn
-          onClick={() => setOpenModal(true)}
-          label=""
-          icon={<MdGroupAdd />}
-        /> */}
+        
       </div>
 
       <CommonModal
@@ -102,14 +98,14 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = () => {
         onSubmit={handleSubmit}
         className="max-w-md"
       >
-        {/* Search Users */}
+       
         <SearchBar
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Search users..."
         />
 
-        {/* Group Name Input (only show for group) */}
+        
         {selectedUsers.length > 1 && (
           <input
             type="text"
@@ -121,7 +117,7 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = () => {
           />
         )}
 
-        {/* User List */}
+        
         <div className="mt-2 max-h-64 overflow-y-auto">
           {filteredUsers.length === 0 ? (
             <p className="text-center mt-5 text-gray-500">No users found</p>

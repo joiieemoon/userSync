@@ -30,9 +30,7 @@ const ConversationLayout: React.FC<conversationProps> = ({
       return;
     }
 
-    // Check if a private chat exists with this user
-    // const q = selectedUser.chatId || null;
-    // setChatId(q);
+   
 
     const existingChat = chats.find(
       (chat) =>
