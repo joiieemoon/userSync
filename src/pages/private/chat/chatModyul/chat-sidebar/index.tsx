@@ -25,7 +25,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
   const [searchTerm, setSearchTerm] = useState("");
   const [unreadCounts, setUnreadCounts] = useState<Record<string, number>>({});
 
-  // Listen for unread messages for each chat
+  // Listen for unread messages for all chats
   useEffect(() => {
     const unsubscribers: (() => void)[] = [];
 
@@ -53,18 +53,27 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
 
   if (loading) return <Spinnerring />;
 
-  const filteredUsers = users
-    .filter((u) => u.uid !== currentUid)
-    .filter((u) =>
+  // Filter users for search bar
+  const filteredUsers = users.filter(
+    (u) =>
+      u.uid !== currentUid &&
       [u.firstName, u.email]
         .join(" ")
         .toLowerCase()
         .includes(searchTerm.toLowerCase()),
-    );
+  );
 
   // Separate chats
   const directChats = chats.filter((c) => c.type === "private");
   const groupChats = chats.filter((c) => c.type === "group");
+
+  // Helper to get existing chat for a user
+  const getChatForUser = (uid: string) =>
+    directChats.find(
+      (chat) =>
+        chat.participants.includes(uid) &&
+        chat.participants.includes(currentUid),
+    );
 
   return (
     <div className="w-72 bg-gray-100 rounded-2xl shadow flex flex-col">
@@ -73,7 +82,6 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
         <AddNewSpaceModal
           onCreateSpace={(selectedUsers) => {
             console.log("Creating space with users:", selectedUsers);
-            // Call your Firebase createChat function here
           }}
         />
         <SearchBar
@@ -90,23 +98,17 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
           </AccordionTitle>
           <AccordionContent className="p-0">
             <div className="flex flex-col h-[300px] overflow-y-auto bg-white">
-              {directChats.length > 0 ? (
+              {filteredUsers.length > 0 ? (
                 <Virtuoso
                   style={{ height: "100%" }}
-                  data={directChats}
-                  itemContent={(index, chat) => {
-                    // Find the other participant
-                    const otherUserId = chat.participants.find(
-                      (uid: string) => uid !== currentUid,
-                    );
-                    const user = users.find((u) => u.uid === otherUserId);
-                    if (!user) return null;
-
-                    const unreadCount = unreadCounts[chat.id] || 0;
+                  data={filteredUsers}
+                  itemContent={(index, user) => {
+                    const chat = getChatForUser(user.uid);
+                    const unreadCount = chat ? unreadCounts[chat.id] || 0 : 0;
 
                     return (
                       <div
-                        key={chat.id}
+                        key={user.uid}
                         onClick={() => setSelectedUser(user)}
                         className="cursor-pointer rounded-md p-2 m-1 hover:bg-gray-200 flex items-center gap-3 bg-gray-100"
                       >
@@ -152,7 +154,6 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
                   data={groupChats}
                   itemContent={(index, chat) => {
                     const unreadCount = unreadCounts[chat.id] || 0;
-
                     return (
                       <div
                         key={chat.id}
@@ -161,6 +162,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
                             uid: chat.id,
                             firstName: chat.groupName || "Group",
                             email: "",
+                            isGroup: true,
                           })
                         }
                         className="cursor-pointer rounded-md p-2 m-1 hover:bg-gray-200 flex items-center gap-3 bg-gray-100"

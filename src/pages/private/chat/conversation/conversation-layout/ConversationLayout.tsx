@@ -1,4 +1,3 @@
-// src/pages/private/conversation/conversation-layout/ConversationLayout.tsx
 import React, { useState, useEffect } from "react";
 import { IoSend } from "react-icons/io5";
 import { Avatar } from "flowbite-react";
@@ -7,7 +6,6 @@ import FormController from "../../../../../components/form-controller";
 import EditBtn from "../../../../../components/button/editbutton/Editbtn";
 import { createConversation } from "../../../../../services/createConversation/CreateConversation";
 import { sendMessage } from "../../../../../services/newMessage/sendMessage";
-import useChats from "../../../../../hooks/use-chat/useChat";
 import useMessages from "../../../../../hooks/use-message/useMessage";
 import { Virtuoso } from "react-virtuoso";
 import type { conversationProps } from "../Conversation";
@@ -17,8 +15,6 @@ const ConversationLayout: React.FC<conversationProps> = ({
   onClose,
   currentUid,
 }) => {
-  const { chats } = useChats();
-
   const [searchTerm, setSearchTerm] = useState("");
   const [chatId, setChatId] = useState<string | null>(null);
 
@@ -28,17 +24,14 @@ const ConversationLayout: React.FC<conversationProps> = ({
     if (!selectedUser) return;
 
     if (selectedUser.isGroup) {
-      setChatId(selectedUser.uid); // chatId
+      setChatId(selectedUser.uid); // existing group chat
       return;
     }
 
-    const existing = chats.find(
-      (chat) =>
-        chat.type === "private" && chat.participants.includes(selectedUser.uid),
-    );
-
-    setChatId(existing?.id || null);
-  }, [selectedUser, chats]);
+    // Check if a private chat exists with this user
+    const q = selectedUser.chatId || null;
+    setChatId(q);
+  }, [selectedUser]);
 
   useEffect(() => {
     if (!chatId || !currentUid || messages.length === 0) return;
@@ -51,7 +44,7 @@ const ConversationLayout: React.FC<conversationProps> = ({
     if (chatId) {
       await sendMessage(chatId, currentUid, searchTerm);
     } else {
-      // Only for direct chat (first message)
+      // Create first-time private chat
       const result = await createConversation(
         currentUid,
         selectedUser.uid,
@@ -82,21 +75,15 @@ const ConversationLayout: React.FC<conversationProps> = ({
           img={!selectedUser?.isGroup ? selectedUser?.profilePhoto : undefined}
           rounded
         />
-
         <div className="ml-3 flex justify-between w-full">
           <div>
-            <h2 className="font-semibold text-lg">
-              {selectedUser?.firstName}
-              {!selectedUser?.isGroup && ` ${selectedUser?.lastName || ""}`}
-            </h2>
-
+            <h2 className="font-semibold text-lg">{selectedUser?.firstName}</h2>
             {!selectedUser?.isGroup && (
               <p className="font-light text-sm text-gray-600">
                 {selectedUser?.email}
               </p>
             )}
           </div>
-
           <div onClick={onClose} className="cursor-pointer">
             <IoMdClose className="text-3xl hover:text-gray-600" />
           </div>
@@ -115,15 +102,12 @@ const ConversationLayout: React.FC<conversationProps> = ({
             followOutput="auto"
             itemContent={(index, msg) => (
               <div
-                className={`flex mt-2 ${
-                  msg.senderId === currentUid ? "justify-end" : "justify-start"
-                }`}
+                className={`flex mt-2 ${msg.senderId === currentUid ? "justify-end" : "justify-start"}`}
               >
                 <div className="inline-flex flex-col max-w-[70%]">
                   <span className="text-gray-400 text-[10px] mb-1">
                     {formatTime(msg.createdAt)}
                   </span>
-
                   <div
                     className={`p-3 rounded-xl break-words w-fit ${
                       msg.senderId === currentUid
@@ -159,7 +143,6 @@ const ConversationLayout: React.FC<conversationProps> = ({
               className="w-full border-none !rounded-3xl"
             />
           </div>
-
           <EditBtn label="" icon={<IoSend />} onClick={handleSendMessage} />
         </div>
       </footer>

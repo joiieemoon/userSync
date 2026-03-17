@@ -1,50 +1,28 @@
 import React, { useState, useEffect } from "react";
-import { auth, db } from "../../../../services/firebase/firebase.ts";
+import { auth, db } from "../../../../services/firebase/firebase";
 import dashboardBg from "../../../../../public/dashboardbg.jpg";
-import useUsers from "../../../../hooks/use-user/useUsers.ts";
+import useUsers from "../../../../hooks/use-user/useUsers";
 import useChats from "../../../../hooks/use-chat/useChat";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 
 import ConversationLayout from "../conversation/conversation-layout/ConversationLayout";
 import ChatSidebar from "./chat-sidebar";
-import Spinnerring from "../../../../components/spinner/Spinnerring.tsx";
+import Spinnerring from "../../../../components/spinner/Spinnerring";
 import NoConversation from "./no-conversation";
 
 const ChatModyul = () => {
   const currentUid = auth.currentUser?.uid || "";
   const { users, loading } = useUsers();
   const { chats } = useChats();
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [chatUserIds, setChatUserIds] = useState<string[]>([]);
-
-  useEffect(() => {
-    if (!currentUid) return;
-
-    const q = query(
-      collection(db, "chats"),
-      where("participants", "array-contains", currentUid),
-    );
-
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const ids = snapshot.docs.map((doc) => {
-        const data = doc.data();
-        return data.participants.find((p: string) => p !== currentUid);
-      });
-      setChatUserIds(ids);
-    });
-
-    return () => unsubscribe();
-  }, [currentUid]);
+  const [selectedUser, setSelectedUser] = useState<any>(null);
 
   if (loading) return <Spinnerring />;
-
-  const filteredUsers = users.filter((u) => chatUserIds.includes(u.uid));
 
   return (
     <div className="md:flex h-[calc(100vh-80px)]">
       <ChatSidebar
         chats={chats}
-        users={filteredUsers}
+        users={users} // all users, filtered in sidebar
         loading={loading}
         currentUid={currentUid}
         setSelectedUser={setSelectedUser}
