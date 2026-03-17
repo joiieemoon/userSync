@@ -1,3 +1,4 @@
+// src/pages/private/conversation/conversation-layout/ConversationLayout.tsx
 import React, { useState, useEffect } from "react";
 import { IoSend } from "react-icons/io5";
 import { Avatar } from "flowbite-react";
@@ -15,29 +16,34 @@ const ConversationLayout: React.FC<conversationProps> = ({
   selectedUser,
   onClose,
   currentUid,
-  onUnreadCountChange,
 }) => {
   const { chats } = useChats();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [chatId, setChatId] = useState<string | null>(null);
 
-  const { messages, unreadCount } = useMessages(chatId, currentUid);
-
-  // Update parent with unread count whenever it changes
-  // useEffect(() => {
-  //   if (onUnreadCountChange && chatId !== null) {
-  //     onUnreadCountChange(chatId, unreadCount);
-  //   }
-  // }, [unreadCount, chatId, onUnreadCountChange]);
+  const { messages, markAsSeen } = useMessages(chatId, currentUid);
 
   useEffect(() => {
     if (!selectedUser) return;
-    const existing = chats.find((chat) =>
-      chat.participants.includes(selectedUser.uid),
+
+    if (selectedUser.isGroup) {
+      setChatId(selectedUser.uid); // chatId
+      return;
+    }
+
+    const existing = chats.find(
+      (chat) =>
+        chat.type === "private" && chat.participants.includes(selectedUser.uid),
     );
+
     setChatId(existing?.id || null);
   }, [selectedUser, chats]);
+
+  useEffect(() => {
+    if (!chatId || !currentUid || messages.length === 0) return;
+    markAsSeen();
+  }, [chatId, messages, currentUid]);
 
   const handleSendMessage = async () => {
     if (!selectedUser || !searchTerm.trim()) return;
@@ -45,6 +51,7 @@ const ConversationLayout: React.FC<conversationProps> = ({
     if (chatId) {
       await sendMessage(chatId, currentUid, searchTerm);
     } else {
+      // Only for direct chat (first message)
       const result = await createConversation(
         currentUid,
         selectedUser.uid,
@@ -52,6 +59,7 @@ const ConversationLayout: React.FC<conversationProps> = ({
       );
       setChatId(result.chatId);
     }
+
     setSearchTerm("");
   };
 
@@ -68,25 +76,34 @@ const ConversationLayout: React.FC<conversationProps> = ({
 
   return (
     <div className="flex flex-col bg-gray-100 h-[calc(100vh-130px)] relative">
-      <header className="flex items-center p-4 shadow w-full">
-        <Avatar alt="User" img={selectedUser?.profilePhoto} rounded />
+      <header className="flex items-center p-4 shadow w-full bg-white z-10">
+        <Avatar
+          alt="User"
+          img={!selectedUser?.isGroup ? selectedUser?.profilePhoto : undefined}
+          rounded
+        />
+
         <div className="ml-3 flex justify-between w-full">
-          <h2 className="font-semibold text-lg">
-            {selectedUser?.firstName} {selectedUser?.lastName}
-            <p className="font-light text-sm text-gray-600">
-              {selectedUser?.email}
-            </p>
-          </h2>
-          <div
-            onClick={onClose}
-            className="hover:font-amber-200 cursor-pointer"
-          >
+          <div>
+            <h2 className="font-semibold text-lg">
+              {selectedUser?.firstName}
+              {!selectedUser?.isGroup && ` ${selectedUser?.lastName || ""}`}
+            </h2>
+
+            {!selectedUser?.isGroup && (
+              <p className="font-light text-sm text-gray-600">
+                {selectedUser?.email}
+              </p>
+            )}
+          </div>
+
+          <div onClick={onClose} className="cursor-pointer">
             <IoMdClose className="text-3xl hover:text-gray-600" />
           </div>
         </div>
       </header>
 
-      <main className="flex-1 flex flex-col p-4">
+      <main className="flex-1 flex flex-col p-4 min-h-0">
         {!messages.length ? (
           <h1 className="text-center text-gray-400 mt-10">
             Start conversation
@@ -106,6 +123,7 @@ const ConversationLayout: React.FC<conversationProps> = ({
                   <span className="text-gray-400 text-[10px] mb-1">
                     {formatTime(msg.createdAt)}
                   </span>
+
                   <div
                     className={`p-3 rounded-xl break-words w-fit ${
                       msg.senderId === currentUid
@@ -123,22 +141,25 @@ const ConversationLayout: React.FC<conversationProps> = ({
       </main>
 
       <footer className="p-4 bg-gray-100 flex items-center gap-2 shadow">
-        <div className="w-full p-2 flex items-center gap-2 rounded">
-          <FormController
-            control="textarea"
-            rows={1}
-            name="search"
-            placeholder="Type a message..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                handleSendMessage();
-              }
-            }}
-            className="w-full border-none rounded-3xl"
-          />
+        <div className="w-full flex items-center gap-2">
+          <div className="flex-1">
+            <FormController
+              control="textarea"
+              rows={1}
+              name="message"
+              placeholder="Type a message..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSendMessage();
+                }
+              }}
+              className="w-full border-none !rounded-3xl"
+            />
+          </div>
+
           <EditBtn label="" icon={<IoSend />} onClick={handleSendMessage} />
         </div>
       </footer>

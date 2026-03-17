@@ -1,16 +1,19 @@
-import React, { useState } from "react";
+// src/pages/private/chat/chat-sidebar.tsx
+import React, { useState, useEffect } from "react";
 import { Virtuoso } from "react-virtuoso";
+import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
+import { db } from "../../../../../services/firebase/firebase";
 import avtar from "../../../../../../public/avtar.png";
 import SearchBar from "../../../../../components/SearchBar/SearchBar";
-import AddNewChatModal from "../../../../../modals/AddNewChatModal/AddNewChatModal";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionPanel,
-  AccordionTitle,
-} from "flowbite-react";
 import Spinnerring from "../../../../../components/spinner/Spinnerring";
 import type { ChatSidebarProps } from "../../conversation/Conversation";
+import AddNewSpaceModal from "../../../../../modals/AddNewChatModal/AddNewChatModal";
+import {
+  Accordion,
+  AccordionPanel,
+  AccordionTitle,
+  AccordionContent,
+} from "flowbite-react";
 
 const ChatSidebar: React.FC<ChatSidebarProps> = ({
   chats,
@@ -18,9 +21,35 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
   loading,
   currentUid,
   setSelectedUser,
-  unreadCounts,
 }) => {
-  const [searchTerm, setsearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [unreadCounts, setUnreadCounts] = useState<Record<string, number>>({});
+
+  // Listen for unread messages for each chat
+  useEffect(() => {
+    const unsubscribers: (() => void)[] = [];
+
+    chats.forEach((chat) => {
+      const messagesRef = collection(db, "chats", chat.id, "messages");
+      const q = query(messagesRef, orderBy("createdAt", "asc"));
+
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        const unread = snapshot.docs.filter((doc) => {
+          const msg = doc.data() as any;
+          return (
+            msg.senderId !== currentUid &&
+            (!msg.seenBy || !msg.seenBy.includes(currentUid))
+          );
+        }).length;
+
+        setUnreadCounts((prev) => ({ ...prev, [chat.id]: unread }));
+      });
+
+      unsubscribers.push(unsubscribe);
+    });
+
+    return () => unsubscribers.forEach((unsub) => unsub());
+  }, [chats, currentUid]);
 
   if (loading) return <Spinnerring />;
 
@@ -33,39 +62,51 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
         .includes(searchTerm.toLowerCase()),
     );
 
+  // Separate chats
+  const directChats = chats.filter((c) => c.type === "private");
+  const groupChats = chats.filter((c) => c.type === "group");
+
   return (
     <div className="w-72 bg-gray-100 rounded-2xl shadow flex flex-col">
+      {/* Top bar */}
       <div className="p-4 flex flex-col items-center justify-between border-b border-gray-300">
-        <AddNewChatModal setSelectedUser={setSelectedUser} />
+        <AddNewSpaceModal
+          onCreateSpace={(selectedUsers) => {
+            console.log("Creating space with users:", selectedUsers);
+            // Call your Firebase createChat function here
+          }}
+        />
         <SearchBar
           value={searchTerm}
-          onChange={(e) => setsearchTerm(e.target.value)}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
 
       <Accordion collapseAll>
+        {/* Direct Messages */}
         <AccordionPanel>
           <AccordionTitle className="font-medium text-sm cursor-pointer">
-            Direct Message
+            Direct Messages
           </AccordionTitle>
           <AccordionContent className="p-0">
             <div className="flex flex-col h-[300px] overflow-y-auto bg-white">
-              {filteredUsers.length > 0 ? (
+              {directChats.length > 0 ? (
                 <Virtuoso
                   style={{ height: "100%" }}
-                  data={filteredUsers}
-                  itemContent={(index, user) => {
-                    const chat = chats.find(
-                      (c) =>
-                        c.participants.includes(user.uid) &&
-                        c.participants.includes(currentUid),
+                  data={directChats}
+                  itemContent={(index, chat) => {
+                    // Find the other participant
+                    const otherUserId = chat.participants.find(
+                      (uid: string) => uid !== currentUid,
                     );
-                    const chatId = chat?.id || "";
-                    const unreadCount = unreadCounts?.[chatId] || 0;
+                    const user = users.find((u) => u.uid === otherUserId);
+                    if (!user) return null;
+
+                    const unreadCount = unreadCounts[chat.id] || 0;
 
                     return (
                       <div
-                        key={user.uid}
+                        key={chat.id}
                         onClick={() => setSelectedUser(user)}
                         className="cursor-pointer rounded-md p-2 m-1 hover:bg-gray-200 flex items-center gap-3 bg-gray-100"
                       >
@@ -84,7 +125,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
                         </div>
                         {unreadCount > 0 && (
                           <span className="text-xs text-white bg-red-500 px-2 rounded-full">
-                            {unreadCount}
+                            {unreadCount < 11 ? unreadCount : "10+"}
                           </span>
                         )}
                       </div>
@@ -92,7 +133,59 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
                   }}
                 />
               ) : (
-                <div className="p-4 text-gray-500">No users found</div>
+                <div className="p-4 text-gray-500">No Direct Messages</div>
+              )}
+            </div>
+          </AccordionContent>
+        </AccordionPanel>
+
+        {/* Group Chats / Spaces */}
+        <AccordionPanel>
+          <AccordionTitle className="font-medium text-sm cursor-pointer">
+            Spaces
+          </AccordionTitle>
+          <AccordionContent className="p-0">
+            <div className="flex flex-col h-[300px] overflow-y-auto bg-white">
+              {groupChats.length > 0 ? (
+                <Virtuoso
+                  style={{ height: "100%" }}
+                  data={groupChats}
+                  itemContent={(index, chat) => {
+                    const unreadCount = unreadCounts[chat.id] || 0;
+
+                    return (
+                      <div
+                        key={chat.id}
+                        onClick={() =>
+                          setSelectedUser({
+                            uid: chat.id,
+                            firstName: chat.groupName || "Group",
+                            email: "",
+                          })
+                        }
+                        className="cursor-pointer rounded-md p-2 m-1 hover:bg-gray-200 flex items-center gap-3 bg-gray-100"
+                      >
+                        <img
+                          src={avtar}
+                          alt={chat.groupName || "Group"}
+                          className="h-10 w-10 rounded-full object-cover"
+                        />
+                        <div className="flex flex-col flex-1">
+                          <span className="font-medium text-gray-900">
+                            {chat.groupName || "Group"}
+                          </span>
+                        </div>
+                        {unreadCount > 0 && (
+                          <span className="text-xs text-white bg-red-500 px-2 rounded-full">
+                            {unreadCount < 11 ? unreadCount : "10+"}
+                          </span>
+                        )}
+                      </div>
+                    );
+                  }}
+                />
+              ) : (
+                <div className="p-4 text-gray-500">No Spaces</div>
               )}
             </div>
           </AccordionContent>

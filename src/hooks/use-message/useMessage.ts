@@ -1,6 +1,6 @@
 // src/hooks/use-message/useMessage.ts
 import { useEffect, useState } from "react";
-import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
+import { collection, query, orderBy, onSnapshot, doc, updateDoc, arrayUnion } from "firebase/firestore";
 import { db } from "../../services/firebase/firebase";
 
 export interface Message {
@@ -14,7 +14,7 @@ export interface Message {
 const useMessages = (
     chatId: string | null,
     currentUid: string | null
-): { messages: Message[]; unreadCount: number } => {
+): { messages: Message[]; unreadCount: number; markAsSeen: () => void } => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [unreadCount, setUnreadCount] = useState(0);
 
@@ -42,13 +42,30 @@ const useMessages = (
                     msg.senderId !== currentUid &&
                     (!msg.seenBy || !msg.seenBy.includes(currentUid))
             ).length;
+
             setUnreadCount(unread);
         });
 
         return () => unsubscribe();
     }, [chatId, currentUid]);
 
-    return { messages, unreadCount };
+    // Function to mark all messages as seen
+    const markAsSeen = async () => {
+        if (!chatId || !currentUid) return;
+
+        const batchUpdate = messages
+            .filter(msg => msg.senderId !== currentUid && (!msg.seenBy || !msg.seenBy.includes(currentUid)))
+            .map(msg => {
+                const messageRef = doc(db, "chats", chatId, "messages", msg.id);
+                return updateDoc(messageRef, {
+                    seenBy: arrayUnion(currentUid),
+                });
+            });
+
+        await Promise.all(batchUpdate);
+    };
+
+    return { messages, unreadCount, markAsSeen };
 };
 
 export default useMessages;

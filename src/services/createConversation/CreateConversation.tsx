@@ -30,3 +30,43 @@ export const createConversation = async (
     messageId: messageRef.id,
   };
 };
+
+export const createChat = async (
+  chatType: "private" | "group",
+  participants: string[],
+  creatorId: string,
+  lastMessage: string = "",
+  groupName?: string,
+) => {
+  try {
+    const chatData: any = {
+      type: chatType,
+      participants,
+      lastMessage,
+      lastMessageAt: Timestamp.now(),
+      createdAt: Timestamp.now(),
+      createdBy: creatorId,
+    };
+
+    if (chatType === "group") {
+      chatData.groupName = groupName || "New Group";
+    }
+
+    const chatRef = await addDoc(collection(db, "chats"), chatData);
+
+    const messageRef = await addDoc(
+      collection(db, "chats", chatRef.id, "messages"),
+      {
+        senderId: creatorId,
+        text: lastMessage || "Group created",
+        createdAt: Timestamp.now(),
+        seenBy: [creatorId],
+      },
+    );
+
+    return { chatId: chatRef.id, messageId: messageRef.id };
+  } catch (err) {
+    console.error("Error creating chat:", err);
+    throw err;
+  }
+};

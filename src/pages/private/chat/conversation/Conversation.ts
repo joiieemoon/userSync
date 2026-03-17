@@ -22,6 +22,7 @@ export interface User {
     lastName?: string;
     email: string;
     profilePhoto?: string;
+    isGroup?: true,
 }
 
 export interface conversationProps {
@@ -30,6 +31,7 @@ export interface conversationProps {
     currentUid: string;
 
     onUnreadCountChange?: (chatId: string | null, count: number) => void;
+
 }
 export interface ChatSidebarProps {
     users: User[];
@@ -37,8 +39,8 @@ export interface ChatSidebarProps {
     currentUid: string;
     setSelectedUser: (user: User | null) => void;
     unreadCounts?: Record<string, number>;
-    chat:any,
-    
+    chat: any,
+
 }
 
 

@@ -4,6 +4,7 @@ import Navbar from "../../navbar/Navbar";
 import { Sidebarmain } from "../../../../components/sidebar/Sidebar";
 import ChatModyul from "../chatModyul/ChatModyul";
 import useTitle from "../../../../hooks/use-title/useTitle";
+
 const ChatLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 

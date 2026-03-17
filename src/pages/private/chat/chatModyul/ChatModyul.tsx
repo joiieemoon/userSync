@@ -1,7 +1,5 @@
-// src/pages/private/chat/ChatModyul.tsx
 import React, { useState, useEffect } from "react";
 import { auth, db } from "../../../../services/firebase/firebase.ts";
-import avtar from "../../../../../public/avtar.png";
 import dashboardBg from "../../../../../public/dashboardbg.jpg";
 import useUsers from "../../../../hooks/use-user/useUsers.ts";
 import useChats from "../../../../hooks/use-chat/useChat";
@@ -18,19 +16,15 @@ const ChatModyul = () => {
   const { chats } = useChats();
   const [selectedUser, setSelectedUser] = useState(null);
   const [chatUserIds, setChatUserIds] = useState<string[]>([]);
-  const [unreadCounts, setUnreadCounts] = useState<Record<string, number>>({});
-
-  const handleUnreadCountChange = (chatId: string | null, count: number) => {
-    if (!chatId) return;
-    setUnreadCounts((prev) => ({ ...prev, [chatId]: count }));
-  };
 
   useEffect(() => {
     if (!currentUid) return;
+
     const q = query(
       collection(db, "chats"),
       where("participants", "array-contains", currentUid),
     );
+
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const ids = snapshot.docs.map((doc) => {
         const data = doc.data();
@@ -38,6 +32,7 @@ const ChatModyul = () => {
       });
       setChatUserIds(ids);
     });
+
     return () => unsubscribe();
   }, [currentUid]);
 
@@ -53,7 +48,6 @@ const ChatModyul = () => {
         loading={loading}
         currentUid={currentUid}
         setSelectedUser={setSelectedUser}
-        unreadCounts={unreadCounts}
       />
 
       <main className="relative flex-1 p-6 overflow-auto bg-white rounded-2xl shadow ml-4">
@@ -66,7 +60,6 @@ const ChatModyul = () => {
             currentUid={currentUid}
             selectedUser={selectedUser}
             onClose={() => setSelectedUser(null)}
-            onUnreadCountChange={handleUnreadCountChange}
           />
         ) : (
           <NoConversation />
