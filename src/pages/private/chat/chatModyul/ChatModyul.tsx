@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { auth, db } from "../../../../services/firebase/firebase";
+import React, { useState } from "react";
+import { auth } from "../../../../services/firebase/firebase";
 import dashboardBg from "../../../../../public/dashboardbg.jpg";
 import useUsers from "../../../../hooks/use-user/useUsers";
 import useChats from "../../../../hooks/use-chat/useChat";
@@ -25,7 +25,7 @@ const ChatModyul = () => {
         loading={loading}
         currentUid={currentUid}
         setSelectedUser={setSelectedUser}
-        // exitingChatUserIds={exitingChatUserIds}
+        existingChatUserIds={existingChatUserIds}
       />
 
       <main className="relative flex-1 p-6 overflow-auto bg-white rounded-2xl shadow ml-4">

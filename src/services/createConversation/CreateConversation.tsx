@@ -58,7 +58,7 @@ export const createChat = async (
       collection(db, "chats", chatRef.id, "messages"),
       {
         senderId: creatorId,
-        text: lastMessage || "Group created",
+        text: lastMessage || chatType === "group" ? "Group created" : "",
         createdAt: Timestamp.now(),
         seenBy: [creatorId],
       },

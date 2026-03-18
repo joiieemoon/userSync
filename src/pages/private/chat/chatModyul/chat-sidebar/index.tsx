@@ -21,12 +21,11 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
   loading,
   currentUid,
   setSelectedUser,
-  
+  existingChatUserIds,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [unreadCounts, setUnreadCounts] = useState<Record<string, number>>({});
 
-  // Listen for unread messages for all chats
   useEffect(() => {
     const unsubscribers: (() => void)[] = [];
 
@@ -54,23 +53,29 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
 
   if (loading) return <Spinnerring />;
 
+  console.log("existingChatUserIds:", existingChatUserIds);
+  console.log("users:", users);
+
+  const directChats = chats.filter((c) => c.type === "private");
+  const groupChats = chats.filter((c) => c.type === "group");
+  const directChatUserIds = directChats
+    .flatMap((chat) => chat.participants)
+    .filter((uid) => uid !== currentUid);
+
   const filteredUsers = users.filter(
     (u) =>
       u.uid !== currentUid &&
+      directChatUserIds.includes(u.uid) &&
       [u.firstName, u.email]
         .join(" ")
         .toLowerCase()
         .includes(searchTerm.toLowerCase()),
   );
 
-  // Separate chats
-  const directChats = chats.filter((c) => c.type === "private");
-  const groupChats = chats.filter((c) => c.type === "group");
-
-  // Helper to get existing chat for a user
   const getChatForUser = (uid: string) =>
     directChats.find(
       (chat) =>
+        chat.participants &&
         chat.participants.includes(uid) &&
         chat.participants.includes(currentUid),
     );
@@ -83,6 +88,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
           onCreateSpace={(selectedUsers) => {
             console.log("Creating space with users:", selectedUsers);
           }}
+          onUserSelected={(user) => setSelectedUser(user)}
         />
         <SearchBar
           value={searchTerm}

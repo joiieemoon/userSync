@@ -5,7 +5,7 @@ import SearchBar from "../../components/SearchBar/SearchBar";
 import EditBtn from "../../components/button/editbutton/Editbtn";
 import CommonModal from "../../components/comman-modal/common-modal";
 import { RiChatNewLine } from "react-icons/ri";
-import { MdGroupAdd } from "react-icons/md";
+
 import useUsers from "../../hooks/use-user/useUsers";
 import useChats from "../../hooks/use-chat/useChat";
 import { createChat } from "../../services/createConversation/CreateConversation";
@@ -23,9 +23,12 @@ interface AddNewSpaceModalProps {
     participants: string[],
     groupName?: string,
   ) => void;
+  onUserSelected?: (user: User) => void;
 }
 
-const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = () => {
+const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
+  onUserSelected,
+}) => {
   const { users } = useUsers();
   const { chats, currentUid, existingChatUserIds, loading } = useChats();
 
@@ -36,7 +39,6 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = () => {
 
   if (loading) return null;
 
- 
   const filteredUsers = users
     .filter((u) => u.uid !== currentUid)
     // .filter((u) => !existingChatUserIds.includes(u.uid))
@@ -59,10 +61,9 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = () => {
     if (selectedUsers.length === 0) return;
 
     if (selectedUsers.length === 1) {
-  
       createChat("private", [currentUid, selectedUsers[0].uid], currentUid, "");
+      onUserSelected && onUserSelected(selectedUsers[0]);
     } else {
-     
       createChat(
         "group",
         [currentUid, ...selectedUsers.map((u) => u.uid)],
@@ -86,7 +87,6 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = () => {
           label=""
           icon={<RiChatNewLine />}
         />
-        
       </div>
 
       <CommonModal
@@ -98,14 +98,12 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = () => {
         onSubmit={handleSubmit}
         className="max-w-md"
       >
-       
         <SearchBar
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Search users..."
         />
 
-        
         {selectedUsers.length > 1 && (
           <input
             type="text"
@@ -117,13 +115,12 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = () => {
           />
         )}
 
-        
-        <div className="mt-2 max-h-64 overflow-y-auto">
+        <div className="mt-2 max-h-64 ">
           {filteredUsers.length === 0 ? (
             <p className="text-center mt-5 text-gray-500">No users found</p>
           ) : (
             <Virtuoso
-              style={{ height: "300px" }}
+              style={{ height: "230px" }}
               data={filteredUsers}
               itemContent={(index, user) => {
                 const isSelected = selectedUsers.some(

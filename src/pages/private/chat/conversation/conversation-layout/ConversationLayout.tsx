@@ -53,7 +53,7 @@ const ConversationLayout: React.FC<conversationProps> = ({
     if (chatId) {
       await sendMessage(chatId, currentUid, searchTerm);
     } else {
-      // Create first-time private chat
+      
       const result = await createConversation(
         currentUid,
         selectedUser.uid,
