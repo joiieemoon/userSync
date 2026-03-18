@@ -5,26 +5,13 @@ import SearchBar from "../../components/SearchBar/SearchBar";
 import EditBtn from "../../components/button/editbutton/Editbtn";
 import CommonModal from "../../components/comman-modal/common-modal";
 import { RiChatNewLine } from "react-icons/ri";
-
+import type {
+  AddNewSpaceModalProps,
+  User,
+} from "../../pages/private/chat/conversation/Conversation";
 import useUsers from "../../hooks/use-user/useUsers";
 import useChats from "../../hooks/use-chat/useChat";
 import { createChat } from "../../services/createConversation/CreateConversation";
-interface User {
-  uid: string;
-  firstName: string;
-  lastName?: string;
-  email: string;
-  profilePhoto?: string;
-}
-
-interface AddNewSpaceModalProps {
-  createChat: (
-    chatType: "private" | "group",
-    participants: string[],
-    groupName?: string,
-  ) => void;
-  onUserSelected?: (user: User) => void;
-}
 
 const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
   onUserSelected,
@@ -56,29 +43,87 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
       setSelectedUsers([...selectedUsers, user]);
     }
   };
-
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (selectedUsers.length === 0) return;
 
-    if (selectedUsers.length === 1) {
-      createChat("private", [currentUid, selectedUsers[0].uid], currentUid, "");
-      onUserSelected && onUserSelected(selectedUsers[0]);
-    } else {
-      createChat(
-        "group",
-        [currentUid, ...selectedUsers.map((u) => u.uid)],
-        currentUid,
-        "",
-        groupName.trim(),
-      );
+    try {
+      if (selectedUsers.length === 1) {
+        
+        const result = await createChat(
+          "private",
+          [currentUid, selectedUsers[0].uid],
+          currentUid,
+          "",
+        );
+
+      
+        onUserSelected && onUserSelected(selectedUsers[0]);
+      } else {
+   
+        const result = await createChat(
+          "group",
+          [currentUid, ...selectedUsers.map((u) => u.uid)],
+          currentUid,
+          "",
+          groupName.trim(),
+        );
+
+        if (result?.chatId) {
+          onUserSelected &&
+            onUserSelected({
+              uid: result.chatId,
+              firstName: groupName.trim() || "Group",
+              isGroup: true,
+            });
+        }
+      }
+    } catch (err) {
+      console.error("Error creating chat:", err);
+    } finally {
+    
+      setSelectedUsers([]);
+      setGroupName("");
+      setSearchTerm("");
+      setOpenModal(false);
     }
-
-    setSelectedUsers([]);
-    setGroupName("");
-    setSearchTerm("");
-    setOpenModal(false);
   };
+  // const handleSubmit = async () => {
+  //   if (selectedUsers.length === 0) return;
 
+  //   if (selectedUsers.length === 1) {
+  //     await createChat(
+  //       "private",
+  //       [currentUid, selectedUsers[0].uid],
+  //       currentUid,
+  //       "",
+  //     );
+  //     onUserSelected && onUserSelected(selectedUsers[0]);
+  //     setOpenModal(false);
+  //   } else {
+  //     // create group chat
+  //     const result = await createChat(
+  //       "group",
+  //       [currentUid, ...selectedUsers.map((u) => u.uid)],
+  //       currentUid,
+  //       "",
+  //       groupName.trim(),
+  //     );
+
+  //     if (result?.chatId) {
+  //       onUserSelected &&
+  //         onUserSelected({
+  //           uid: result.chatId,
+  //           firstName: groupName.trim() || "Group",
+  //           isGroup: true,
+  //         });
+  //     }
+  //   }
+
+  //   setSelectedUsers([]);
+  //   setGroupName("");
+  //   setSearchTerm("");
+  //   setOpenModal(false);
+  // };
   return (
     <>
       <div className="flex justify-start w-full mb-3">

@@ -42,5 +42,12 @@ export interface ChatSidebarProps {
     chat: any,
 
 }
-
+export interface AddNewSpaceModalProps {
+    createChat: (
+        chatType: "private" | "group",
+        participants: string[],
+        groupName?: string,
+    ) => void;
+    onUserSelected?: (user: User) => void;
+}
 

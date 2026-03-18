@@ -53,9 +53,6 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
 
   if (loading) return <Spinnerring />;
 
-  console.log("existingChatUserIds:", existingChatUserIds);
-  console.log("users:", users);
-
   const directChats = chats.filter((c) => c.type === "private");
   const groupChats = chats.filter((c) => c.type === "group");
   const directChatUserIds = directChats

@@ -5,7 +5,7 @@ import { IoMdClose } from "react-icons/io";
 import FormController from "../../../../../components/form-controller";
 import EditBtn from "../../../../../components/button/editbutton/Editbtn";
 import { createConversation } from "../../../../../services/createConversation/CreateConversation";
-import { sendMessage } from "../../../../../services/newMessage/sendMessage";
+import { sendMessage } from "../../../../../services/createConversation/CreateConversation";
 import useMessages from "../../../../../hooks/use-message/useMessage";
 import { Virtuoso } from "react-virtuoso";
 import type { conversationProps } from "../Conversation";
@@ -19,8 +19,8 @@ const ConversationLayout: React.FC<conversationProps> = ({
   const [searchTerm, setSearchTerm] = useState("");
   const [chatId, setChatId] = useState<string | null>(null);
 
-  const { messages, markAsSeen ,} = useMessages(chatId, currentUid);
-  const {chats}=useChats()
+  const { messages, markAsSeen } = useMessages(chatId, currentUid);
+  const { chats } = useChats();
 
   useEffect(() => {
     if (!selectedUser) return;
@@ -29,8 +29,6 @@ const ConversationLayout: React.FC<conversationProps> = ({
       setChatId(selectedUser.uid);
       return;
     }
-
-   
 
     const existingChat = chats.find(
       (chat) =>
@@ -53,7 +51,6 @@ const ConversationLayout: React.FC<conversationProps> = ({
     if (chatId) {
       await sendMessage(chatId, currentUid, searchTerm);
     } else {
-      
       const result = await createConversation(
         currentUid,
         selectedUser.uid,
@@ -115,6 +112,7 @@ const ConversationLayout: React.FC<conversationProps> = ({
               >
                 <div className="inline-flex flex-col max-w-[70%]">
                   <span className="text-gray-400 text-[10px] mb-1">
+                    {}
                     {formatTime(msg.createdAt)}
                   </span>
                   <div

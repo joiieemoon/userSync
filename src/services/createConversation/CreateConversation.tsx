@@ -1,5 +1,11 @@
 import { db } from "../firebase/firebase.ts";
-import { addDoc, collection, Timestamp } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  Timestamp,
+  updateDoc,
+  doc,
+} from "firebase/firestore";
 
 export const createConversation = async (
   user1: string,
@@ -54,19 +60,35 @@ export const createChat = async (
 
     const chatRef = await addDoc(collection(db, "chats"), chatData);
 
-    const messageRef = await addDoc(
-      collection(db, "chats", chatRef.id, "messages"),
-      {
+    if (chatType === "group" || lastMessage?.trim()) {
+      await addDoc(collection(db, "chats", chatRef.id, "messages"), {
         senderId: creatorId,
-        text: lastMessage || chatType === "group" ? "Group created" : "",
+        text: chatType === "group" ? "Group created" : lastMessage?.trim(),
         createdAt: Timestamp.now(),
         seenBy: [creatorId],
-      },
-    );
+      });
+    }
 
     return { chatId: chatRef.id, messageId: messageRef.id };
   } catch (err) {
     console.error("Error creating chat:", err);
     throw err;
   }
+};
+export const sendMessage = async (
+  chatId: string,
+  senderId: string,
+  text: string,
+) => {
+  await addDoc(collection(db, "chats", chatId, "messages"), {
+    senderId,
+    text,
+    createdAt: Timestamp.now(),
+    seenBy: [senderId],
+  });
+
+  await updateDoc(doc(db, "chats", chatId), {
+    lastMessage: text,
+    lastMessageAt: Timestamp.now(),
+  });
 };
