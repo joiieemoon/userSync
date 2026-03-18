@@ -12,6 +12,7 @@ import type {
 import useUsers from "../../hooks/use-user/useUsers";
 import useChats from "../../hooks/use-chat/useChat";
 import { createChat } from "../../services/createConversation/CreateConversation";
+import FormController from "../../components/form-controller";
 
 const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
   onUserSelected,
@@ -23,7 +24,7 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
   const [groupName, setGroupName] = useState("");
-
+  const [groupNameError, setGroupNameError] = useState(false);
   if (loading) return null;
 
   const filteredUsers = users
@@ -45,10 +46,14 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
   };
   const handleSubmit = async () => {
     if (selectedUsers.length === 0) return;
-
+    if (selectedUsers.length > 1 && !groupName.trim()) {
+      setGroupNameError(true);
+      return;
+    } else {
+      setGroupNameError(false);
+    }
     try {
       if (selectedUsers.length === 1) {
-        
         const result = await createChat(
           "private",
           [currentUid, selectedUsers[0].uid],
@@ -56,10 +61,8 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
           "",
         );
 
-      
         onUserSelected && onUserSelected(selectedUsers[0]);
       } else {
-   
         const result = await createChat(
           "group",
           [currentUid, ...selectedUsers.map((u) => u.uid)],
@@ -80,50 +83,13 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
     } catch (err) {
       console.error("Error creating chat:", err);
     } finally {
-    
       setSelectedUsers([]);
       setGroupName("");
       setSearchTerm("");
       setOpenModal(false);
     }
   };
-  // const handleSubmit = async () => {
-  //   if (selectedUsers.length === 0) return;
 
-  //   if (selectedUsers.length === 1) {
-  //     await createChat(
-  //       "private",
-  //       [currentUid, selectedUsers[0].uid],
-  //       currentUid,
-  //       "",
-  //     );
-  //     onUserSelected && onUserSelected(selectedUsers[0]);
-  //     setOpenModal(false);
-  //   } else {
-  //     // create group chat
-  //     const result = await createChat(
-  //       "group",
-  //       [currentUid, ...selectedUsers.map((u) => u.uid)],
-  //       currentUid,
-  //       "",
-  //       groupName.trim(),
-  //     );
-
-  //     if (result?.chatId) {
-  //       onUserSelected &&
-  //         onUserSelected({
-  //           uid: result.chatId,
-  //           firstName: groupName.trim() || "Group",
-  //           isGroup: true,
-  //         });
-  //     }
-  //   }
-
-  //   setSelectedUsers([]);
-  //   setGroupName("");
-  //   setSearchTerm("");
-  //   setOpenModal(false);
-  // };
   return (
     <>
       <div className="flex justify-start w-full mb-3">
@@ -148,17 +114,27 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Search users..."
         />
-
-        {selectedUsers.length > 1 && (
-          <input
-            type="text"
-            placeholder="Enter group name"
-            value={groupName}
-            onChange={(e) => setGroupName(e.target.value)}
-            className="w-full p-2 border rounded mt-2"
-            required
-          />
-        )}
+        <div className=" mt-2">
+          {" "}
+          {selectedUsers.length > 1 && (
+            <FormController
+              control="input"
+              type="text"
+              label="Group Name"
+              placeholder="Enter group name"
+              value={groupName}
+              onChange={(e) => {
+                setGroupName(e.target.value);
+                if (groupNameError && e.target.value.trim() !== "") {
+                  setGroupNameError(false);
+                }
+              }}
+              error={groupNameError}
+              errorMessage="Group name is required"
+              className="w-full p-2 rounded"
+            />
+          )}
+        </div>
 
         <div className="mt-2 max-h-64 ">
           {filteredUsers.length === 0 ? (

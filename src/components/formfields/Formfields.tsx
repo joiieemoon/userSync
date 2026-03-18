@@ -45,6 +45,7 @@ const Inputfields: FC<InputProps> = ({
   success = false,
   error = false,
   label,
+  required,
   as = "input",
   rows = 4,
   ...rest
@@ -112,6 +113,7 @@ const Inputfields: FC<InputProps> = ({
               placeholder={placeholder}
               disabled={disabled}
               className={inputClasses}
+              required={required}
               {...rest}
             />
 
