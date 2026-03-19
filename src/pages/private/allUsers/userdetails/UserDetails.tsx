@@ -64,7 +64,7 @@ export default function UsersDetails() {
   };
 
   return (
-    <div className="p-6 mt-10 rounded-2xl shadow-2xl">
+    <div className="p-6  mt-10 rounded-2xl shadow-2xl">
       <h2 className="text-3xl mt-2 font-semibold mb-2 ">All Users</h2>
       {/* Search + Add User */}
       <div className="flex mt-5 justify-between items-center mb-3">

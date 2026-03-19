@@ -27,7 +27,7 @@ const ChatLayout = () => {
           }`}
         >
           {/* Content */}
-          <main className="p-10 pt-19 space-y-7 h-[calc(100vh-80px)]">
+          <main className="p-6  mt-13  space-y-7 h-[calc(100vh-80px)]">
             <ChatModyul />
           </main>
         </div>

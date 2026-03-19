@@ -80,7 +80,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
     );
 
   return (
-    <div className="w-72 bg-gray-100 rounded-2xl shadow flex flex-col">
+    <div className="w-72 bg-gray-100 rounded-2xl shadow flex flex-col ">
       {/* Top bar */}
       <div className="p-4 flex flex-col items-center justify-between border-b border-gray-300">
         <AddNewSpaceModal

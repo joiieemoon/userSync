@@ -39,6 +39,12 @@ input {
 .dark .h-full.overflow-y-auto.bg-gray-50 {
   background-color: #f9fafb;
 }
+.dark .your-wrapper .h-full.overflow-y-auto {
+  background-color: white !important;
+}
+.overflow-y-auto.overflow-x-hidden {
+  background: white !important;
+}
 /* pagination */
 
 ul > li > button {
