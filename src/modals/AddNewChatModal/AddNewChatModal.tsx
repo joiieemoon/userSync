@@ -54,44 +54,52 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
   const handleSubmit = async () => {
     if (selectedUsers.length === 0) return;
 
-    if (mode === "group") {
-      if (!groupName.trim()) {
-        setGroupNameError(true);
-        return;
+    try {
+      if (mode === "group") {
+        if (!groupName.trim()) {
+          setGroupNameError(true);
+          return;
+        }
+
+        const result = await createChat(
+          "group",
+          [currentUid, ...selectedUsers.map((u) => u.uid)],
+          currentUid,
+          "",
+          groupName.trim(),
+        );
+
+        if (result?.chatId) {
+          onUserSelected?.({
+            uid: result.chatId,
+            firstName: groupName.trim(),
+            isGroup: true,
+          });
+        }
+      } else {
+        const result = await createChat(
+          "private",
+          [currentUid, selectedUsers[0].uid],
+          currentUid,
+          "",
+        );
+
+        if (result?.chatId) {
+          onUserSelected?.({
+            ...selectedUsers[0],
+            chatId: result.chatId,
+          });
+        }
       }
-
-      const result = await createChat(
-        "group",
-        [currentUid, ...selectedUsers.map((u) => u.uid)],
-        currentUid,
-        "",
-        groupName.trim(),
-      );
-
-      if (result?.chatId) {
-        onUserSelected?.({
-          uid: result.chatId,
-          firstName: groupName.trim(),
-          isGroup: true,
-        });
-        setOpenModal(false);
-      }
-    } else {
-      const result = await createChat(
-        "private",
-        [currentUid, selectedUsers[0].uid],
-        currentUid,
-        "",
-      );
-
-      onUserSelected?.(selectedUsers[0]);
+    } catch (err) {
+      console.error("Error creating chat:", err);
+    } finally {
+      setSelectedUsers([]);
+      setGroupName("");
+      setSearchTerm("");
+      setGroupNameError(false);
       setOpenModal(false);
     }
-
-    setSelectedUsers([]);
-    setGroupName("");
-    setSearchTerm("");
-    setOpenModal(false);
   };
 
   return (
