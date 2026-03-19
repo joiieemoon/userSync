@@ -7,14 +7,8 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 import { db, auth } from "../../services/firebase/firebase.ts";
+import type { Chat } from "../../pages/private/chat/conversation/Conversation.ts";
 
-interface Chat {
-  id: string;
-  participants: string[];
-  type: string;
-  lastMessage?: string;
-  lastMessageAt?: any;
-}
 
 const useChats = () => {
   const [chats, setChats] = useState<Chat[]>([]);
@@ -34,6 +28,7 @@ const useChats = () => {
       const fetchedChats: Chat[] = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...(doc.data() as Chat),
+        createdBy: (doc.data() as any).createdBy || null, 
       }));
       setChats(fetchedChats);
       setLoading(false);
@@ -51,7 +46,20 @@ const useChats = () => {
     return chat?.lastMessage || null;
   };
 
-  return { chats, loading, existingChatUserIds, getLastMessage, currentUid };
+ 
+  const getCreatedBy = (chatId: string) => {
+    const chat = chats.find((c) => c.id === chatId);
+    return chat?.createdBy || null;
+  };
+
+  return {
+    chats,
+    loading,
+    existingChatUserIds,
+    getLastMessage,
+    currentUid,
+    getCreatedBy,
+  };
 };
 
 export default useChats;

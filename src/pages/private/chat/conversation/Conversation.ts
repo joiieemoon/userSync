@@ -8,7 +8,14 @@ export interface conversation {
     createdBy: string
 
 }
-
+export interface Chat {
+    id: string;
+    participants: string[];
+    type: string;
+    lastMessage?: string;
+    lastMessageAt?: any;
+    createdBy?: string;
+}
 export interface message {
     messageid: string,
     senderId: string,
@@ -49,5 +56,6 @@ export interface AddNewSpaceModalProps {
         groupName?: string,
     ) => void;
     onUserSelected?: (user: User) => void;
+    addmode: "create" | "add"
 }
 

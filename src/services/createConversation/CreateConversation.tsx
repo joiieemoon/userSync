@@ -5,6 +5,7 @@ import {
   Timestamp,
   updateDoc,
   doc,
+  getDoc,
 } from "firebase/firestore";
 
 export const createConversation = async (
@@ -91,4 +92,43 @@ export const sendMessage = async (
     lastMessage: text,
     lastMessageAt: Timestamp.now(),
   });
+};
+
+export const addMembersToGroup = async (
+  chatId: string,
+  newUserIds: string[],
+  addedBy: string,
+) => {
+  try {
+    console.log("this function is call add member");
+    const chatRef = doc(db, "chats", chatId);
+
+    const chatSnap = await getDoc(chatRef);
+
+    if (!chatSnap.exists()) {
+      throw new Error("Chat not found");
+    }
+
+    const chatData = chatSnap.data();
+
+    const updatedParticipants = [
+      ...new Set([...chatData.participants, ...newUserIds]),
+    ];
+
+    await updateDoc(chatRef, {
+      participants: updatedParticipants,
+    });
+
+    await addDoc(collection(db, "chats", chatId, "messages"), {
+      senderId: addedBy,
+      text: "New members added",
+      createdAt: Timestamp.now(),
+      seenBy: [addedBy],
+    });
+
+    return true;
+  } catch (err) {
+    console.error("Error adding members:", err);
+    throw err;
+  }
 };

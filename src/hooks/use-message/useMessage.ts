@@ -49,7 +49,7 @@ const useMessages = (
         return () => unsubscribe();
     }, [chatId, currentUid]);
 
-    // Function to mark all messages as seen
+    //
     const markAsSeen = async () => {
         if (!chatId || !currentUid) return;
 

@@ -11,11 +11,18 @@ import type {
 } from "../../pages/private/chat/conversation/Conversation";
 import useUsers from "../../hooks/use-user/useUsers";
 import useChats from "../../hooks/use-chat/useChat";
-import { createChat } from "../../services/createConversation/CreateConversation";
+import {
+  addMembersToGroup,
+  createChat,
+} from "../../services/createConversation/CreateConversation";
 import FormController from "../../components/form-controller";
 import { MdGroupAdd } from "react-icons/md";
+import { AiOutlineUsergroupAdd } from "react-icons/ai";
 const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
   onUserSelected,
+  modeselect,
+  addmode,
+  chatId,
 }) => {
   const { users } = useUsers();
   const { chats, currentUid, existingChatUserIds, loading } = useChats();
@@ -25,7 +32,7 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
   const [groupName, setGroupName] = useState("");
   const [groupNameError, setGroupNameError] = useState(false);
-  const [mode, setMode] = useState<"chat" | "group">("chat");
+  const [mode, setMode] = useState<"chat" | "group" | "addmember">("chat");
   if (loading) return null;
 
   const filteredUsers = users
@@ -56,7 +63,6 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
       setSelectedUsers([...selectedUsers, user]);
     }
   };
-
   const handleSubmit = async () => {
     if (selectedUsers.length === 0) return;
 
@@ -68,6 +74,15 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
     }
 
     try {
+      if (addmode === "add") {
+        await addMembersToGroup(
+          chatId,
+          selectedUsers.map((u) => u.uid),
+          currentUid,
+        );
+        return;
+      }
+
       if (mode === "group") {
         const result = await createChat(
           "group",
@@ -83,6 +98,7 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
             firstName: groupName.trim(),
             isGroup: true,
             chatId: result.chatId,
+            createdBy: currentUid,
           });
         }
       } else {
@@ -101,7 +117,7 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
         }
       }
     } catch (err) {
-      console.error("Error creating chat:", err);
+      console.error("Error:", err);
     } finally {
       setSelectedUsers([]);
       setGroupName("");
@@ -110,26 +126,40 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
       setOpenModal(false);
     }
   };
+
   return (
     <>
       <div className="flex justify-evenly w-full mb-3">
-        <EditBtn
-          onClick={() => {
-            setMode("chat");
-            setOpenModal(true);
-          }}
-          label=""
-          icon={<RiChatNewLine />}
-        />
+        {addmode === "add" ? (
+          <EditBtn
+            onClick={() => {
+              setMode("addmember");
+              setOpenModal(true);
+            }}
+            label=""
+            icon={<AiOutlineUsergroupAdd />}
+          />
+        ) : (
+          <>
+            <EditBtn
+              onClick={() => {
+                setMode("chat");
+                setOpenModal(true);
+              }}
+              label=""
+              icon={<RiChatNewLine />}
+            />
 
-        <EditBtn
-          onClick={() => {
-            setMode("group");
-            setOpenModal(true);
-          }}
-          label=""
-          icon={<MdGroupAdd />}
-        />
+            <EditBtn
+              onClick={() => {
+                setMode("group");
+                setOpenModal(true);
+              }}
+              label=""
+              icon={<MdGroupAdd />}
+            />
+          </>
+        )}
       </div>
 
       <CommonModal
@@ -137,8 +167,14 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
         onClose={() => {
           (setOpenModal(false), setSelectedUsers([]));
         }}
-        title={mode === "group" ? "New Group" : "New Chat"}
-        submitLabel="Create"
+        title={
+          addmode === "add"
+            ? "Add Member"
+            : mode === "group"
+              ? "New Group"
+              : "New Chat"
+        }
+        submitLabel={addmode === "add" ? "Add" : "Create"}
         cancelLabel="Cancel"
         onSubmit={handleSubmit}
         className="max-w-md"
@@ -155,7 +191,7 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
         />
         <div className=" mt-2">
           {" "}
-          {mode === "group" && (
+          {addmode !== "add" && mode === "group" && (
             <FormController
               control="input"
               type="text"

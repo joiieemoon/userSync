@@ -11,6 +11,7 @@ import { Virtuoso } from "react-virtuoso";
 import type { conversationProps } from "../Conversation";
 import useChats from "../../../../../hooks/use-chat/useChat";
 import Spinnerring from "../../../../../components/spinner/Spinnerring";
+import AddNewSpaceModal from "../../../../../modals/AddNewChatModal/AddNewChatModal";
 
 const ConversationLayout: React.FC<conversationProps> = ({
   selectedUser,
@@ -21,31 +22,14 @@ const ConversationLayout: React.FC<conversationProps> = ({
   const [chatId, setChatId] = useState<string | null>(null);
 
   const { messages, markAsSeen } = useMessages(chatId, currentUid);
-  const { chats, loading } = useChats();
+  const { chats, loading, getCreatedBy } = useChats();
 
   if (loading) {
     <div className="border">
       <Spinnerring />;
     </div>;
   }
-  //working
-  // useEffect(() => {
-  //   if (!selectedUser) return;
 
-  //   if (selectedUser.isGroup) {
-  //     setChatId(selectedUser.uid);
-  //     return;
-  //   }
-
-  //   const existingChat = chats.find(
-  //     (chat) =>
-  //       chat.type === "private" &&
-  //       chat.participants.includes(selectedUser.uid) &&
-  //       chat.participants.includes(currentUid),
-  //   );
-
-  //   setChatId(existingChat?.id || null);
-  // }, [selectedUser]);
   useEffect(() => {
     if (!selectedUser) return;
 
@@ -103,7 +87,7 @@ const ConversationLayout: React.FC<conversationProps> = ({
       minute: "2-digit",
     });
   };
-
+ 
   return (
     <div className="flex flex-col bg-gray-100 h-[calc(100vh-130px)] relative">
       <header className="flex items-center p-4 shadow w-full bg-white z-10">
@@ -112,7 +96,7 @@ const ConversationLayout: React.FC<conversationProps> = ({
           img={!selectedUser?.isGroup ? selectedUser?.profilePhoto : undefined}
           rounded
         />
-        <div className="ml-3 flex justify-between w-full">
+        <div className="ml-3 flex justify-between w-full  items-center">
           <div>
             <h2 className="font-semibold text-lg">{selectedUser?.firstName}</h2>
             {!selectedUser?.isGroup && (
@@ -121,8 +105,24 @@ const ConversationLayout: React.FC<conversationProps> = ({
               </p>
             )}
           </div>
-          <div onClick={onClose} className="cursor-pointer">
-            <IoMdClose className="text-3xl hover:text-gray-600" />
+          <div className="flex">
+            <div className="cursor-pointer  mr-3.5">
+              {selectedUser?.isGroup &&
+                chatId &&
+                getCreatedBy(chatId) === currentUid && (
+                  <>
+                    <AddNewSpaceModal
+                      addmode="add"
+                      chatId={chatId}
+                      onClose={() => setShowAddMemberModal(false)}
+                    />
+                  </>
+                )}
+            </div>
+
+            <div onClick={onClose} className="cursor-pointer">
+              <IoMdClose className="text-3xl hover:text-gray-600" />
+            </div>
           </div>
         </div>
       </header>
