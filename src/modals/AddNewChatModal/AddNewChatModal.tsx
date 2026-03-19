@@ -13,7 +13,7 @@ import useUsers from "../../hooks/use-user/useUsers";
 import useChats from "../../hooks/use-chat/useChat";
 import { createChat } from "../../services/createConversation/CreateConversation";
 import FormController from "../../components/form-controller";
-
+import { MdGroupAdd } from "react-icons/md";
 const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
   onUserSelected,
 }) => {
@@ -25,6 +25,7 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
   const [groupName, setGroupName] = useState("");
   const [groupNameError, setGroupNameError] = useState(false);
+  const [mode, setMode] = useState<"chat" | "group">("chat");
   if (loading) return null;
 
   const filteredUsers = users
@@ -38,72 +39,87 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
     );
 
   const toggleUserSelection = (user: User) => {
+    if (mode === "chat") {
+      setSelectedUsers([user]);
+      return;
+    }
+
     if (selectedUsers.find((u) => u.uid === user.uid)) {
       setSelectedUsers(selectedUsers.filter((u) => u.uid !== user.uid));
     } else {
       setSelectedUsers([...selectedUsers, user]);
     }
   };
+
   const handleSubmit = async () => {
     if (selectedUsers.length === 0) return;
-    if (selectedUsers.length > 1 && !groupName.trim()) {
-      setGroupNameError(true);
-      return;
-    } else {
-      setGroupNameError(false);
-    }
-    try {
-      if (selectedUsers.length === 1) {
-        const result = await createChat(
-          "private",
-          [currentUid, selectedUsers[0].uid],
-          currentUid,
-          "",
-        );
 
-        onUserSelected && onUserSelected(selectedUsers[0]);
-      } else {
-        const result = await createChat(
-          "group",
-          [currentUid, ...selectedUsers.map((u) => u.uid)],
-          currentUid,
-          "",
-          groupName.trim(),
-        );
-
-        if (result?.chatId) {
-          onUserSelected &&
-            onUserSelected({
-              uid: result.chatId,
-              firstName: groupName.trim() || "Group",
-              isGroup: true,
-            });
-        }
+    if (mode === "group") {
+      if (!groupName.trim()) {
+        setGroupNameError(true);
+        return;
       }
-    } catch (err) {
-      console.error("Error creating chat:", err);
-    } finally {
-      setSelectedUsers([]);
-      setGroupName("");
-      setSearchTerm("");
+
+      const result = await createChat(
+        "group",
+        [currentUid, ...selectedUsers.map((u) => u.uid)],
+        currentUid,
+        "",
+        groupName.trim(),
+      );
+
+      if (result?.chatId) {
+        onUserSelected?.({
+          uid: result.chatId,
+          firstName: groupName.trim(),
+          isGroup: true,
+        });
+        setOpenModal(false);
+      }
+    } else {
+      const result = await createChat(
+        "private",
+        [currentUid, selectedUsers[0].uid],
+        currentUid,
+        "",
+      );
+
+      onUserSelected?.(selectedUsers[0]);
       setOpenModal(false);
     }
+
+    setSelectedUsers([]);
+    setGroupName("");
+    setSearchTerm("");
+    setOpenModal(false);
   };
 
   return (
     <>
-      <div className="flex justify-start w-full mb-3">
+      <div className="flex justify-evenly w-full mb-3">
         <EditBtn
-          onClick={() => setOpenModal(true)}
+          onClick={() => {
+            setMode("chat");
+            setOpenModal(true);
+          }}
           label=""
           icon={<RiChatNewLine />}
+        />
+
+        <EditBtn
+          onClick={() => {
+            setMode("group");
+            setOpenModal(true);
+          }}
+          label=""
+          icon={<MdGroupAdd />}
         />
       </div>
 
       <CommonModal
         isOpen={openModal}
         onClose={() => setOpenModal(false)}
-        title={selectedUsers.length > 1 ? "New Group" : "New Chat"}
+        title={mode === "group" ? "New Group" : "New Chat"}
         submitLabel="Create"
         cancelLabel="Cancel"
         onSubmit={handleSubmit}
@@ -116,7 +132,7 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
         />
         <div className=" mt-2">
           {" "}
-          {selectedUsers.length > 1 && (
+          {mode === "group" && (
             <FormController
               control="input"
               type="text"
@@ -131,7 +147,6 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
               }}
               error={groupNameError}
               errorMessage="Group name is required"
-              className="w-full p-2 rounded"
             />
           )}
         </div>
