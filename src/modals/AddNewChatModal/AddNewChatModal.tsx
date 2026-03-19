@@ -8,7 +8,7 @@ import { RiChatNewLine } from "react-icons/ri";
 import type {
   AddNewSpaceModalProps,
   User,
-} from "../../pages/private/chat/conversation/Conversation";
+} from "../../types/interfaces";
 import useUsers from "../../hooks/use-user/useUsers";
 import useChats from "../../hooks/use-chat/useChat";
 import {

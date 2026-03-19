@@ -1,13 +1,7 @@
 "use client";
 
 import { Pagination } from "flowbite-react";
-
-interface PaginationMainProps {
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
-  extraProps?: Partial<React.ComponentProps<typeof Pagination>>;
-}
+import type { PaginationMainProps } from "../../types/interfaces";
 
 export function PaginationMain({
   currentPage,

@@ -6,13 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import CommonModal from "../common-modal";
 import { PiWarningCircle } from "react-icons/pi";
-
-type DeleteItemModalProps = {
-  isOpen: boolean;
-  onClose: () => void;
-  collectionName: string;
-  item: { id: string } | null;
-};
+import type { DeleteItemModalProps } from "../../../types/interfaces/index.ts";
 
 const DeleteItemModal: React.FC<DeleteItemModalProps> = ({
   isOpen,

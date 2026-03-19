@@ -1,24 +1,8 @@
+import type { PersonalDetails } from "../../../types/interfaces";
 
-
-interface Props {
-  user: {
-    uid: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone?: string;
-    role?: string;
-    bio?: string;
-  };
-  onEdit: () => void;
-}
-
-export default function PersonalDetails({ user, onEdit }: Props) {
+export default function PersonalDetails({ user, onEdit }: PersonalDetails) {
   return (
     <div className="bg-white rounded-2xl shadow p-6  ">
-     
-
-      
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-lg font-semibold text-gray-900 ">
@@ -31,8 +15,7 @@ export default function PersonalDetails({ user, onEdit }: Props) {
 
       {/* <div className="grid grid-cols-2 gap-y-5 gap-x-10 text-sm">
        */}
-       <div className="bg-gray-50 border border-gray-200 rounded-2xl shadow-md p-6 ">
-
+      <div className="bg-gray-50 border border-gray-200 rounded-2xl shadow-md p-6 ">
         <Field label="First Name" value={user.firstName} />
         <Field label="Last Name" value={user.lastName} />
         <Field label="Email" value={user.email} />

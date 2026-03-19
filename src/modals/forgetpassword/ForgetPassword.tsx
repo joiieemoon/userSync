@@ -6,12 +6,8 @@ import { Formik, Form } from "formik";
 
 import CommonModal from "../../components/comman-modal/common-modal";
 import FormController from "../../components/form-controller/index.tsx";
+import type { forgetpasswordprops } from "../../types/interfaces/index.ts";
 
-type Props = {
-  isOpen: boolean;
-  onClose: () => void;
-  onSubmit: (email: string) => void;
-};
 
 const forgotPasswordSchema = Yup.object({
   email: Yup.string()
@@ -19,7 +15,10 @@ const forgotPasswordSchema = Yup.object({
     .required("Email is required"),
 });
 
-export default function ForgotPassword({ isOpen, onClose }: Props) {
+export default function ForgotPassword({
+  isOpen,
+  onClose,
+}: forgetpasswordprops) {
   if (!isOpen) return null;
 
   const handleSubmit = async (

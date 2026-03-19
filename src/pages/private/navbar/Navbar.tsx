@@ -22,10 +22,8 @@ import { setUserPermissions } from "../../../redux/permissionslice/permissionsli
 import { useDispatch } from "react-redux";
 import useUsers from "../../../hooks/use-user/useUsers.ts";
 import { setUser } from "../../../redux/store/authSlice";
-interface NavbarProps {
-  toggleSidebar: () => void;
-  isOpen: boolean;
-}
+import type {NavbarProps} from "../../../types/interfaces"
+
 import { IoMdHome } from "react-icons/io";
 const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isOpen }) => {
   const navigate = useNavigate();

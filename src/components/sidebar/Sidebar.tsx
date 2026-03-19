@@ -13,10 +13,7 @@ import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { canPermit } from "../../helper/canPermit/canpermit";
 import type { RootState } from "../../redux/store/store";
-
-interface SidebarProps {
-  isOpen: boolean;
-}
+import type { SidebarProps } from "../../types/interfaces";
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
   const navigate = useNavigate();

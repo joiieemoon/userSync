@@ -1,18 +1,6 @@
 import React, { ReactNode } from "react";
 import EditBtn from "../../button/editbutton/Editbtn.tsx";
-
-type CommonModalProps = {
-  isOpen: boolean;
-  onClose: () => void;
-  title?: string | ReactNode;
-  children?: ReactNode;
-  footer?: ReactNode;
-  onSubmit?: () => void;
-  submitLabel?: string;
-  cancelLabel?: string;
-  className?: string;
-  submitDisabled?: boolean;
-};
+import type { CommonModalProps } from "../../../types/interfaces/index.ts";
 
 const CommonModal: React.FC<CommonModalProps> = ({
   isOpen,

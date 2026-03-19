@@ -13,21 +13,12 @@ import avatar from "../../../public/avtar.png";
 
 import CommonModal from "../../components/comman-modal/common-modal";
 import FormController from "../../components/form-controller/index.tsx";
-interface Props {
-  user: {
-    uid: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone?: string;
-    role?: string;
-    bio?: string;
-    profilePhoto?: string;
-  };
-  onClose: () => void;
-}
+import type { updateProfileProps } from "../../types/interfaces/index.ts";
 
-export default function UpdateProfileModal({ user, onClose }: Props) {
+export default function UpdateProfileModal({
+  user,
+  onClose,
+}: updateProfileProps) {
   const dispatch = useDispatch<AppDispatch>();
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);

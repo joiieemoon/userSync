@@ -1,12 +1,7 @@
 import Inputfields from "../formfields/Formfields";
+import type { formcontrollerProps } from "../../types/interfaces";
 
-interface Props {
-  control: "input" | "textarea" | "select" | "checkbox";
-  [key: string]: any;
-  
-}
-
-const FormController = ({ control, ...props }: Props) => {
+const FormController = ({ control, ...props }: formcontrollerProps) => {
   switch (control) {
     case "input":
       return <Inputfields {...props} />;

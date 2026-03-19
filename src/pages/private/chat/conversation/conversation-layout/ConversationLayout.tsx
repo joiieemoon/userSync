@@ -8,7 +8,8 @@ import { createConversation } from "../../../../../services/createConversation/C
 import { sendMessage } from "../../../../../services/createConversation/CreateConversation";
 import useMessages from "../../../../../hooks/use-message/useMessage";
 import { Virtuoso } from "react-virtuoso";
-import type { conversationProps } from "../Conversation";
+
+import type { conversationProps } from "../../../../../types/interfaces";
 import useChats from "../../../../../hooks/use-chat/useChat";
 import Spinnerring from "../../../../../components/spinner/Spinnerring";
 import AddNewSpaceModal from "../../../../../modals/AddNewChatModal/AddNewChatModal";
@@ -87,7 +88,7 @@ const ConversationLayout: React.FC<conversationProps> = ({
       minute: "2-digit",
     });
   };
- 
+
   return (
     <div className="flex flex-col bg-gray-100 h-[calc(100vh-130px)] relative">
       <header className="flex items-center p-4 shadow w-full bg-white z-10">

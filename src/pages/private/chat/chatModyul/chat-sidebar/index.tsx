@@ -6,7 +6,8 @@ import { db } from "../../../../../services/firebase/firebase";
 import avtar from "../../../../../../public/avtar.png";
 import SearchBar from "../../../../../components/SearchBar/SearchBar";
 import Spinnerring from "../../../../../components/spinner/Spinnerring";
-import type { ChatSidebarProps } from "../../conversation/Conversation";
+
+import type { ChatSidebarProps } from "../../../../../types/interfaces";
 import AddNewSpaceModal from "../../../../../modals/AddNewChatModal/AddNewChatModal";
 import nogroupchat from "../../../../.././../public/nogroupchat.png";
 import nodirectchat from "../../../../../../public/nodirectchat.png";

@@ -3,11 +3,9 @@ import { useSelector } from "react-redux";
 import type { RootState } from "../../../redux/store/store";
 import avtar from "../../../../public/avtar.png";
 import { MdOutlineEdit } from "react-icons/md";
-interface Props {
-  onEdit?: () => void;
-}
+import type { ProfileHeader } from "../../../types/interfaces";
 
-export default function ProfileHeader({ onEdit }: Props) {
+export default function ProfileHeader({ onEdit }: ProfileHeader) {
   // Get user from Redux
   const user = useSelector((state: RootState) => state.auth.user);
 

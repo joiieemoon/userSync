@@ -1,19 +1,7 @@
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
+import type { Permissions, UserPermissionsState } from "../../types/interfaces"
 
-interface Permissions {
-    [module: string]: {
-        canAdd: boolean;
-        canEdit: boolean;
-        canDelete: boolean;
-        canView: boolean;
-    };
-}
-
-interface UserPermissionsState {
-    username: string;
-    permissions: Permissions;
-}
 
 const initialState: UserPermissionsState = {
     username: "",

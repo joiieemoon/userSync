@@ -1,11 +1,4 @@
-type EditBtnProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  onClick?: () => void;
-  label: string;
-  icon?: React.ReactNode;
-  variant?: "primary" | "secondary" | "main";
-  type?: "button" | "submit" | "reset";
-  disabled?: boolean;
-};
+import type { EditBtnProps } from "../../../types/interfaces";
 
 const EditBtn = ({
   onClick,

@@ -1,9 +1,6 @@
 import React from "react";
 import { IoMdSearch } from "react-icons/io";
-
-interface SearchBarProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  containerClassName?: string;
-}
+import type { SearchBarProps } from "../../types/interfaces";
 
 const SearchBar: React.FC<SearchBarProps> = ({
   containerClassName = "",

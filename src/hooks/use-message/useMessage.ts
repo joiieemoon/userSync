@@ -3,13 +3,7 @@ import { useEffect, useState } from "react";
 import { collection, query, orderBy, onSnapshot, doc, updateDoc, arrayUnion } from "firebase/firestore";
 import { db } from "../../services/firebase/firebase";
 
-export interface Message {
-    id: string;
-    senderId: string;
-    text: string;
-    createdAt: any;
-    seenBy?: string[];
-}
+
 
 const useMessages = (
     chatId: string | null,
