@@ -38,6 +38,12 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
         .includes(searchTerm.toLowerCase()),
     );
 
+  const sortedUsers = [...filteredUsers].sort((a, b) => {
+    const nameA = a.firstName.toLowerCase();
+    const nameB = b.firstName.toLowerCase();
+
+    return nameA.localeCompare(nameB);
+  });
   const toggleUserSelection = (user: User) => {
     if (mode === "chat") {
       setSelectedUsers([user]);
@@ -54,13 +60,15 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
   const handleSubmit = async () => {
     if (selectedUsers.length === 0) return;
 
+    if (mode === "group") {
+      if (!groupName.trim()) {
+        setGroupNameError(true);
+        return;
+      }
+    }
+
     try {
       if (mode === "group") {
-        if (!groupName.trim()) {
-          setGroupNameError(true);
-          return;
-        }
-
         const result = await createChat(
           "group",
           [currentUid, ...selectedUsers.map((u) => u.uid)],
@@ -74,6 +82,7 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
             uid: result.chatId,
             firstName: groupName.trim(),
             isGroup: true,
+            chatId: result.chatId,
           });
         }
       } else {
@@ -101,7 +110,6 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
       setOpenModal(false);
     }
   };
-
   return (
     <>
       <div className="flex justify-evenly w-full mb-3">
@@ -126,12 +134,19 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
 
       <CommonModal
         isOpen={openModal}
-        onClose={() => setOpenModal(false)}
+        onClose={() => {
+          (setOpenModal(false), setSelectedUsers([]));
+        }}
         title={mode === "group" ? "New Group" : "New Chat"}
         submitLabel="Create"
         cancelLabel="Cancel"
         onSubmit={handleSubmit}
         className="max-w-md"
+        submitDisabled={
+          mode === "group"
+            ? selectedUsers.length === 0
+            : selectedUsers.length === 0
+        }
       >
         <SearchBar
           value={searchTerm}
@@ -160,12 +175,14 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
         </div>
 
         <div className="mt-2 max-h-64 ">
-          {filteredUsers.length === 0 ? (
+          {/* {filteredUsers.length === 0 ? ( */}
+          {sortedUsers.length === 0 ? (
             <p className="text-center mt-5 text-gray-500">No users found</p>
           ) : (
             <Virtuoso
               style={{ height: "230px" }}
-              data={filteredUsers}
+              // data={filteredUsers}
+              data={sortedUsers}
               itemContent={(index, user) => {
                 const isSelected = selectedUsers.some(
                   (u) => u.uid === user.uid,

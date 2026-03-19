@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import { IoSend } from "react-icons/io5";
 import { Avatar } from "flowbite-react";
 import { IoMdClose } from "react-icons/io";
@@ -10,6 +10,7 @@ import useMessages from "../../../../../hooks/use-message/useMessage";
 import { Virtuoso } from "react-virtuoso";
 import type { conversationProps } from "../Conversation";
 import useChats from "../../../../../hooks/use-chat/useChat";
+import Spinnerring from "../../../../../components/spinner/Spinnerring";
 
 const ConversationLayout: React.FC<conversationProps> = ({
   selectedUser,
@@ -20,10 +21,38 @@ const ConversationLayout: React.FC<conversationProps> = ({
   const [chatId, setChatId] = useState<string | null>(null);
 
   const { messages, markAsSeen } = useMessages(chatId, currentUid);
-  const { chats } = useChats();
+  const { chats, loading } = useChats();
 
+  if (loading) {
+    <div className="border">
+      <Spinnerring />;
+    </div>;
+  }
+  //working
+  // useEffect(() => {
+  //   if (!selectedUser) return;
+
+  //   if (selectedUser.isGroup) {
+  //     setChatId(selectedUser.uid);
+  //     return;
+  //   }
+
+  //   const existingChat = chats.find(
+  //     (chat) =>
+  //       chat.type === "private" &&
+  //       chat.participants.includes(selectedUser.uid) &&
+  //       chat.participants.includes(currentUid),
+  //   );
+
+  //   setChatId(existingChat?.id || null);
+  // }, [selectedUser]);
   useEffect(() => {
     if (!selectedUser) return;
+
+    if (selectedUser.chatId) {
+      setChatId(selectedUser.chatId);
+      return;
+    }
 
     if (selectedUser.isGroup) {
       setChatId(selectedUser.uid);
@@ -37,8 +66,10 @@ const ConversationLayout: React.FC<conversationProps> = ({
         chat.participants.includes(currentUid),
     );
 
-    setChatId(existingChat?.id || null);
-  }, [selectedUser]);
+    if (existingChat) {
+      setChatId(existingChat.id);
+    }
+  }, [selectedUser, chats]);
 
   useEffect(() => {
     if (!chatId || !currentUid || messages.length === 0) return;
@@ -135,8 +166,7 @@ const ConversationLayout: React.FC<conversationProps> = ({
         <div className="w-full flex items-center gap-2">
           <div className="flex-1">
             <FormController
-              control="textarea"
-              rows={1}
+              control="input"
               name="message"
               placeholder="Type a message..."
               value={searchTerm}
@@ -150,7 +180,12 @@ const ConversationLayout: React.FC<conversationProps> = ({
               className="w-full border-none !rounded-3xl"
             />
           </div>
-          <EditBtn label="" icon={<IoSend />} onClick={handleSendMessage} />
+          <EditBtn
+            label=""
+            icon={<IoSend />}
+            onClick={handleSendMessage}
+            disabled={searchTerm === ""}
+          />
         </div>
       </footer>
     </div>

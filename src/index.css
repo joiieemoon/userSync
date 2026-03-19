@@ -32,7 +32,7 @@ input::placeholder {
 }
 
 input {
-  background-color: #dce1e6;
+  background-color: rgb(226 232 240);
   border: none;
   color: black;
 }
@@ -71,7 +71,7 @@ li[aria-current="page"] > button {
 [data-testid="flowbite-accordion"] button:focus {
   outline: none !important;
   box-shadow: none !important;
- background-color: #f3f4f6 !important;
+  background-color: #f3f4f6 !important;
 }
 [data-testid="flowbite-accordion"] button:hover {
   background-color: #f3f4f6 !important; /* light hover */

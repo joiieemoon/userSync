@@ -8,6 +8,8 @@ import SearchBar from "../../../../../components/SearchBar/SearchBar";
 import Spinnerring from "../../../../../components/spinner/Spinnerring";
 import type { ChatSidebarProps } from "../../conversation/Conversation";
 import AddNewSpaceModal from "../../../../../modals/AddNewChatModal/AddNewChatModal";
+import nogroupchat from "../../../../.././../public/nogroupchat.png";
+import nodirectchat from "../../../../../../public/nodirectchat.png";
 import {
   Accordion,
   AccordionPanel,
@@ -100,7 +102,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
             Direct Messages
           </AccordionTitle>
           <AccordionContent className="p-0">
-            <div className="flex flex-col h-[300px] overflow-y-auto bg-white">
+            <div className="flex flex-col h-[300px] overflow-y-auto bg-gray-100">
               {filteredUsers.length > 0 ? (
                 <Virtuoso
                   style={{ height: "100%" }}
@@ -138,7 +140,16 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
                   }}
                 />
               ) : (
-                <div className="p-4 text-gray-500">No Direct Messages</div>
+                <div className="flex flex-col w-full justify-center items-center bg-gray-100 ">
+                  <img src={nodirectchat} alt="no convo" className="" />
+                  <div className=" text-gray-500 text-m font-bold">
+                    No Direct-Chat yet{" "}
+                  </div>
+                  <div className=" text-gray-500">
+                    {" "}
+                    create one to get started.{" "}
+                  </div>
+                </div>
               )}
             </div>
           </AccordionContent>
@@ -150,7 +161,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
             Spaces
           </AccordionTitle>
           <AccordionContent className="p-0">
-            <div className="flex flex-col h-[300px] overflow-y-auto bg-white">
+            <div className="flex flex-col h-[300px] overflow-y-auto bg-gray-100">
               {groupChats.length > 0 ? (
                 <Virtuoso
                   style={{ height: "100%" }}
@@ -190,7 +201,16 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
                   }}
                 />
               ) : (
-                <div className="p-4 text-gray-500">No Spaces</div>
+                <div className="flex flex-col w-full justify-center items-center bg-gray-100 ">
+                  <img src={nogroupchat} alt="no convo" className="" />
+                  <div className=" text-gray-500 text-m font-bold">
+                    No spaces yet{" "}
+                  </div>
+                  <div className=" text-gray-500">
+                    {" "}
+                    create one to get started.{" "}
+                  </div>
+                </div>
               )}
             </div>
           </AccordionContent>
