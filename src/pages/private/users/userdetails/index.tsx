@@ -14,16 +14,25 @@ import Spinnerring from "../../../../components/common/spinner/index.tsx";
 import UserModal from "../../../../modals/add-edit-user-modal";
 import DeleteItemModal from "../../../../components/common/common-delete-modal";
 import { usePagination } from "../../../../hooks/use-pagination";
-
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "../../../../redux/store/store";
+import {
+  setUserSearch,
+  setSortOrder,
+} from "../../../../redux/slice/uiSlice.ts";
 export default function UsersDetails() {
   const { users, loading } = useUsers();
 
   const [userToDelete, setUserToDelete] = useState<any>(null);
   const [userToEdit, setUserToEdit] = useState<any>(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [isAddUserOpen, setIsAddUserOpen] = useState(false);
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
+  const [isAddUserOpen, setIsAddUserOpen] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const { searchTerm, sortOrder } = useSelector(
+    (state: RootState) => state.ui.users,
+  );
   const currentUid = auth.currentUser?.uid;
 
   const currentUser = useMemo(
@@ -53,7 +62,7 @@ export default function UsersDetails() {
   });
 
   const toggleSortOrder = () => {
-    setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+    dispatch(setSortOrder(sortOrder === "asc" ? "desc" : "asc"));
   };
   if (loading) return <Spinnerring />;
   return (
@@ -63,7 +72,7 @@ export default function UsersDetails() {
       <div className="flex mt-5 justify-between items-center mb-3">
         <SearchBar
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => dispatch(setUserSearch(e.target.value))}
           placeholder="Search users..."
           name="searchUser"
         />
@@ -106,7 +115,7 @@ export default function UsersDetails() {
 
         <tbody>
           {currentUsers.length > 0 ? (
-            currentUsers.map((u,index) => (
+            currentUsers.map((u, index) => (
               <tr key={u.uid} className="border-t">
                 <td className="p-2">{(currentPage - 1) * 5 + index + 1}</td>
                 <td className="p-2">{u.firstName}</td>
