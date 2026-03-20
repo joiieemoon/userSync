@@ -15,7 +15,7 @@ import {
   addMembersToGroup,
   createChat,
 } from "../../services/create-conversation";
-import FormController from "../../components/form-controller";
+import FormController from "../../components/common/input/form-controller";
 import { MdGroupAdd } from "react-icons/md";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({

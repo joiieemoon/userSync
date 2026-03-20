@@ -51,6 +51,7 @@ ul > li > button {
   background-color: #dce1e6 !important;
   color: #000 !important;
   border-color: #dce1e6 !important;
+  cursor: pointer;
 }
 
 li[aria-current="page"] > button {

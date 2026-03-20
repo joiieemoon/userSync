@@ -25,7 +25,15 @@ export interface PaginationMainProps {
     onPageChange: (page: number) => void;
     extraProps?: Partial<React.ComponentProps<typeof Pagination>>;
 }
-
+//use pagiantion hook 
+export interface UsePaginationProps<T> {
+    data: T[];
+    itemsPerPage?: number;
+    searchTerm?: string;
+    sortField?: keyof T;
+    sortOrder?: "asc" | "desc";
+    filterFields?: (keyof T)[];
+}
 //formcontroller
 export interface formcontrollerProps {
     control: "input" | "textarea" | "select" | "checkbox";

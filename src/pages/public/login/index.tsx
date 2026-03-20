@@ -1,10 +1,9 @@
 import loginCover from "../../../../public/logincover.png";
-import { loginFields } from "../../../components/form-fields/formconfig.ts";
+import { loginFields } from "../../../components/common/input/form-fields/formconfig.ts";
 import { Link } from "react-router-dom";
 import { Formik, Form } from "formik";
 import { auth } from "../../../services/firebase/firebase.ts";
-
-import { loginvalidationSchema } from "../../../components/validations/validation-schema/index.ts";
+import { loginvalidationSchema } from "../../../utils/validations/validation-schema/index.ts";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -30,7 +29,7 @@ import { db } from "../../../services/firebase/firebase.ts";
 import { setUserPermissions } from "../../../redux/permissionslice";
 import EditBtn from "../../../components/common/button/edit-button/index.tsx";
 
-import FormController from "../../../components/form-controller";
+import FormController from "../../../components/common/input/form-controller/index.tsx";
 
 export const Login = () => {
   const [showForgot, setShowForgot] = useState(false);

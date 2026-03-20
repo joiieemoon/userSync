@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import { Formik, Form } from "formik";
 
 import CommonModal from "../../components/common/common-modal/index.tsx";
-import FormController from "../../components/form-controller";
+import FormController from "../../components/common/input/form-controller/index.tsx";
 import type { forgetpasswordprops } from "../../types/interfaces";
 
 const forgotPasswordSchema = Yup.object({

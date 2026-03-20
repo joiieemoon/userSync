@@ -1,5 +1,5 @@
 import loginCover from "../../../../public/logincover.png";
-import { signupFields } from "../../../components/form-fields/formconfig.ts";
+import { signupFields } from "../../../components/common/input/form-fields/formconfig.ts";
 import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 import { auth, db } from "../../../services/firebase/firebase.ts";
@@ -7,12 +7,11 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { setDoc, doc, serverTimestamp } from "firebase/firestore";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-import { signupvalidationSchema } from "../../../components/validations/validation-schema";
+import { signupvalidationSchema } from "../../../utils/validations/validation-schema/index.ts";
 import { useState } from "react";
 
 import EditBtn from "../../../components/common/button/edit-button/index.tsx";
-import FormController from "../../../components/form-controller";
+import FormController from "../../../components/common/input/form-controller/index.tsx";
 export const Signup = () => {
   const [isDisable, setisDisable] = useState(false);
   const navigate = useNavigate();

@@ -2,7 +2,7 @@ import React, { useState, useEffect, use } from "react";
 import { IoSend } from "react-icons/io5";
 import { Avatar } from "flowbite-react";
 import { IoMdClose } from "react-icons/io";
-import FormController from "../../../form-controller";
+import FormController from "../../../common/input/form-controller";
 
 import EditBtn from "../../../common/button/edit-button";
 import { createConversation } from "../../../../services/create-conversation";

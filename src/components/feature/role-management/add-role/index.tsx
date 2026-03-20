@@ -16,7 +16,7 @@ import EditBtn from "../../../common/button/edit-button";
 
 import { db } from "../../../../services/firebase/firebase";
 
-import FormController from "../../../form-controller";
+import FormController from "../../../common/input/form-controller";
 
 type Permission = {
   canView: boolean;

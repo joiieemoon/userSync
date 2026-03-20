@@ -1,5 +1,5 @@
 import Inputfields from "../form-fields/Formfields";
-import type { formcontrollerProps } from "../../types/interfaces";
+import type { formcontrollerProps } from "../../../../types/interfaces";
 
 const FormController = ({ control, ...props }: formcontrollerProps) => {
   switch (control) {

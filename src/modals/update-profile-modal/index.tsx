@@ -9,11 +9,12 @@ import { toast } from "react-toastify";
 import { FileInput } from "flowbite-react";
 import "react-toastify/dist/ReactToastify.css";
 
-import { updateProfileValidationSchema } from "../../components/validations/validation-schema";
+import { updateProfileValidationSchema } from "../../utils/validations/validation-schema/index.ts";
+
 import { Formik, Form } from "formik";
 import avatar from "../../../public/avtar.png";
 import CommonModal from "../../components/common/common-modal/index.tsx";
-import FormController from "../../components/form-controller/index.tsx";
+import FormController from "../../components/common/input/form-controller/index.tsx";
 import type { updateProfileProps } from "../../types/interfaces/index.ts";
 
 export default function UpdateProfileModal({

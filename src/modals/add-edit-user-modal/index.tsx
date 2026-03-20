@@ -18,15 +18,16 @@ import CommonModal from "../../components/common/common-modal/index.tsx";
 import {
   editUserFields,
   signupFields,
-} from "../../components/form-fields/formconfig.ts";
+} from "../../components/common/input/form-fields/formconfig.ts";
+
 import {
   updateProfileValidationSchema,
   signupvalidationSchema,
-} from "../../components/validations/validation-schema";
+} from "../../utils/validations/validation-schema/index.ts";
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
-import FormController from "../../components/form-controller/index.tsx";
+import FormController from "../../components/common/input/form-controller/index.tsx";
 
 type UserModalProps = {
   isOpen: boolean;
