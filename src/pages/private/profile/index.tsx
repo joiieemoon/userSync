@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import ProfileHeader from "../../../components/profile/profile-header";
-import PersonalDetails from "../../../components/profile/profile-personal-details";
+
+import ProfileHeader from "../../../components/feature/user-management/profile/profile-header";
+import PersonalDetails from "../../../components/feature/user-management/profile/profile-personal-details";
 import UpdateProfileModal from "../../../modals/update-profile-modal";
 import { useAuthListener } from "../../../redux/auth-store";
 import type { RootState } from "../../../redux/store/store";

@@ -45,7 +45,7 @@ export interface PersonalDetails {
     onEdit: () => void;
 }
 //profile header
-export interface ProfileHeader {
+export interface ProfileHeaderprops {
     onEdit?: () => void;
 }
 //updateProfile props

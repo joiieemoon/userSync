@@ -3,7 +3,7 @@ import { loginFields } from "../../../components/form-fields/formconfig.ts";
 import { Link } from "react-router-dom";
 import { Formik, Form } from "formik";
 import { auth } from "../../../services/firebase/firebase.ts";
-// import { loginvalidationSchema } from "../../../components/validations/validationSchema";
+
 import { loginvalidationSchema } from "../../../components/validations/validation-schema/index.ts";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { toast } from "react-toastify";
@@ -28,7 +28,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../../../services/firebase/firebase.ts";
 import { setUserPermissions } from "../../../redux/permissionslice";
-import EditBtn from "../../../components/button/edit-button";
+import EditBtn from "../../../components/common/button/edit-button/index.tsx";
 
 import FormController from "../../../components/form-controller";
 

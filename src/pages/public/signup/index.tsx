@@ -10,7 +10,8 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { signupvalidationSchema } from "../../../components/validations/validation-schema";
 import { useState } from "react";
-import EditBtn from "../../../components/button/edit-button/index.tsx";
+
+import EditBtn from "../../../components/common/button/edit-button/index.tsx";
 import FormController from "../../../components/form-controller";
 export const Signup = () => {
   const [isDisable, setisDisable] = useState(false);
