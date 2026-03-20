@@ -25,8 +25,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
   );
 
   if (!username) return null;
-  console.log(username);
-  console.log(permissions);
+
   if (!username) return null;
 
   return (
