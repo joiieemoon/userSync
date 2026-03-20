@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Sidebarmain } from "../../../../components/sidebar";
 
-import Navbar from "../../navbar";
+import { Sidebarmain } from "../../../../components/layout/sidebar";
+
+import Navbar from "../../../../components/layout/navbar";
 import RoleModyul from "../role-modyul";
 import useTitle from "../../../../hooks/use-title";
 

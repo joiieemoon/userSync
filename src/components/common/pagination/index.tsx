@@ -1,8 +1,8 @@
 "use client";
 
 import { Pagination } from "flowbite-react";
-import type { PaginationMainProps } from "../../types/interfaces";
 
+import type { PaginationMainProps } from "../../../types/interfaces";
 export function PaginationMain({
   currentPage,
   totalPages,

@@ -16,14 +16,15 @@ import {
 } from "firebase/firestore";
 import { MdOutlineEdit } from "react-icons/md";
 import { db } from "../../../../services/firebase/firebase.ts";
-import SearchBar from "../../../../components/search-bar";
-import EditBtn from "../../../../components/button/edit-button";
+import SearchBar from "../../../../components/common/search-bar/index.tsx";
+
+import EditBtn from "../../../../components/common/button/edit-button/index.tsx";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { Spinner } from "flowbite-react/components/Spinner";
 
-import DeleteItemModal from "../../../../components/comman-modal/comman-delete-modal";
+import DeleteItemModal from "../../../../components/common/common-delete-modal/index.tsx";
 const RoleModyul = () => {
   const [roles, setRoles] = useState<any[]>([]);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");

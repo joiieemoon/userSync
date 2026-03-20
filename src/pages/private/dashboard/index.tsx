@@ -1,16 +1,12 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../redux/store/store";
-
-import Navbar from "../navbar";
-
-import { Sidebarmain } from "../../../components/sidebar";
+import Navbar from "../../../components/layout/navbar";
+import { Sidebarmain } from "../../../components/layout/sidebar";
 import dashboardBg from "../../../../public/dashboardbg.jpg";
 import avatar from "../../../../public/avtar.png";
 import useTitle from "../../../hooks/use-title";
-
-import Spinnerring from "../../../components/spinner";
-
+import Spinnerring from "../../../components/common/spinner";
 const Dashboard = () => {
   const user = useSelector((state: RootState) => state.auth.user);
 

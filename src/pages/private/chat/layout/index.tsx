@@ -1,7 +1,7 @@
 import React, { useState } from "react";
+import Navbar from "../../../../components/layout/navbar";
 
-import Navbar from "../../navbar";
-import { Sidebarmain } from "../../../../components/sidebar";
+import { Sidebarmain } from "../../../../components/layout/sidebar";
 import ChatModyul from "../chat-modyul";
 import useTitle from "../../../../hooks/use-title";
 

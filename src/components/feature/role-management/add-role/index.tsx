@@ -12,9 +12,11 @@ import {
 import { useFormik } from "formik";
 import { toast } from "react-toastify";
 import { useParams, useNavigate } from "react-router-dom";
-import EditBtn from "../../../../../components/button/edit-button";
-import { db } from "../../../../../services/firebase/firebase";
-import FormController from "../../../../../components/form-controller";
+import EditBtn from "../../../common/button/edit-button";
+
+import { db } from "../../../../services/firebase/firebase";
+
+import FormController from "../../../form-controller";
 
 type Permission = {
   canView: boolean;

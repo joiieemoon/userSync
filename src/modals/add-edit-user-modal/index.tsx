@@ -12,7 +12,8 @@ import {
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { Formik, Form } from "formik";
 import { toast } from "react-toastify";
-import CommonModal from "../../components/comman-modal/common-modal";
+
+import CommonModal from "../../components/common/common-modal/index.tsx";
 
 import {
   editUserFields,
@@ -203,7 +204,6 @@ const UserModal: React.FC<UserModalProps> = ({
                     control="input"
                     id={field.name}
                     name={field.name}
-
                     type={field.type}
                     placeholder={field.placeholder}
                     value={values[field.name as keyof typeof values]}

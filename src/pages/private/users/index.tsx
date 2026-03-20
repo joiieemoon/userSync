@@ -1,7 +1,9 @@
 import React, { useState, lazy, Suspense, use } from "react";
 import useUsers from "../../../hooks/use-user";
-import Navbar from "../navbar";
-import { Sidebarmain } from "../../../components/sidebar";
+
+import Navbar from "../../../components/layout/navbar";
+
+import { Sidebarmain } from "../../../components/layout/sidebar";
 import useTitle from "../../../hooks/use-title";
 
 // Lazy load only

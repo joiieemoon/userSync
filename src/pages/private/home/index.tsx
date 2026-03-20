@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 
-import Navbar from "../navbar";
 
-import { Sidebarmain } from "../../../components/sidebar";
+import Navbar from "../../../components/layout/navbar/index.tsx";
+
+import { Sidebarmain } from "../../../components/layout/sidebar/index.tsx";
 import { auth, db } from "../../../services/firebase/firebase.ts";
 import { doc, getDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import Dashboard from "../dashboard/index.tsx";
+import Spinnerring from "../../../components/common/spinner/index.tsx";
 
-import Spinnerring from "../../../components/spinner/index.tsx";
 const Home = () => {
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);

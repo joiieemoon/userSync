@@ -1,5 +1,6 @@
 import React from "react";
-import nochat from "../../../../../../public/nochat.png";
+import nochat from "../../../../../public/nochat.png";
+
 const NoConversation = () => {
   return (
     <>

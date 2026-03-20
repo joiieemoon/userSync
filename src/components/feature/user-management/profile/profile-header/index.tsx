@@ -1,9 +1,10 @@
-import EditBtn from "../../button/edit-button";
+import EditBtn from "../../../../common/button/edit-button";
 import { useSelector } from "react-redux";
-import type { RootState } from "../../../redux/store/store";
+
+import type { RootState } from "../../../../../redux/store/store";
 import avtar from "../../../../public/avtar.png";
 import { MdOutlineEdit } from "react-icons/md";
-import type { ProfileHeader } from "../../../types/interfaces";
+import type { ProfileHeader } from "../../../../../types/interfaces";
 
 export default function ProfileHeader({ onEdit }: ProfileHeader) {
   // Get user from Redux

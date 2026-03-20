@@ -1,4 +1,5 @@
-import type { PersonalDetails } from "../../../types/interfaces";
+
+import type { PersonalDetails } from "../../../../../types/interfaces";
 
 export default function PersonalDetails({ user, onEdit }: PersonalDetails) {
   return (

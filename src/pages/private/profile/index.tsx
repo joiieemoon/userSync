@@ -5,9 +5,10 @@ import PersonalDetails from "../../../components/profile/profile-personal-detail
 import UpdateProfileModal from "../../../modals/update-profile-modal";
 import { useAuthListener } from "../../../redux/auth-store";
 import type { RootState } from "../../../redux/store/store";
+import Navbar from "../../../components/layout/navbar";
 
-import Navbar from "../navbar";
-import { Sidebarmain } from "../../../components/sidebar";
+import { Sidebarmain } from "../../../components/layout/sidebar";
+
 import useTitle from "../../../hooks/use-title";
 
 const Profile = () => {

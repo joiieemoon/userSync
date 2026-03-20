@@ -1,16 +1,15 @@
-
 import React, { useState, useEffect } from "react";
 import { Virtuoso } from "react-virtuoso";
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
-import { db } from "../../../../../services/firebase/firebase";
-import avtar from "../../../../../../public/avtar.png";
-import SearchBar from "../../../../../components/search-bar";
-import Spinnerring from "../../../../../components/spinner";
+import { db } from "../../../../services/firebase/firebase";
+import avtar from "../../../../../public/avtar.png";
+import SearchBar from "../../../common/search-bar";
+import Spinnerring from "../../../common/spinner";
 
-import type { ChatSidebarProps } from "../../../../../types/interfaces";
-import AddNewSpaceModal from "../../../../../modals/add-newchat-modal";
-import nogroupchat from "../../../../.././../public/nogroupchat.png";
-import nodirectchat from "../../../../../../public/nodirectchat.png";
+import type { ChatSidebarProps } from "../../../../types/interfaces";
+import AddNewSpaceModal from "../../../../modals/add-newchat-modal";
+import nogroupchat from "../../../../../public/nogroupchat.png";
+import nodirectchat from "../../../../../public/nodirectchat.png";
 import {
   Accordion,
   AccordionPanel,

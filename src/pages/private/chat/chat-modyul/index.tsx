@@ -4,10 +4,10 @@ import dashboardBg from "../../../../../public/dashboardbg.jpg";
 import useUsers from "../../../../hooks/use-user";
 import useChats from "../../../../hooks/use-chat";
 
-import Conversation from "./conversation";
-import ChatSidebar from "./chat-sidebar";
-import Spinnerring from "../../../../components/spinner";
-import NoConversation from "./no-conversation";
+import Conversation from "../../../../components/feature/chat-components/conversation";
+import ChatSidebar from "../../../../components/feature/chat-components/chat-sidebar";
+import Spinnerring from "../../../../components/common/spinner";
+import NoConversation from "../../../../components/feature/chat-components/no-conversation";
 
 const ChatModyul = () => {
   const currentUid = auth.currentUser?.uid || "";

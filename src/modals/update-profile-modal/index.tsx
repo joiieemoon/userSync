@@ -12,8 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { updateProfileValidationSchema } from "../../components/validations/validation-schema";
 import { Formik, Form } from "formik";
 import avatar from "../../../public/avtar.png";
-
-import CommonModal from "../../components/comman-modal/common-modal/index.tsx";
+import CommonModal from "../../components/common/common-modal/index.tsx";
 import FormController from "../../components/form-controller/index.tsx";
 import type { updateProfileProps } from "../../types/interfaces/index.ts";
 

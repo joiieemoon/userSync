@@ -4,16 +4,19 @@ import { FaSortAlphaDown, FaSortAlphaDownAlt } from "react-icons/fa";
 
 import { useState, useEffect } from "react";
 import { auth } from "../../../../services/firebase/firebase.ts";
-import SearchBar from "../../../../components/search-bar";
-import EditBtn from "../../../../components/button/edit-button";
-import { PaginationMain } from "../../../../components/pagination";
+import SearchBar from "../../../../components/common/search-bar/index.tsx";
+
+import EditBtn from "../../../../components/common/button/edit-button/index.tsx";
+
+import { PaginationMain } from "../../../../components/common/pagination/index.tsx";
 import { canPermit } from "../../../../helper/canPermit";
 import { MdDeleteOutline } from "react-icons/md";
 import { MdOutlineEdit } from "react-icons/md";
-import Spinnerring from "../../../../components/spinner";
+import Spinnerring from "../../../../components/common/spinner/index.tsx";
 
 import UserModal from "../../../../modals/add-edit-user-modal";
-import DeleteItemModal from "../../../../components/comman-modal/comman-delete-modal";
+
+import DeleteItemModal from "../../../../components/common/common-delete-modal";
 export default function UsersDetails() {
   const { users, loading } = useUsers();
   const [userToDelete, setUserToDelete] = useState(null);

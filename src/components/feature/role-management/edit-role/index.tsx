@@ -1,7 +1,7 @@
 import React, { useState } from "react";
+import Navbar from "../../../layout/navbar";
+import { Sidebarmain } from "../../../layout/sidebar";
 
-import Navbar from "../../../../../pages/private/navbar";
-import { Sidebarmain } from "../../../../../components/sidebar";
 import EditRole from "../add-role";
 
 function UsersSkeleton() {

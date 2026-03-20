@@ -1,5 +1,6 @@
 import React, { ReactNode } from "react";
-import EditBtn from "../../button/edit-button/index.tsx";
+
+import EditBtn from "../button/edit-button/index.tsx";
 import type { CommonModalProps } from "../../../types/interfaces/index.ts";
 
 const CommonModal: React.FC<CommonModalProps> = ({

@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { Virtuoso } from "react-virtuoso";
 import avtar from "../../../public/avtar.png";
-import SearchBar from "../../components/search-bar";
-import EditBtn from "../../components/button/edit-button";
-import CommonModal from "../../components/comman-modal/common-modal";
+import SearchBar from "../../components/common/search-bar";
+
+import EditBtn from "../../components/common/button/edit-button";
+
+import CommonModal from "../../components/common/common-modal";
+
 import { RiChatNewLine } from "react-icons/ri";
 import type { AddNewSpaceModalProps, User } from "../../types/interfaces";
 import useUsers from "../../hooks/use-user";

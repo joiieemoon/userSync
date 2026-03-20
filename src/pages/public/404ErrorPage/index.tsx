@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import EditBtn from "../../../components/button/edit-button";
+
+import EditBtn from "../../../components/common/button/edit-button";
 
 const Errorpage = () => {
   const navigate = useNavigate();

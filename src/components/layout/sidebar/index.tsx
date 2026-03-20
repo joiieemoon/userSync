@@ -11,9 +11,10 @@ import { MdCampaign } from "react-icons/md";
 import { TbUserEdit } from "react-icons/tb";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { canPermit } from "../../helper/canPermit";
-import type { RootState } from "../../redux/store/store";
-import type { SidebarProps } from "../../types/interfaces";
+
+import { canPermit } from "../../../helper/canPermit";
+import type { RootState } from "../../../redux/store/store";
+import type { SidebarProps } from "../../../types/interfaces";
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
   const navigate = useNavigate();

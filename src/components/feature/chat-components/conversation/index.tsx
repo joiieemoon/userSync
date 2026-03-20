@@ -2,17 +2,19 @@ import React, { useState, useEffect, use } from "react";
 import { IoSend } from "react-icons/io5";
 import { Avatar } from "flowbite-react";
 import { IoMdClose } from "react-icons/io";
-import FormController from "../../../../../components/form-controller";
-import EditBtn from "../../../../../components/button/edit-button";
-import { createConversation } from "../../../../../services/create-conversation";
-import { sendMessage } from "../../../../../services/create-conversation";
-import useMessages from "../../../../../hooks/use-message";
+import FormController from "../../../form-controller";
+
+import EditBtn from "../../../common/button/edit-button";
+import { createConversation } from "../../../../services/create-conversation";
+import { sendMessage } from "../../../../services/create-conversation";
+import useMessages from "../../../../hooks/use-message";
 import { Virtuoso } from "react-virtuoso";
 
-import type { conversationProps } from "../../../../../types/interfaces";
-import useChats from "../../../../../hooks/use-chat";
-import Spinnerring from "../../../../../components/spinner";
-import AddNewSpaceModal from "../../../../../modals/add-newchat-modal";
+import type { conversationProps } from "../../../../types/interfaces";
+import useChats from "../../../../hooks/use-chat";
+
+import Spinnerring from "../../../common/spinner";
+import AddNewSpaceModal from "../../../../modals/add-newchat-modal";
 
 const Conversation: React.FC<conversationProps> = ({
   selectedUser,

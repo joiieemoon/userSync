@@ -19,13 +19,13 @@ const Users = lazy(() => import("./pages/private/users/index.tsx"));
 
 const Role = lazy(() => import("./pages/private/role/layout/index.tsx"));
 const EditRoleMain = lazy(
-  () => import("./pages/private/role/role-modyul/edit-role/index.tsx"),
+  () => import("./components/feature/role-management/edit-role"),
 );
 const ChatLayout = lazy(() => import("./pages/private/chat/layout/index.tsx"));
 const Errorpage = lazy(() => import("./pages/public/404ErrorPage/index.tsx"));
 
 import type { User } from "firebase/auth";
-import Spinnerring from "./components/spinner/index.tsx";
+import Spinnerring from "./components/common/spinner";
 
 const App = () => {
   const [user, setUser] = useState<User | null>(null);
