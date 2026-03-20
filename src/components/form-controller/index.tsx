@@ -1,4 +1,4 @@
-import Inputfields from "../formfields/Formfields";
+import Inputfields from "../form-fields/Formfields";
 import type { formcontrollerProps } from "../../types/interfaces";
 
 const FormController = ({ control, ...props }: formcontrollerProps) => {

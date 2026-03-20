@@ -3,29 +3,29 @@ import { ToastContainer } from "react-toastify";
 import { Route, Routes, Navigate } from "react-router-dom";
 import { auth } from "./services/firebase/firebase.ts";
 const Loginmain = lazy(() =>
-  import("./pages/public/login/Login").then((module) => ({
+  import("./pages/public/login/index.tsx").then((module) => ({
     default: module.Login,
   })),
 );
 
 const Signupmain = lazy(() =>
-  import("./pages/public/signup/Signup").then((module) => ({
+  import("./pages/public/signup/index.tsx").then((module) => ({
     default: module.Signup,
   })),
 );
-const Home = lazy(() => import("./pages/private/home/Home"));
-const Profile = lazy(() => import("./pages/private/profile/Profile"));
-const Users = lazy(() => import("./pages/private/allUsers/Users"));
+const Home = lazy(() => import("./pages/private/home/index.tsx"));
+const Profile = lazy(() => import("./pages/private/profile/index.tsx"));
+const Users = lazy(() => import("./pages/private/users/index.tsx"));
 
-const Role = lazy(() => import("./pages/private/role/Role"));
+const Role = lazy(() => import("./pages/private/role/layout/index.tsx"));
 const EditRoleMain = lazy(
-  () => import("./pages/private/role/rolemodyul/editRole/EditRoleMain"),
+  () => import("./pages/private/role/role-modyul/edit-role/index.tsx"),
 );
-const ChatLayout = lazy(() => import("./pages/private/chat/Layout/ChatLayout"));
-const Errorpage = lazy(() => import("./pages/public/404ErrorPage/Errorpage"));
+const ChatLayout = lazy(() => import("./pages/private/chat/layout/index.tsx"));
+const Errorpage = lazy(() => import("./pages/public/404ErrorPage/index.tsx"));
 
 import type { User } from "firebase/auth";
-import Spinnerring from "./components/spinner/Spinnerring.tsx";
+import Spinnerring from "./components/spinner/index.tsx";
 
 const App = () => {
   const [user, setUser] = useState<User | null>(null);

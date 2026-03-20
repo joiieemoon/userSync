@@ -1,0 +1,84 @@
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../../redux/store/store";
+
+import Navbar from "../navbar";
+
+import { Sidebarmain } from "../../../components/sidebar";
+import dashboardBg from "../../../../public/dashboardbg.jpg";
+import avatar from "../../../../public/avtar.png";
+import useTitle from "../../../hooks/use-title";
+
+import Spinnerring from "../../../components/spinner";
+
+const Dashboard = () => {
+  const user = useSelector((state: RootState) => state.auth.user);
+
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+  useTitle("User Sync-Dashboard");
+  if (!user) {
+    return <Spinnerring />;
+  }
+  return (
+    <>
+      <div className="relative flex min-h-screen overflow-hidden !bg-white">
+        {/* Background */}
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: `url(${dashboardBg})`,
+            opacity: 0.15,
+          }}
+        />
+
+        {/* Sidebar */}
+        <Sidebarmain isOpen={isSidebarOpen} />
+        <Navbar toggleSidebar={toggleSidebar} />
+
+        {/* Main */}
+
+        {!user ? (
+          <div className="flex items-center justify-center min-h-screen ">
+            <Spinner aria-label="Loading profile" />
+          </div>
+        ) : (
+          <div
+            className={`relative flex-1 flex flex-col transition-all duration-300 ${
+              isSidebarOpen ? "ml-64" : "ml-0"
+            }`}
+          >
+            <main className="flex flex-1 items-center justify-center p-6 pt-24">
+              {/* Glass Card */}
+              <div className="w-full bg-amber-300  max-w-4xl backdrop-blur-xl  border border-white/20 rounded-3xl shadow-2xl p-12 text-center ">
+                {/* Avatar */}
+                <div className="flex justify-center mb-6">
+                  <img
+                    src={
+                      user?.profilePhoto && user.profilePhoto !== ""
+                        ? user.profilePhoto
+                        : avatar
+                    }
+                    alt="profile"
+                    className="w-28 h-28 rounded-full object-cover border-4 border-white/30 shadow-lg"
+                  />
+                </div>
+
+                <h2 className="text-4xl md:text-5xl font-bold text-black mb-3">
+                  Welcome, {user?.firstName || "User"}
+                </h2>
+
+                <p className="text-black/70 text-lg mb-10">
+                  Manage your profile, explore users, and control your dashboard
+                  from here.
+                </p>
+              </div>
+            </main>
+          </div>
+        )}
+      </div>
+    </>
+  );
+};
+
+export default Dashboard;

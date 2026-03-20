@@ -1,0 +1,212 @@
+import React, { useEffect, useState } from "react";
+import { MdAdd } from "react-icons/md";
+import { MdDeleteOutline } from "react-icons/md";
+import { FaSortAlphaDown, FaSortAlphaDownAlt } from "react-icons/fa";
+import { canPermit } from "../../../../helper/canPermit";
+import {
+  collection,
+  getDocs,
+  deleteDoc,
+  updateDoc,
+  where,
+  query,
+  onSnapshot,
+  doc,
+  Timestamp,
+} from "firebase/firestore";
+import { MdOutlineEdit } from "react-icons/md";
+import { db } from "../../../../services/firebase/firebase.ts";
+import SearchBar from "../../../../components/search-bar";
+import EditBtn from "../../../../components/button/edit-button";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import { Spinner } from "flowbite-react/components/Spinner";
+
+import DeleteItemModal from "../../../../components/comman-modal/comman-delete-modal";
+const RoleModyul = () => {
+  const [roles, setRoles] = useState<any[]>([]);
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [roleToDelete, setRoleToDelete] = useState<any | null>(null);
+  const navigation = useNavigate();
+
+  const currentUserPermissions = useSelector(
+    (state: RootState) => state.userPermissions.permissions,
+  );
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "roles"), (snapshot) => {
+      const roleList = snapshot.docs.map((docSnap) => {
+        const data = docSnap.data();
+        return {
+          id: docSnap.id,
+          roleName: data.roleName || "",
+          permissions: data.permissions || {},
+          createdAt:
+            data.createdAt instanceof Timestamp
+              ? data.createdAt.toDate()
+              : null,
+        };
+      });
+      setRoles(roleList);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+  if (loading)
+    return (
+      <div className="p-6 flex justify-center items-center h-screen">
+        Loading...
+        <Spinner color="success" aria-label="Success spinner example" />
+      </div>
+    );
+  const removeRole = async (roleId: string, roleName: string) => {
+    try {
+      const q = query(collection(db, "Users"), where("role", "==", roleName));
+      const snapshot = await getDocs(q);
+
+      const updatePromises = snapshot.docs.map((userDoc) =>
+        updateDoc(userDoc.ref, { role: "No Role" }),
+      );
+
+      await Promise.all(updatePromises);
+
+      await deleteDoc(doc(db, "roles", roleId));
+      console.log("delte role ", roleName);
+
+      toast.success(
+        `Role '${roleName}' deleted successfully! Users have been updated to 'No Role'.`,
+        { position: "top-center" },
+      );
+    } catch (error: any) {
+      console.error(error);
+      toast.error("Error deleting role: " + error.message, {
+        position: "top-center",
+      });
+    }
+  };
+
+  const filteredRoles = roles.filter((role) =>
+    role.roleName.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+
+  const sortedRoles = [...filteredRoles].sort((a, b) => {
+    const roleA = a.roleName.toLowerCase();
+    const roleB = b.roleName.toLowerCase();
+    return sortOrder === "asc"
+      ? roleA.localeCompare(roleB)
+      : roleB.localeCompare(roleA);
+  });
+
+  const toggleSortOrder = () =>
+    setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+
+  return (
+    <div className="p-6 mt-10 rounded-2xl shadow-2xl">
+      <h2 className="text-3xl font-semibold mb-4 ">Roles</h2>
+
+      <div className="mb-3 flex justify-between items-center">
+        <SearchBar
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        {canPermit(currentUserPermissions, "role", "canAdd") && (
+          <EditBtn
+            label="Add Role"
+            icon={<MdAdd className="text-xl" />}
+            onClick={() => navigation("/role/add")}
+          />
+        )}
+      </div>
+
+      <table className="w-full bg-white rounded-xl shadow-2xl">
+        <thead className="bg-amber-300">
+          <tr>
+            <th className="p-3 text-left">#</th>
+            <th
+              className="p-3 text-left cursor-pointer flex "
+              onClick={toggleSortOrder}
+            >
+              Role Name
+              {sortOrder === "asc" ? (
+                <FaSortAlphaDown className="text-xl text-gray-700 ml-1" />
+              ) : (
+                <FaSortAlphaDownAlt className="text-xl ml-1 text-gray-700" />
+              )}
+            </th>
+            <th className="p-3 text-left">Created At</th>
+            <th className="p-3 text-left">Role Permissions</th>
+            {(canPermit(currentUserPermissions, "user", "canEdit") ||
+              canPermit(currentUserPermissions, "user", "canDelete")) && (
+              <th className="p-3 text-left">Action</th>
+            )}
+          </tr>
+        </thead>
+
+        <tbody>
+          {sortedRoles.length > 0 ? (
+            sortedRoles.map((role, index) => (
+              <tr key={role.id} className="border-b">
+                <td className="p-2">{index + 1}</td>
+                <td className="p-2">
+                  {role.roleName} {}
+                </td>
+                <td className="p-2">
+                  {role.createdAt ? role.createdAt.toLocaleDateString() : "-"}
+                </td>
+                <td className="p-2">
+                  {Object.values(role.permissions || {}).reduce(
+                    (count: number, module: any) =>
+                      count + Object.values(module).filter(Boolean).length,
+                    0,
+                  )}
+                </td>
+                {(canPermit(currentUserPermissions, "role", "canEdit") ||
+                  canPermit(currentUserPermissions, "role", "canDelete")) && (
+                  <td className="p-2 flex gap-2">
+                    {canPermit(currentUserPermissions, "role", "canEdit") && (
+                      <div onClick={() => navigation(`/role/edit/${role.id}`)}>
+                        <MdOutlineEdit className="text-2xl cursor-pointer" />
+                      </div>
+                    )}
+                    {canPermit(currentUserPermissions, "role", "canDelete") && (
+                      <div onClick={() => setRoleToDelete(role)}>
+                        <MdDeleteOutline className="text-2xl cursor-pointer" />
+                      </div>
+                    )}
+                  </td>
+                )}
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td
+                colSpan={
+                  canPermit(currentUserPermissions, "user", "canEdit") ||
+                  canPermit(currentUserPermissions, "user", "canDelete")
+                    ? 6
+                    : 5
+                }
+                className="text-center p-6 text-gray-500 font-medium"
+              >
+                No roles found.
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+
+      <DeleteItemModal
+        isOpen={!!roleToDelete}
+        onClose={() => setRoleToDelete(null)}
+        collectionName="roles"
+        item={roleToDelete ? { id: roleToDelete.id } : null}
+      />
+    </div>
+  );
+};
+
+export default RoleModyul;
