@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import Navbar from "../../../../components/layout/navbar";
 
 import { Sidebarmain } from "../../../../components/layout/sidebar";
@@ -7,11 +6,6 @@ import useTitle from "../../../../hooks/use-title";
 import { toggleSidebar } from "../../../../redux/slice/uiSlice";
 import { useDispatch, useSelector } from "react-redux";
 const ChatLayout = () => {
-  // const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-  // const toggleSidebar = () => {
-  //   setIsSidebarOpen(!isSidebarOpen);
-  // };
   useTitle("User Sync-Chat");
   const dispatch = useDispatch();
 

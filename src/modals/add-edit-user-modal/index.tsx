@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { db, auth } from "../../services/firebase/firebase.ts";
-import {
-  setDoc,
-  doc,
-  updateDoc,
-  getDocs,
-  collection,
-  serverTimestamp,
-} from "firebase/firestore";
+import { auth } from "../../services/firebase/firebase.ts";
+import { serverTimestamp } from "firebase/firestore";
 
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { Formik, Form } from "formik";
@@ -29,6 +22,8 @@ import { getAuth } from "firebase/auth";
 
 import FormController from "../../components/common/input/form-controller/index.tsx";
 import type { UserModalProps } from "../../types/interfaces";
+import { usersService } from "../../services/firebase/user-services/index.ts";
+import { roleService } from "../../services/firebase/role-services";
 
 const UserModal: React.FC<UserModalProps> = ({
   isOpen,
@@ -43,13 +38,14 @@ const UserModal: React.FC<UserModalProps> = ({
 
   useEffect(() => {
     const fetchRoles = async () => {
-      const querySnapshot = await getDocs(collection(db, "roles"));
-      const roleList = querySnapshot.docs.map((docSnap) => ({
-        id: docSnap.id,
-        roleName: docSnap.data().roleName,
-      }));
-      setRoles(roleList);
+      try {
+        const roleList = await roleService.getAll();
+        setRoles(roleList);
+      } catch (error) {
+        console.error("Error fetching roles:", error);
+      }
     };
+
     fetchRoles();
   }, []);
 
@@ -80,7 +76,7 @@ const UserModal: React.FC<UserModalProps> = ({
   ) => {
     try {
       if (isEditMode && user) {
-        await updateDoc(doc(db, "Users", user.uid), values);
+        await usersService.update(user.uid, values);
         toast.success("User updated successfully", { position: "top-center" });
       } else {
         const secondaryApp = initializeApp(auth.app.options, "Secondary");
@@ -95,7 +91,7 @@ const UserModal: React.FC<UserModalProps> = ({
         const newUser = userCredential.user;
 
         if (newUser) {
-          await setDoc(doc(db, "Users", newUser.uid), {
+          await usersService.create(newUser.uid, {
             email: values.email,
             firstName: values.firstName,
             lastName: values.lastName,

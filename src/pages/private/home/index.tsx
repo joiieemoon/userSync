@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
-
 import Navbar from "../../../components/layout/navbar/index.tsx";
-
 import { Sidebarmain } from "../../../components/layout/sidebar/index.tsx";
-import { auth, db } from "../../../services/firebase/firebase.ts";
-import { doc, getDoc } from "firebase/firestore";
+import { auth } from "../../../services/firebase/firebase.ts";
 import { useNavigate } from "react-router-dom";
 import Dashboard from "../dashboard/index.tsx";
 import Spinnerring from "../../../components/common/spinner/index.tsx";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleSidebar } from "../../../redux/slice/uiSlice";
+import { usersService } from "../../../services/firebase/user-services/index.ts";
+
 const Home = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -18,16 +17,11 @@ const Home = () => {
   const isSidebarOpen = useSelector((state: any) => state.ui.users.sidebarOpen);
 
   const handleToggleSidebar = () => dispatch(toggleSidebar());
-
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
-        const docRef = doc(db, "Users", user.uid);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-          setUserDetails(docSnap.data());
-        }
+        const userData = await usersService.getById(user.uid);
+        setUserDetails(userData);
       }
     });
 

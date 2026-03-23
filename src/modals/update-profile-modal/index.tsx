@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { doc, updateDoc } from "firebase/firestore";
-import { db } from "../../services/firebase/firebase.ts";
+
 import { updateUser } from "../../redux/store/auth-slice";
 import type { AppDispatch } from "../../redux/store/store/index.ts";
-
+import { usersService } from "../../services/firebase/user-services";
 import { toast } from "react-toastify";
 import { FileInput } from "flowbite-react";
 import "react-toastify/dist/ReactToastify.css";
@@ -58,7 +57,7 @@ export default function UpdateProfileModal({
         profilePhoto: photoURL,
       };
 
-      await updateDoc(doc(db, "Users", user.uid), updatedData);
+      await usersService.update(user.uid, updatedData);
       dispatch(updateUser(updatedData));
 
       toast.success("Profile updated successfully!", {

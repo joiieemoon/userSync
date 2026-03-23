@@ -38,7 +38,7 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
 
   const [openModal, setOpenModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  // const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
+
   const dispatch = useDispatch();
   const selectedUsers = useSelector(
     (state: RootState) => state.ui.users.selectedUsers,
