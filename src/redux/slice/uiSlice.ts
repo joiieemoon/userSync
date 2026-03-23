@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-
+import type { User } from "../../types/interfaces";
 interface UsersUIState {
     sortOrder: "asc" | "desc";
     currentPage: number;
@@ -11,6 +11,8 @@ interface UsersUIState {
         delete: boolean;
     };
     sidebarOpen: boolean;
+    selectedUsers: User[];
+
 }
 
 interface UIState {
@@ -28,13 +30,36 @@ const initialState: UIState = {
             delete: false,
         },
         sidebarOpen: false,
+        selectedUsers: [],
+
     },
 };
+
+
 
 const uiSlice = createSlice({
     name: "ui",
     initialState,
     reducers: {
+
+        setSelectedUsers(state, action: PayloadAction<User[]>) {
+            state.users.selectedUsers = action.payload;
+        },
+        addSelectedUser(state, action: PayloadAction<User>) {
+            if (!state.users.selectedUsers.find(u => u.uid === action.payload.uid)) {
+                state.users.selectedUsers.push(action.payload);
+            }
+        },
+        removeSelectedUser(state, action: PayloadAction<string>) {
+            state.users.selectedUsers = state.users.selectedUsers.filter(
+                u => u.uid !== action.payload
+            );
+        },
+        clearSelectedUsers(state) {
+            state.users.selectedUsers = [];
+        },
+
+
         setUserSearch(state, action: PayloadAction<string>) {
             state.users.currentPage = 1;
         },
@@ -47,13 +72,14 @@ const uiSlice = createSlice({
         setLoading(state, action: PayloadAction<boolean>) {
             state.users.loading = action.payload;
         },
-      
+
         toggleSidebar(state) {
             state.users.sidebarOpen = !state.users.sidebarOpen;
         },
         setSidebar(state, action: PayloadAction<boolean>) {
             state.users.sidebarOpen = action.payload;
         },
+
         setShowModal(
             state,
             action: PayloadAction<{ type: "add" | "edit" | "delete"; value: boolean }>
@@ -67,6 +93,10 @@ const uiSlice = createSlice({
 });
 
 export const {
+    setSelectedUsers,
+    addSelectedUser,
+    removeSelectedUser,
+    clearSelectedUsers,
     setUserSearch,
     setSortOrder,
     setCurrentPage,

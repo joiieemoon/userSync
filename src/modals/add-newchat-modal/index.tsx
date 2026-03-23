@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Virtuoso } from "react-virtuoso";
 import avtar from "../../../public/avtar.png";
 import SearchBar from "../../components/common/search-bar";
@@ -18,6 +18,15 @@ import {
 import FormController from "../../components/common/input/form-controller";
 import { MdGroupAdd } from "react-icons/md";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setSelectedUsers,
+  addSelectedUser,
+  removeSelectedUser,
+  clearSelectedUsers,
+} from "../../redux/slice/uiSlice";
+import type { RootState } from "../../redux/store/store";
+
 const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
   onUserSelected,
   modeselect,
@@ -29,7 +38,11 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
 
   const [openModal, setOpenModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
+  // const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
+  const dispatch = useDispatch();
+  const selectedUsers = useSelector(
+    (state: RootState) => state.ui.users.selectedUsers,
+  );
   const [groupName, setGroupName] = useState("");
   const [groupNameError, setGroupNameError] = useState(false);
   const [mode, setMode] = useState<"chat" | "group" | "addmember">("chat");
@@ -58,14 +71,21 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
   });
   const toggleUserSelection = (user: User) => {
     if (mode === "chat") {
-      setSelectedUsers([user]);
+      // setSelectedUsers([user]);
+      dispatch(setSelectedUsers([user]));
       return;
     }
 
+    // if (selectedUsers.find((u) => u.uid === user.uid)) {
+    //   setSelectedUsers(selectedUsers.filter((u) => u.uid !== user.uid));
+    // } else {
+    //   setSelectedUsers([...selectedUsers, user]);
+    // }
+
     if (selectedUsers.find((u) => u.uid === user.uid)) {
-      setSelectedUsers(selectedUsers.filter((u) => u.uid !== user.uid));
+      dispatch(removeSelectedUser(user.uid));
     } else {
-      setSelectedUsers([...selectedUsers, user]);
+      dispatch(addSelectedUser(user));
     }
   };
   const handleSubmit = async () => {
@@ -124,7 +144,8 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
     } catch (err) {
       console.error("Error:", err);
     } finally {
-      setSelectedUsers([]);
+      // setSelectedUsers([]);
+      dispatch(clearSelectedUsers());
       setGroupName("");
       setSearchTerm("");
       setGroupNameError(false);
@@ -170,7 +191,8 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
       <CommonModal
         isOpen={openModal}
         onClose={() => {
-          (setOpenModal(false), setSelectedUsers([]));
+          setOpenModal(false);
+          dispatch(clearSelectedUsers());
         }}
         title={
           addmode === "add"

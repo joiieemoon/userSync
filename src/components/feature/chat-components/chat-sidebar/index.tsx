@@ -23,7 +23,6 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
   loading,
   currentUid,
   setSelectedUser,
-  // existingChatUserIds,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [unreadCounts, setUnreadCounts] = useState<Record<string, number>>({});
@@ -57,6 +56,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
 
   const directChats = chats.filter((c) => c.type === "private");
   const groupChats = chats.filter((c) => c.type === "group");
+
   const directChatUserIds = directChats
     .flatMap((chat) => chat.participants)
     .filter((uid) => uid !== currentUid);
@@ -74,8 +74,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
   const getChatForUser = (uid: string) =>
     directChats.find(
       (chat) =>
-        chat.participants &&
-        chat.participants.includes(uid) &&
+        chat.participants?.includes(uid) &&
         chat.participants.includes(currentUid),
     );
 
@@ -83,12 +82,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
     <div className="w-72 bg-gray-100 rounded-2xl shadow flex flex-col ">
       {/* Top bar */}
       <div className="p-4 flex flex-col items-center justify-between border-b border-gray-300">
-        <AddNewSpaceModal
-          onCreateSpace={(selectedUsers) => {
-            console.log("Creating space with users:", selectedUsers);
-          }}
-          onUserSelected={(user) => setSelectedUser(user)}
-        />
+        <AddNewSpaceModal  onUserSelected={(user) => setSelectedUser(user)} />
         <SearchBar
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -141,13 +135,12 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
                 />
               ) : (
                 <div className="flex flex-col w-full justify-center items-center bg-gray-100 ">
-                  <img src={nodirectchat} alt="no convo" className="" />
-                  <div className=" text-gray-500 text-m font-bold">
-                    No Direct-Chat yet{" "}
+                  <img src={nodirectchat} alt="no convo" />
+                  <div className="text-gray-500 text-m font-bold">
+                    No Direct-Chat yet
                   </div>
-                  <div className=" text-gray-500">
-                    {" "}
-                    create one to get started.{" "}
+                  <div className="text-gray-500">
+                    Create one to get started.
                   </div>
                 </div>
               )}
@@ -155,7 +148,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
           </AccordionContent>
         </AccordionPanel>
 
-        {/* Group Chats / Spaces */}
+        {/* Group Chats */}
         <AccordionPanel>
           <AccordionTitle className="font-medium text-sm cursor-pointer">
             Spaces
@@ -202,13 +195,12 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
                 />
               ) : (
                 <div className="flex flex-col w-full justify-center items-center bg-gray-100 ">
-                  <img src={nogroupchat} alt="no convo" className="" />
-                  <div className=" text-gray-500 text-m font-bold">
-                    No spaces yet{" "}
+                  <img src={nogroupchat} alt="no convo" />
+                  <div className="text-gray-500 text-m font-bold">
+                    No spaces yet
                   </div>
-                  <div className=" text-gray-500">
-                    {" "}
-                    create one to get started.{" "}
+                  <div className="text-gray-500">
+                    Create one to get started.
                   </div>
                 </div>
               )}

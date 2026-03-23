@@ -8,13 +8,24 @@ import Conversation from "../../../../components/feature/chat-components/convers
 import ChatSidebar from "../../../../components/feature/chat-components/chat-sidebar";
 import Spinnerring from "../../../../components/common/spinner";
 import NoConversation from "../../../../components/feature/chat-components/no-conversation";
-
+import { useDispatch, useSelector } from "react-redux";
+import {
+  clearSelectedUsers,
+  setSelectedUsers,
+} from "../../../../redux/slice/uiSlice";
+import type { RootState } from "../../../../redux/store/store";
 const ChatModyul = () => {
   const currentUid = auth.currentUser?.uid || "";
   const { users, loading } = useUsers();
   const { chats, existingChatUserIds } = useChats();
-  const [selectedUser, setSelectedUser] = useState<any>(null);
+  // const [selectedUser, setSelectedUser] = useState<any>(null);
+  const dispatch = useDispatch();
 
+  const selectedUsers = useSelector(
+    (state: RootState) => state.ui.users.selectedUsers,
+  );
+
+  const selectedUser = selectedUsers[0] || null;
   if (loading) return <Spinnerring />;
 
   return (
@@ -24,7 +35,8 @@ const ChatModyul = () => {
         users={users}
         loading={loading}
         currentUid={currentUid}
-        setSelectedUser={setSelectedUser}
+        // setSelectedUser={setSelectedUser}
+        setSelectedUser={(user) => dispatch(setSelectedUsers([user]))}
         existingChatUserIds={existingChatUserIds}
       />
 
@@ -37,7 +49,8 @@ const ChatModyul = () => {
           <Conversation
             currentUid={currentUid}
             selectedUser={selectedUser}
-            onClose={() => setSelectedUser(null)}
+            // onClose={() => setSelectedUser(null)}
+            onClose={() => dispatch(clearSelectedUsers())}
           />
         ) : (
           <NoConversation />
