@@ -15,23 +15,17 @@ import useChats from "../../../../hooks/use-chat";
 
 import Spinnerring from "../../../common/spinner";
 import AddNewSpaceModal from "../../../../modals/add-newchat-modal";
-import { useDispatch, useSelector } from "react-redux";
-import type { RootState } from "../../../../redux/store/store";
-import { setUserSearch } from "../../../../redux/slice/uiSlice.ts";
+
 const Conversation: React.FC<conversationProps> = ({
   selectedUser,
   onClose,
   currentUid,
 }) => {
- 
-  const dispatch = useDispatch();
-
-  const { searchTerm } = useSelector((state: RootState) => state.ui.users);
   const [chatId, setChatId] = useState<string | null>(null);
 
   const { messages, markAsSeen } = useMessages(chatId, currentUid);
   const { chats, loading, getCreatedBy } = useChats();
-
+  const [searchTerm, setSearchTerm] = useState();
   if (loading) {
     <div className="border">
       <Spinnerring />;
@@ -178,7 +172,7 @@ const Conversation: React.FC<conversationProps> = ({
               name="message"
               placeholder="Type a message..."
               value={searchTerm}
-              onChange={(e) => dispatch(setUserSearch(e.target.value))}
+              onChange={(e) => setSearchTerm(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();

@@ -28,18 +28,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
 import FormController from "../../components/common/input/form-controller/index.tsx";
-
-type UserModalProps = {
-  isOpen: boolean;
-  onClose: () => void;
-  user?: {
-    uid: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    role: string;
-  } | null;
-};
+import type { UserModalProps } from "../../types/interfaces";
 
 const UserModal: React.FC<UserModalProps> = ({
   isOpen,

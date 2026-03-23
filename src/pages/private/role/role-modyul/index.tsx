@@ -25,22 +25,21 @@ import { usePagination } from "../../../../hooks/use-pagination";
 import { PaginationMain } from "../../../../components/common/pagination";
 import type { RootState } from "../../../../redux/store/store";
 import {
-  setUserSearch,
   setSortOrder,
+  setLoading,
+  setShowModal,
 } from "../../../../redux/slice/uiSlice.ts";
 const RoleModyul = () => {
   const [roles, setRoles] = useState<any[]>([]);
-
-  const [loading, setLoading] = useState(true);
   const [roleToDelete, setRoleToDelete] = useState<any | null>(null);
-
+  const [searchTerm, setsearchTerm] = useState();
   const navigation = useNavigate();
   const dispatch = useDispatch();
 
   const currentUserPermissions = useSelector(
     (state: RootState) => state.userPermissions.permissions,
   );
-  const { searchTerm, sortOrder } = useSelector(
+  const { sortOrder, loading, showModal } = useSelector(
     (state: RootState) => state.ui.users,
   );
 
@@ -60,7 +59,8 @@ const RoleModyul = () => {
       });
 
       setRoles(roleList);
-      setLoading(false);
+
+      dispatch(setLoading(false));
     });
 
     return () => unsubscribe();
@@ -119,7 +119,7 @@ const RoleModyul = () => {
       <div className="mb-3 flex justify-between items-center">
         <SearchBar
           value={searchTerm}
-          onChange={(e) => dispatch(setUserSearch(e.target.value))}
+          onChange={(e) => setsearchTerm(e.target.value)}
         />
 
         {canPermit(currentUserPermissions, "role", "canAdd") && (
@@ -189,7 +189,12 @@ const RoleModyul = () => {
                     {canPermit(currentUserPermissions, "role", "canDelete") && (
                       <MdDeleteOutline
                         className="text-2xl cursor-pointer"
-                        onClick={() => setRoleToDelete(role)}
+                        onClick={() => {
+                          setRoleToDelete(role);
+                          dispatch(
+                            setShowModal({ type: "delete", value: true }),
+                          );
+                        }}
                       />
                     )}
                   </td>
@@ -214,9 +219,18 @@ const RoleModyul = () => {
         />
       )}
 
-      <DeleteItemModal
+      {/* <DeleteItemModal
         isOpen={!!roleToDelete}
         onClose={() => setRoleToDelete(null)}
+        collectionName="roles"
+        item={roleToDelete ? { id: roleToDelete.id } : null}
+      /> */}
+      <DeleteItemModal
+        isOpen={showModal.delete}
+        onClose={() => {
+          setRoleToDelete(null);
+          dispatch(setShowModal({ type: "delete", value: false }));
+        }}
         collectionName="roles"
         item={roleToDelete ? { id: roleToDelete.id } : null}
       />

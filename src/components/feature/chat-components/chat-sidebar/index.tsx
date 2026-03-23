@@ -16,20 +16,17 @@ import {
   AccordionTitle,
   AccordionContent,
 } from "flowbite-react";
-import { useDispatch, useSelector } from "react-redux";
-import { setUserSearch } from "../../../../redux/slice/uiSlice.ts";
-import type { RootState } from "../../../../redux/store/store";
+
 const ChatSidebar: React.FC<ChatSidebarProps> = ({
   chats,
   users,
   loading,
   currentUid,
   setSelectedUser,
+  // existingChatUserIds,
 }) => {
+  const [searchTerm, setSearchTerm] = useState("");
   const [unreadCounts, setUnreadCounts] = useState<Record<string, number>>({});
-  const dispatch = useDispatch();
-
-  const { searchTerm } = useSelector((state: RootState) => state.ui.users);
 
   useEffect(() => {
     const unsubscribers: (() => void)[] = [];
@@ -94,7 +91,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
         />
         <SearchBar
           value={searchTerm}
-          onChange={(e) => dispatch(setUserSearch(e.target.value))}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
 

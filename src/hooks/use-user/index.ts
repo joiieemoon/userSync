@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import { db } from "../../services/firebase/firebase.ts";
 import { collection, onSnapshot, Timestamp } from "firebase/firestore";
+import type { RootState } from "../../redux/store/store";
+import { setLoading } from "../../redux/slice/uiSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const useUsers = () => {
   const [users, setUsers] = useState<any[]>([]);
   const [rolesMap, setRolesMap] = useState<Record<string, any>>({});
-  const [loading, setLoading] = useState(true);
-
+  const { loading } = useSelector((state: RootState) => state.ui.users);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const unsubscribeRoles = onSnapshot(collection(db, "roles"), (snapshot) => {
@@ -63,11 +66,13 @@ const useUsers = () => {
         });
 
         setUsers(list);
-        setLoading(false);
+
+        dispatch(setLoading(false));
       },
       (error) => {
         console.error("Error fetching users:", error);
-        setLoading(false);
+
+        dispatch(setLoading(false));
       }
     );
 

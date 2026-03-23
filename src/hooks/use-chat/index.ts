@@ -7,14 +7,17 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 import { db, auth } from "../../services/firebase/firebase.ts";
-
+import type { RootState } from "../../redux/store/store";
 import type { Chat } from "../../types/interfaces/index.ts";
-
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading } from "../../redux/slice/uiSlice";
 const useChats = () => {
   const [chats, setChats] = useState<Chat[]>([]);
-  const [loading, setLoading] = useState(true);
-  const currentUid = auth.currentUser?.uid;
 
+  const dispatch = useDispatch();
+
+  const currentUid = auth.currentUser?.uid;
+  const { loading } = useSelector((state: RootState) => state.ui.users);
   useEffect(() => {
     if (!currentUid) return;
 
@@ -31,7 +34,8 @@ const useChats = () => {
         createdBy: (doc.data() as any).createdBy || null,
       }));
       setChats(fetchedChats);
-      setLoading(false);
+  
+      dispatch(setLoading(false));
     });
 
     return () => unsubscribe();

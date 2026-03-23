@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Virtuoso } from "react-virtuoso";
 import avtar from "../../../public/avtar.png";
 import SearchBar from "../../components/common/search-bar";
@@ -18,9 +18,6 @@ import {
 import FormController from "../../components/common/input/form-controller";
 import { MdGroupAdd } from "react-icons/md";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
-import { useDispatch, useSelector } from "react-redux";
-import type { RootState } from "../../redux/store/store";
-import { setUserSearch } from "../../redux/slice/uiSlice.ts";
 const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
   onUserSelected,
   modeselect,
@@ -31,13 +28,16 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
   const { chats, currentUid, existingChatUserIds, loading } = useChats();
 
   const [openModal, setOpenModal] = useState(false);
-  // const [searchTerm, setSearchTerm] = useState("");
-  const dispatch = useDispatch();
-  const { searchTerm } = useSelector((state: RootState) => state.ui.users);
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
   const [groupName, setGroupName] = useState("");
   const [groupNameError, setGroupNameError] = useState(false);
   const [mode, setMode] = useState<"chat" | "group" | "addmember">("chat");
+  useEffect(() => {
+    if (openModal) {
+      setSearchTerm("");
+    }
+  }, [openModal]);
   if (loading) return null;
 
   const filteredUsers = users
@@ -191,7 +191,7 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
       >
         <SearchBar
           value={searchTerm}
-          onChange={(e) => dispatch(setUserSearch(e.target.value))}
+          onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Search users..."
         />
         <div className=" mt-2">

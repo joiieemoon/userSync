@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import ProfileHeader from "../../../components/feature/user-management/profile/profile-header";
 import PersonalDetails from "../../../components/feature/user-management/profile/profile-personal-details";
@@ -7,7 +7,7 @@ import UpdateProfileModal from "../../../modals/update-profile-modal";
 import { useAuthListener } from "../../../redux/auth-store";
 import type { RootState } from "../../../redux/store/store";
 import Navbar from "../../../components/layout/navbar";
-
+import { setShowModal } from "../../../redux/slice/uiSlice";
 import { Sidebarmain } from "../../../components/layout/sidebar";
 
 import useTitle from "../../../hooks/use-title";
@@ -17,8 +17,8 @@ const Profile = () => {
 
   const user = useSelector((state: RootState) => state.auth.user);
 
-  const [open, setOpen] = useState(false);
-
+  const dispatch = useDispatch();
+  const { showModal } = useSelector((state: RootState) => state.ui.users);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   useTitle("User Sync-Profile");
   const toggleSidebar = () => {
@@ -37,7 +37,8 @@ const Profile = () => {
     <div className="flex min-h-screen bg-gray-50 ">
       {/* Sidebar */}
       <Sidebarmain isOpen={isSidebarOpen} />
-      <Navbar toggleSidebar={toggleSidebar} isOpen={open} />
+
+      <Navbar toggleSidebar={toggleSidebar} isOpen={showModal.edit} />
 
       {/* Main Layout */}
       <div
@@ -50,15 +51,22 @@ const Profile = () => {
 
         {/* Content */}
         <main className="p-8 pt-24 space-y-6">
-          <ProfileHeader user={user} onEdit={() => setOpen(true)} />
-
-          <PersonalDetails user={user} onEdit={() => setOpen(true)} />
+          
+          <ProfileHeader
+            user={user}
+            onEdit={() => dispatch(setShowModal({ type: "edit", value: true }))}
+          />
+          <PersonalDetails user={user} />
         </main>
       </div>
 
       {/* Modal */}
-      {open && (
-        <UpdateProfileModal user={user} onClose={() => setOpen(false)} />
+     
+      {showModal.edit && (
+        <UpdateProfileModal
+          user={user}
+          onClose={() => dispatch(setShowModal({ type: "edit", value: false }))}
+        />
       )}
     </div>
   );

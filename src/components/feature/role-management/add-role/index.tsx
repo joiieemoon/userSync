@@ -17,25 +17,13 @@ import EditBtn from "../../../common/button/edit-button";
 import { db } from "../../../../services/firebase/firebase";
 
 import FormController from "../../../common/input/form-controller";
-
-type Permission = {
-  canView: boolean;
-  canAdd: boolean;
-  canEdit: boolean;
-  canDelete: boolean;
-};
-
-type Role = {
-  id?: string;
-  roleName: string;
-  permissions: {
-    [module: string]: Permission;
-  };
-};
-
+import type { Role, Permissions } from "../../../../types/interfaces";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "../../../../redux/store/store";
+import { setLoading } from "../../../../redux/slice/uiSlice";
 const modulesList = ["user", "role", "chat", "campaign"];
 
-const permissionKeys: (keyof Permission)[] = [
+const permissionKeys: (keyof Permissions)[] = [
   "canView",
   "canAdd",
   "canEdit",
@@ -45,11 +33,11 @@ const permissionKeys: (keyof Permission)[] = [
 const EditRole: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
+  const { loading } = useSelector((state: RootState) => state.ui.users);
   const [role, setRole] = useState<Role | null>(null);
-  const [loading, setLoading] = useState(true);
 
-  // Fetch Role for edit
+
   useEffect(() => {
     const fetchRole = async () => {
       if (id) {
@@ -61,13 +49,12 @@ const EditRole: React.FC = () => {
         }
       }
 
-      setLoading(false);
+      dispatch(setLoading(false));
     };
 
     fetchRole();
   }, [id]);
 
-  // Initialize permissions
   const initialPermissions: Role["permissions"] = {};
 
   modulesList.forEach((mod) => {

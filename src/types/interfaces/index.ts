@@ -84,6 +84,36 @@ export interface UserPermissionsState {
     username: string;
     permissions: Permissions;
 }
+//user
+
+export type UserModalProps = {
+    isOpen: boolean;
+    onClose: () => void;
+    user?: {
+        uid: string;
+        firstName: string;
+        lastName: string;
+        email: string;
+        role: string;
+    } | null;
+};
+
+//role type 
+
+export type Permission = {
+    canView: boolean;
+    canAdd: boolean;
+    canEdit: boolean;
+    canDelete: boolean;
+};
+
+export type Role = {
+    id?: string;
+    roleName: string;
+    permissions: {
+        [module: string]: Permission;
+    };
+};
 //editbtn 
 export type EditBtnProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
     onClick?: () => void;
@@ -169,7 +199,7 @@ export interface ChatSidebarProps {
     currentUid: string;
     setSelectedUser: (user: User | null) => void;
     unreadCounts?: Record<string, number>;
-    chats:Chat[],
+    chats: Chat[],
 
 }
 export interface AddNewSpaceModalProps {

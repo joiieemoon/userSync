@@ -16,21 +16,16 @@ import DeleteItemModal from "../../../../components/common/common-delete-modal";
 import { usePagination } from "../../../../hooks/use-pagination";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../../../../redux/store/store";
-import {
-  setUserSearch,
-  setSortOrder,
-} from "../../../../redux/slice/uiSlice.ts";
+import { setSortOrder, setShowModal } from "../../../../redux/slice/uiSlice.ts";
 export default function UsersDetails() {
   const { users, loading } = useUsers();
 
   const [userToDelete, setUserToDelete] = useState<any>(null);
   const [userToEdit, setUserToEdit] = useState<any>(null);
 
-  const [isAddUserOpen, setIsAddUserOpen] = useState(false);
-
+  const [searchTerm, setsearchTerm] = useState();
   const dispatch = useDispatch();
-
-  const { searchTerm, sortOrder } = useSelector(
+  const { sortOrder, showModal } = useSelector(
     (state: RootState) => state.ui.users,
   );
   const currentUid = auth.currentUser?.uid;
@@ -72,7 +67,7 @@ export default function UsersDetails() {
       <div className="flex mt-5 justify-between items-center mb-3">
         <SearchBar
           value={searchTerm}
-          onChange={(e) => dispatch(setUserSearch(e.target.value))}
+          onChange={(e) => setsearchTerm(e.target.value)}
           placeholder="Search users..."
           name="searchUser"
         />
@@ -81,7 +76,10 @@ export default function UsersDetails() {
           <EditBtn
             label="Add User"
             icon={<MdAdd className="text-xl" />}
-            onClick={() => setIsAddUserOpen(true)}
+            onClick={() => {
+              setUserToEdit(null);
+              dispatch(setShowModal({ type: "add", value: true }));
+            }}
           />
         )}
       </div>
@@ -130,14 +128,22 @@ export default function UsersDetails() {
                     {canPermit(currentUserPermissions, "user", "canEdit") && (
                       <MdOutlineEdit
                         className="cursor-pointer text-2xl"
-                        onClick={() => setUserToEdit(u)}
+                        onClick={() => {
+                          setUserToEdit(u);
+                          dispatch(setShowModal({ type: "edit", value: true }));
+                        }}
                       />
                     )}
 
                     {canPermit(currentUserPermissions, "user", "canDelete") && (
                       <MdDeleteOutline
                         className="cursor-pointer text-2xl"
-                        onClick={() => setUserToDelete(u)}
+                        onClick={() => {
+                          setUserToDelete(u);
+                          dispatch(
+                            setShowModal({ type: "delete", value: true }),
+                          );
+                        }}
                       />
                     )}
                   </td>
@@ -163,16 +169,20 @@ export default function UsersDetails() {
       )}
 
       <DeleteItemModal
-        isOpen={!!userToDelete}
-        onClose={() => setUserToDelete(null)}
+        isOpen={showModal.delete}
+        onClose={() => {
+          setUserToDelete(null);
+          dispatch(setShowModal({ type: "delete", value: false }));
+        }}
         collectionName="Users"
         item={userToDelete ? { id: userToDelete.uid } : null}
       />
 
       <UserModal
-        isOpen={isAddUserOpen || !!userToEdit}
+        isOpen={showModal.add || showModal.edit}
         onClose={() => {
-          setIsAddUserOpen(false);
+          dispatch(setShowModal({ type: "add", value: false }));
+          dispatch(setShowModal({ type: "edit", value: false }));
           setUserToEdit(null);
         }}
         user={userToEdit}

@@ -2,9 +2,16 @@ import { createSlice, } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 interface UsersUIState {
-    searchTerm: string;
+
     sortOrder: "asc" | "desc";
     currentPage: number;
+    loading: boolean;
+    showModal: {
+        add: boolean,
+        edit: boolean,
+        delete: boolean,
+    },
+
 }
 
 interface UIState {
@@ -13,9 +20,15 @@ interface UIState {
 
 const initialState: UIState = {
     users: {
-        searchTerm: "",
+
         sortOrder: "asc",
         currentPage: 1,
+        loading: true,
+        showModal: {
+            add: false,
+            edit: false,
+            delete: false,
+        },
     },
 };
 
@@ -24,7 +37,7 @@ const uiSlice = createSlice({
     initialState,
     reducers: {
         setUserSearch(state, action: PayloadAction<string>) {
-            state.users.searchTerm = action.payload;
+
             state.users.currentPage = 1;
         },
         setSortOrder(state, action: PayloadAction<"asc" | "desc">) {
@@ -33,8 +46,17 @@ const uiSlice = createSlice({
         setCurrentPage(state, action: PayloadAction<number>) {
             state.users.currentPage = action.payload;
         },
+        setLoading(state, action: PayloadAction<boolean>) {
+            state.users.loading = action.payload;
+        },
+        setShowModal(
+            state,
+            action: PayloadAction<{ type: "add" | "edit" | "delete"; value: boolean }>
+        ) {
+            state.users.showModal[action.payload.type] = action.payload.value;
+        },
         resetUsersUI(state) {
-            state.users = initialState.users;
+            state.users = { ...initialState.users };
         },
     },
 });
@@ -43,6 +65,8 @@ export const {
     setUserSearch,
     setSortOrder,
     setCurrentPage,
+    setLoading,
+    setShowModal,
     resetUsersUI,
 } = uiSlice.actions;
 

@@ -180,21 +180,7 @@ export const Login = () => {
                   />
                 </div>
               ))}
-              <div className="flex items-center justify-between text-sm">
-                <div className="flex items-center ">
-                  <div className="w-full text-right">
-                    <span
-                      className="text-blue-500 cursor-pointer text-sm"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setShowForgot(true);
-                      }}
-                    >
-                      Forgot Password?
-                    </span>
-                  </div>
-                </div>
-              </div>
+
               <div className="flex justify-center items-center">
                 <EditBtn
                   type="submit"
