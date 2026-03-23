@@ -18,6 +18,9 @@ import {
 import FormController from "../../components/common/input/form-controller";
 import { MdGroupAdd } from "react-icons/md";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "../../redux/store/store";
+import { setUserSearch } from "../../redux/slice/uiSlice.ts";
 const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
   onUserSelected,
   modeselect,
@@ -28,7 +31,9 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
   const { chats, currentUid, existingChatUserIds, loading } = useChats();
 
   const [openModal, setOpenModal] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+  // const [searchTerm, setSearchTerm] = useState("");
+  const dispatch = useDispatch();
+  const { searchTerm } = useSelector((state: RootState) => state.ui.users);
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
   const [groupName, setGroupName] = useState("");
   const [groupNameError, setGroupNameError] = useState(false);
@@ -186,7 +191,7 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
       >
         <SearchBar
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => dispatch(setUserSearch(e.target.value))}
           placeholder="Search users..."
         />
         <div className=" mt-2">

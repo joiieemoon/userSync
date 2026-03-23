@@ -1,5 +1,5 @@
-import { createSlice,  } from "@reduxjs/toolkit";
-import type { PayloadAction  } from "@reduxjs/toolkit";
+import { createSlice, } from "@reduxjs/toolkit";
+import type { PayloadAction } from "@reduxjs/toolkit";
 
 interface UsersUIState {
     searchTerm: string;
@@ -25,7 +25,7 @@ const uiSlice = createSlice({
     reducers: {
         setUserSearch(state, action: PayloadAction<string>) {
             state.users.searchTerm = action.payload;
-            state.users.currentPage = 1; // reset page on search
+            state.users.currentPage = 1;
         },
         setSortOrder(state, action: PayloadAction<"asc" | "desc">) {
             state.users.sortOrder = action.payload;

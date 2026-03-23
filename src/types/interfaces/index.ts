@@ -169,7 +169,7 @@ export interface ChatSidebarProps {
     currentUid: string;
     setSelectedUser: (user: User | null) => void;
     unreadCounts?: Record<string, number>;
-    chat: any,
+    chats:Chat[],
 
 }
 export interface AddNewSpaceModalProps {

@@ -18,23 +18,30 @@ import SearchBar from "../../../../components/common/search-bar/index.tsx";
 import EditBtn from "../../../../components/common/button/edit-button/index.tsx";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Spinner } from "flowbite-react/components/Spinner";
 import DeleteItemModal from "../../../../components/common/common-delete-modal";
 import { usePagination } from "../../../../hooks/use-pagination";
 import { PaginationMain } from "../../../../components/common/pagination";
-
+import type { RootState } from "../../../../redux/store/store";
+import {
+  setUserSearch,
+  setSortOrder,
+} from "../../../../redux/slice/uiSlice.ts";
 const RoleModyul = () => {
   const [roles, setRoles] = useState<any[]>([]);
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-  const [searchTerm, setSearchTerm] = useState("");
+
   const [loading, setLoading] = useState(true);
   const [roleToDelete, setRoleToDelete] = useState<any | null>(null);
 
   const navigation = useNavigate();
+  const dispatch = useDispatch();
 
   const currentUserPermissions = useSelector(
     (state: RootState) => state.userPermissions.permissions,
+  );
+  const { searchTerm, sortOrder } = useSelector(
+    (state: RootState) => state.ui.users,
   );
 
   useEffect(() => {
@@ -59,7 +66,6 @@ const RoleModyul = () => {
     return () => unsubscribe();
   }, []);
 
-  
   const {
     currentData: currentRoles,
     currentPage,
@@ -67,15 +73,16 @@ const RoleModyul = () => {
     goToPage,
   } = usePagination({
     data: roles,
-    itemsPerPage: 10, 
+    itemsPerPage: 10,
     searchTerm,
     sortField: "roleName",
     sortOrder,
     filterFields: ["roleName"],
   });
 
-  const toggleSortOrder = () =>
-    setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+  const toggleSortOrder = () => {
+    dispatch(setSortOrder(sortOrder === "asc" ? "desc" : "asc"));
+  };
 
   if (loading)
     return (
@@ -109,11 +116,10 @@ const RoleModyul = () => {
     <div className="p-6 mt-10 rounded-2xl shadow-2xl">
       <h2 className="text-3xl font-semibold mb-4">Roles</h2>
 
-      
       <div className="mb-3 flex justify-between items-center">
         <SearchBar
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => dispatch(setUserSearch(e.target.value))}
         />
 
         {canPermit(currentUserPermissions, "role", "canAdd") && (
@@ -154,7 +160,6 @@ const RoleModyul = () => {
           {currentRoles.length > 0 ? (
             currentRoles.map((role, index) => (
               <tr key={role.id} className="border-b">
-          
                 <td className="p-2">{(currentPage - 1) * 5 + index + 1}</td>
 
                 <td className="p-2">{role.roleName}</td>
@@ -209,7 +214,6 @@ const RoleModyul = () => {
         />
       )}
 
-     
       <DeleteItemModal
         isOpen={!!roleToDelete}
         onClose={() => setRoleToDelete(null)}
