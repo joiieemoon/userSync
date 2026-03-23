@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 
-
 import Navbar from "../../../components/layout/navbar/index.tsx";
 
 import { Sidebarmain } from "../../../components/layout/sidebar/index.tsx";
@@ -9,13 +8,16 @@ import { doc, getDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import Dashboard from "../dashboard/index.tsx";
 import Spinnerring from "../../../components/common/spinner/index.tsx";
-
+import { useDispatch, useSelector } from "react-redux";
+import { toggleSidebar } from "../../../redux/slice/uiSlice";
 const Home = () => {
   const navigate = useNavigate();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [userDetails, setUserDetails] = useState(null);
+  const dispatch = useDispatch();
 
-  const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
+  const [userDetails, setUserDetails] = useState(null);
+  const isSidebarOpen = useSelector((state: any) => state.ui.users.sidebarOpen);
+
+  const handleToggleSidebar = () => dispatch(toggleSidebar());
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
@@ -46,7 +48,7 @@ const Home = () => {
       <Sidebarmain isOpen={isSidebarOpen} className="!bg-white" />
 
       <div className="flex-1 min-h-screen bg-gray-100 dark:bg-gray-200">
-        <Navbar toggleSidebar={toggleSidebar} user={userDetails} />
+        <Navbar toggleSidebar={handleToggleSidebar} user={userDetails} />
 
         {userDetails ? (
           <Dashboard />

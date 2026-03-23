@@ -1,17 +1,16 @@
-import { createSlice, } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 interface UsersUIState {
-
     sortOrder: "asc" | "desc";
     currentPage: number;
     loading: boolean;
     showModal: {
-        add: boolean,
-        edit: boolean,
-        delete: boolean,
-    },
-
+        add: boolean;
+        edit: boolean;
+        delete: boolean;
+    };
+    sidebarOpen: boolean;
 }
 
 interface UIState {
@@ -20,7 +19,6 @@ interface UIState {
 
 const initialState: UIState = {
     users: {
-
         sortOrder: "asc",
         currentPage: 1,
         loading: true,
@@ -29,6 +27,7 @@ const initialState: UIState = {
             edit: false,
             delete: false,
         },
+        sidebarOpen: false,
     },
 };
 
@@ -37,7 +36,6 @@ const uiSlice = createSlice({
     initialState,
     reducers: {
         setUserSearch(state, action: PayloadAction<string>) {
-
             state.users.currentPage = 1;
         },
         setSortOrder(state, action: PayloadAction<"asc" | "desc">) {
@@ -48,6 +46,13 @@ const uiSlice = createSlice({
         },
         setLoading(state, action: PayloadAction<boolean>) {
             state.users.loading = action.payload;
+        },
+      
+        toggleSidebar(state) {
+            state.users.sidebarOpen = !state.users.sidebarOpen;
+        },
+        setSidebar(state, action: PayloadAction<boolean>) {
+            state.users.sidebarOpen = action.payload;
         },
         setShowModal(
             state,
@@ -68,6 +73,8 @@ export const {
     setLoading,
     setShowModal,
     resetUsersUI,
+    toggleSidebar,
+    setSidebar,
 } = uiSlice.actions;
 
 export default uiSlice.reducer;

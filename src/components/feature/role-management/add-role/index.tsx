@@ -86,7 +86,7 @@ const EditRole: React.FC = () => {
             permissions: values.permissions,
           });
 
-          // Update users with same role
+
           if (oldRoleName) {
             const usersQuery = query(
               collection(db, "Users"),

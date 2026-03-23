@@ -7,7 +7,7 @@ import UpdateProfileModal from "../../../modals/update-profile-modal";
 import { useAuthListener } from "../../../redux/auth-store";
 import type { RootState } from "../../../redux/store/store";
 import Navbar from "../../../components/layout/navbar";
-import { setShowModal } from "../../../redux/slice/uiSlice";
+import { setShowModal, toggleSidebar } from "../../../redux/slice/uiSlice";
 import { Sidebarmain } from "../../../components/layout/sidebar";
 
 import useTitle from "../../../hooks/use-title";
@@ -19,12 +19,13 @@ const Profile = () => {
 
   const dispatch = useDispatch();
   const { showModal } = useSelector((state: RootState) => state.ui.users);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  useTitle("User Sync-Profile");
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
 
+  useTitle("User Sync-Profile");
+
+  const isSidebarOpen = useSelector(
+    (state: RootState) => state.ui.users.sidebarOpen,
+  );
+  const handleToggleSidebar = () => dispatch(toggleSidebar());
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center text-gray-500">
@@ -38,8 +39,7 @@ const Profile = () => {
       {/* Sidebar */}
       <Sidebarmain isOpen={isSidebarOpen} />
 
-      <Navbar toggleSidebar={toggleSidebar} isOpen={showModal.edit} />
-
+      <Navbar toggleSidebar={handleToggleSidebar} isOpen={isSidebarOpen} />
       {/* Main Layout */}
       <div
         className={`
@@ -51,7 +51,6 @@ const Profile = () => {
 
         {/* Content */}
         <main className="p-8 pt-24 space-y-6">
-          
           <ProfileHeader
             user={user}
             onEdit={() => dispatch(setShowModal({ type: "edit", value: true }))}
@@ -61,7 +60,7 @@ const Profile = () => {
       </div>
 
       {/* Modal */}
-     
+
       {showModal.edit && (
         <UpdateProfileModal
           user={user}

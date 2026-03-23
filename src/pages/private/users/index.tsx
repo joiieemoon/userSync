@@ -1,12 +1,14 @@
-import React, { useState, lazy, Suspense, use } from "react";
-import useUsers from "../../../hooks/use-user";
+"use client";
+import React, { lazy, Suspense } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 import Navbar from "../../../components/layout/navbar";
-
 import { Sidebarmain } from "../../../components/layout/sidebar";
 import useTitle from "../../../hooks/use-title";
+import { toggleSidebar } from "../../../redux/slice/uiSlice";
+import useUsers from "../../../hooks/use-user";
 
-// Lazy load only
+// Lazy load UsersDetails
 const UsersDetails = lazy(() => import("./userdetails"));
 
 // Skeleton loader
@@ -16,7 +18,7 @@ function UsersSkeleton() {
       {[...Array(10)].map((_, i) => (
         <div
           key={i}
-          className="h-10 bg-gray-200  rounded-lg animate-pulse "
+          className="h-10 bg-gray-200 rounded-lg animate-pulse"
         ></div>
       ))}
     </div>
@@ -24,20 +26,24 @@ function UsersSkeleton() {
 }
 
 export default function Users() {
+  const dispatch = useDispatch();
+
+  const isSidebarOpen = useSelector((state: any) => state.ui.users.sidebarOpen);
+
+  const handleToggleSidebar = () => dispatch(toggleSidebar());
+
   const { users, loading } = useUsers();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   useTitle("User Sync-Users");
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
 
   return (
-    <div className="flex min-h-screen bg-gray-50 ">
+    <div className="flex min-h-screen bg-gray-50">
       {/* Sidebar */}
       <Sidebarmain isOpen={isSidebarOpen} />
+
       {/* Navbar */}
-      <Navbar toggleSidebar={toggleSidebar} isOpen={isSidebarOpen} />
-      {/* Main layout */}
+      <Navbar toggleSidebar={handleToggleSidebar} isOpen={isSidebarOpen} />
+
+      {/* Main Layout */}
       <div
         className={`flex-1 flex flex-col transition-all duration-300 ${
           isSidebarOpen ? "ml-64" : "ml-0"
