@@ -18,7 +18,7 @@ const ChatModyul = () => {
   const currentUid = auth.currentUser?.uid || "";
   const { users, loading } = useUsers();
   const { chats, existingChatUserIds } = useChats();
-  // const [selectedUser, setSelectedUser] = useState<any>(null);
+
   const dispatch = useDispatch();
 
   const selectedUsers = useSelector(

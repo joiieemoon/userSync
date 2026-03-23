@@ -12,6 +12,7 @@ import { useState } from "react";
 
 import EditBtn from "../../../components/common/button/edit-button/index.tsx";
 import FormController from "../../../components/common/input/form-controller/index.tsx";
+import { usersService } from "../../../services/firebase/user-services/index.ts";
 export const Signup = () => {
   const [isDisable, setisDisable] = useState(false);
   const navigate = useNavigate();
@@ -39,12 +40,11 @@ export const Signup = () => {
               const user = userCreadential.user;
 
               if (user) {
-                await setDoc(doc(db, "Users", user.uid), {
+                await usersService.create(user.uid, {
                   email: user.email,
                   firstName: values.firstName,
                   lastName: values.lastName,
                   password: values.password,
-
                   role: "user",
                   profilePhoto: "",
                   createdAt: serverTimestamp(),

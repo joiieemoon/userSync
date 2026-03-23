@@ -9,46 +9,32 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { useState } from "react";
-
 import ForgotPassword from "../../../modals/forget-password-modal";
 
 import { useDispatch } from "react-redux";
 import { setUser } from "../../../redux/store/auth-slice";
 import type { AppDispatch } from "../../../redux/store/store";
-
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  setDoc,
-  where,
-} from "firebase/firestore";
-import { db } from "../../../services/firebase/firebase.ts";
 import { setUserPermissions } from "../../../redux/permissionslice";
-import EditBtn from "../../../components/common/button/edit-button/index.tsx";
 
+import EditBtn from "../../../components/common/button/edit-button/index.tsx";
 import FormController from "../../../components/common/input/form-controller/index.tsx";
+
+import { usersService } from "../../../services/firebase/user-services/index.ts";
+import { roleService } from "../../../services/firebase/role-services/index.ts";
 
 export const Login = () => {
   const [showForgot, setShowForgot] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const [isDisable, setisDisable] = useState(false);
-  const generateAvatar = (name: string) => {
-    return `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(
-      name,
-    )}`;
-  };
+
+  const generateAvatar = (name: string) =>
+    `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(name)}`;
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen overflow-hidden ">
       <div className="flex-1 flex items-center justify-center p-6">
         <Formik
-          initialValues={{
-            email: "",
-            password: "",
-          }}
+          initialValues={{ email: "", password: "" }}
           validationSchema={loginvalidationSchema}
           onSubmit={async (values, { setSubmitting }) => {
             try {
@@ -57,43 +43,25 @@ export const Login = () => {
                 values.email,
                 values.password,
               );
-
               const user = userCredential.user;
 
               if (user) {
-                const snap = await getDoc(doc(db, "Users", user.uid));
+                const data = await usersService.getById(user.uid);
 
-                if (snap.exists()) {
-                  const data = snap.data();
+                if (data) {
                   const fullName = `${data.firstName} ${data.lastName}`;
-
                   let profilePhoto = data.profilePhoto;
 
                   if (!profilePhoto || profilePhoto.trim() === "") {
                     profilePhoto = generateAvatar(fullName);
-
-                    await setDoc(
-                      doc(db, "Users", user.uid),
-                      { profilePhoto },
-                      { merge: true },
-                    );
+                    await usersService.update(user.uid, { profilePhoto });
                   }
+
                   let rolePermissions = {};
-
                   if (data.role) {
-                    const q = query(
-                      collection(db, "roles"),
-                      where("roleName", "==", data.role),
-                    );
-
-                    const querySnapshot = await getDocs(q);
-
-                    if (!querySnapshot.empty) {
-                      const roleData = querySnapshot.docs[0].data();
-                      rolePermissions = roleData.permissions || {};
-                    }
+                    const roleData = await roleService.getByName(data.role);
+                    rolePermissions = roleData?.permissions || {};
                   }
-
                   dispatch(
                     setUser({
                       uid: user.uid,
@@ -122,10 +90,10 @@ export const Login = () => {
                 position: "top-center",
                 onClose: () => setisDisable(false),
               });
-            } catch (error) {
-              const cleanMessage = error.message
-                .replace("Firebase:", "")
-                .trim();
+            } catch (error: any) {
+              const cleanMessage =
+                error.message?.replace("Firebase:", "").trim() ||
+                "Login failed";
               setisDisable(true);
               toast.error("Login failed! " + cleanMessage, {
                 position: "top-center",
@@ -143,13 +111,12 @@ export const Login = () => {
             errors,
             handleChange,
             handleBlur,
-
             touched,
             isSubmitting,
           }) => (
             <Form
               onSubmit={handleSubmit}
-              className="w-full max-w-md bg-white/80  p-10 rounded-2xl shadow-2xl space-y-5"
+              className="w-full max-w-md bg-white/80 p-10 rounded-2xl shadow-2xl space-y-5"
             >
               <div className="text-center">
                 <h2 className="text-3xl font-bold ">Welcome Back</h2>
@@ -201,6 +168,7 @@ export const Login = () => {
           )}
         </Formik>
       </div>
+
       <ForgotPassword
         isOpen={showForgot}
         onClose={() => setShowForgot(false)}
@@ -209,7 +177,8 @@ export const Login = () => {
           setShowForgot(false);
         }}
       />
-      <div className="hidden md:flex flex-1 ">
+
+      <div className="hidden md:flex flex-1">
         <img
           src={loginCover}
           alt="usersync"
