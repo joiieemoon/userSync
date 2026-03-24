@@ -1,19 +1,8 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { MdAdd, MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
 import { FaSortAlphaDown, FaSortAlphaDownAlt } from "react-icons/fa";
 import { canPermit } from "../../../../helper/canPermit";
-import {
-  collection,
-  getDocs,
-  deleteDoc,
-  updateDoc,
-  where,
-  query,
-  onSnapshot,
-  doc,
-  Timestamp,
-} from "firebase/firestore";
-import { db } from "../../../../services/firebase/firebase.ts";
+
 import SearchBar from "../../../../components/common/search-bar/index.tsx";
 import EditBtn from "../../../../components/common/button/edit-button/index.tsx";
 import { useNavigate } from "react-router-dom";
@@ -29,6 +18,8 @@ import {
   setLoading,
   setShowModal,
 } from "../../../../redux/slice/uiSlice.ts";
+import { roleService } from "../../../../services/firebase/role-services";
+import { usersService } from "../../../../services/firebase/user-services";
 const RoleModyul = () => {
   const [roles, setRoles] = useState<any[]>([]);
   const [roleToDelete, setRoleToDelete] = useState<any | null>(null);
@@ -44,28 +35,21 @@ const RoleModyul = () => {
   );
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "roles"), (snapshot) => {
-      const roleList = snapshot.docs.map((docSnap) => {
-        const data = docSnap.data();
-        return {
-          id: docSnap.id,
-          roleName: data.roleName || "",
-          permissions: data.permissions || {},
-          createdAt:
-            data.createdAt instanceof Timestamp
-              ? data.createdAt.toDate()
-              : null,
-        };
-      });
+    const fetchRoles = async () => {
+      try {
+        dispatch(setLoading(true));
+        const roleList = await roleService.getAll();
 
-      setRoles(roleList);
+        setRoles(roleList);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        dispatch(setLoading(false));
+      }
+    };
 
-      dispatch(setLoading(false));
-    });
-
-    return () => unsubscribe();
+    fetchRoles();
   }, []);
-
   const {
     currentData: currentRoles,
     currentPage,
@@ -84,6 +68,28 @@ const RoleModyul = () => {
     dispatch(setSortOrder(sortOrder === "asc" ? "desc" : "asc"));
   };
 
+  const removeRole = async (roleId: string, roleName: string) => {
+    try {
+      const usersSnap = await roleService.getUsersByRole(roleName);
+
+      const updatePromises = usersSnap.map((userDoc) =>
+        usersService.update(userDoc.id, { role: "No Role" }),
+      );
+
+      await Promise.all(updatePromises);
+
+      await roleService.delete(roleId);
+
+      toast.success(`Role '${roleName}' deleted successfully!`, {
+        position: "top-center",
+      });
+
+      const updatedRoles = await roleService.getAll();
+      setRoles(updatedRoles);
+    } catch (error: any) {
+      toast.error("Error deleting role: " + error.message);
+    }
+  };
   if (loading)
     return (
       <div className="p-6 flex justify-center items-center h-screen">
@@ -91,26 +97,6 @@ const RoleModyul = () => {
         <Spinner color="success" />
       </div>
     );
-
-  const removeRole = async (roleId: string, roleName: string) => {
-    try {
-      const q = query(collection(db, "Users"), where("role", "==", roleName));
-      const snapshot = await getDocs(q);
-
-      const updatePromises = snapshot.docs.map((userDoc) =>
-        updateDoc(userDoc.ref, { role: "No Role" }),
-      );
-
-      await Promise.all(updatePromises);
-      await deleteDoc(doc(db, "roles", roleId));
-
-      toast.success(`Role '${roleName}' deleted successfully!`, {
-        position: "top-center",
-      });
-    } catch (error: any) {
-      toast.error("Error deleting role: " + error.message);
-    }
-  };
 
   return (
     <div className="p-6 mt-10 rounded-2xl shadow-2xl">
@@ -219,12 +205,6 @@ const RoleModyul = () => {
         />
       )}
 
-      {/* <DeleteItemModal
-        isOpen={!!roleToDelete}
-        onClose={() => setRoleToDelete(null)}
-        collectionName="roles"
-        item={roleToDelete ? { id: roleToDelete.id } : null}
-      /> */}
       <DeleteItemModal
         isOpen={showModal.delete}
         onClose={() => {
