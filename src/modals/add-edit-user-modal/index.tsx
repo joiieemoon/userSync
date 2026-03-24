@@ -216,4 +216,4 @@ const UserModal: React.FC<UserModalProps> = ({
   );
 };
 
-export default UserModal;
+export default React.memo(UserModal);

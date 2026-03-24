@@ -13,7 +13,7 @@ export const useAuthListener = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
-        // Fetch Firestore user document
+
         const snap = await getDoc(doc(db, "Users", firebaseUser.uid));
         if (snap.exists()) {
           const data = snap.data();

@@ -12,15 +12,6 @@ import {
 import { db } from "../firebase";
 
 export const roleService = {
-    // getAll: async () => {
-    //     const snapshot = await getDocs(collection(db, "roles"));
-    //     return snapshot.docs.map((docSnap) => ({
-    //         id: docSnap.id,
-    //         ...docSnap.data(),
-    //     }));
-    // },
-
-
 
     getAll: async () => {
         const snapshot = await getDocs(collection(db, "roles"));

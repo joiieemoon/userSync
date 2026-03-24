@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Virtuoso } from "react-virtuoso";
 import avtar from "../../../public/avtar.png";
 import SearchBar from "../../components/common/search-bar";
@@ -51,52 +51,44 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
       setSearchTerm("");
     }
   }, [openModal]);
-  if (loading) return null;
 
-  const filteredUsers = users
-    .filter((u) => u.uid !== currentUid)
-    // .filter((u) => !existingChatUserIds.includes(u.uid))
-    .filter((u) =>
-      [u.firstName, u.email]
-        .join(" ")
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase()),
-    );
+  const filteredUsers = useMemo(() => {
+    return users
+      .filter((u) => u.uid !== currentUid)
+      .filter((u) =>
+        [u.firstName, u.email]
+          .join(" ")
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()),
+      );
+  }, [users, currentUid, searchTerm]);
 
-  const sortedUsers = [...filteredUsers].sort((a, b) => {
-    const nameA = a.firstName.toLowerCase();
-    const nameB = b.firstName.toLowerCase();
+  const sortedUsers = useMemo(() => {
+    return [...filteredUsers].sort((a, b) => {
+      const nameA = a.firstName.toLowerCase();
+      const nameB = b.firstName.toLowerCase();
 
-    return nameA.localeCompare(nameB);
-  });
-  const toggleUserSelection = (user: User) => {
-    if (mode === "chat") {
-      // setSelectedUsers([user]);
-      dispatch(setSelectedUsers([user]));
-      return;
-    }
+      return nameA.localeCompare(nameB);
+    });
+  }, [filteredUsers]);
 
-    // if (selectedUsers.find((u) => u.uid === user.uid)) {
-    //   setSelectedUsers(selectedUsers.filter((u) => u.uid !== user.uid));
-    // } else {
-    //   setSelectedUsers([...selectedUsers, user]);
-    // }
-
-    if (selectedUsers.find((u) => u.uid === user.uid)) {
-      dispatch(removeSelectedUser(user.uid));
-    } else {
-      dispatch(addSelectedUser(user));
-    }
-  };
-  const handleSubmit = async () => {
-    if (selectedUsers.length === 0) return;
-
-    if (mode === "group") {
-      if (!groupName.trim()) {
-        setGroupNameError(true);
+  const toggleUserSelection = useCallback(
+    (user: User) => {
+      if (mode === "chat") {
+        dispatch(setSelectedUsers([user]));
         return;
       }
-    }
+
+      if (selectedUsers.find((u) => u.uid === user.uid)) {
+        dispatch(removeSelectedUser(user.uid));
+      } else {
+        dispatch(addSelectedUser(user));
+      }
+    },
+    [mode, selectedUsers, dispatch],
+  );
+  const handleSubmit = async () => {
+    if (selectedUsers.length === 0) return;
 
     try {
       if (addmode === "add") {
@@ -105,10 +97,12 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
           selectedUsers.map((u) => u.uid),
           currentUid,
         );
-        return;
-      }
+      } else if (mode === "group") {
+        if (!groupName.trim()) {
+          setGroupNameError(true);
+          return;
+        }
 
-      if (mode === "group") {
         const result = await createChat(
           "group",
           [currentUid, ...selectedUsers.map((u) => u.uid)],
@@ -127,24 +121,39 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
           });
         }
       } else {
-        const result = await createChat(
-          "private",
-          [currentUid, selectedUsers[0].uid],
-          currentUid,
-          "",
+        const user = selectedUsers[0];
+
+        const existingChat = chats.find(
+          (chat) =>
+            !chat.isGroup &&
+            chat.participants.includes(currentUid!) &&
+            chat.participants.includes(user.uid),
         );
 
-        if (result?.chatId) {
+        if (existingChat) {
           onUserSelected?.({
-            ...selectedUsers[0],
-            chatId: result.chatId,
+            ...user,
+            chatId: existingChat.id,
           });
+        } else {
+          const result = await createChat(
+            "private",
+            [currentUid, user.uid],
+            currentUid,
+            "",
+          );
+
+          if (result?.chatId) {
+            onUserSelected?.({
+              ...user,
+              chatId: result.chatId,
+            });
+          }
         }
       }
     } catch (err) {
       console.error("Error:", err);
     } finally {
-      // setSelectedUsers([]);
       dispatch(clearSelectedUsers());
       setGroupName("");
       setSearchTerm("");
@@ -152,6 +161,7 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
       setOpenModal(false);
     }
   };
+  if (loading) return null;
 
   return (
     <>
@@ -284,4 +294,4 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
   );
 };
 
-export default AddNewSpaceModal;
+export default React.memo(AddNewSpaceModal);

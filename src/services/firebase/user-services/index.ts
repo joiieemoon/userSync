@@ -1,3 +1,4 @@
+
 import { collection, getDocs, getDoc, updateDoc, deleteDoc, doc, setDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 
@@ -18,16 +19,15 @@ export const usersService = {
     delete: async (id: string) => {
         return deleteDoc(doc(db, 'Users', id));
     },
+
     getById: async (id: string) => {
         const docRef = doc(db, "Users", id);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-            return docSnap.data();
+            return { id: docSnap.id, ...docSnap.data() };  
         } else {
             return null;
         }
     },
-    
-
 };

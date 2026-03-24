@@ -1,7 +1,7 @@
 import React from "react";
 import { IoMdSearch } from "react-icons/io";
-import type { SearchBarProps } from "../../types/interfaces";
 
+import type { SearchBarProps } from "../../../types/interfaces";
 const SearchBar: React.FC<SearchBarProps> = ({
   containerClassName = "",
   className = "",
@@ -21,4 +21,4 @@ const SearchBar: React.FC<SearchBarProps> = ({
   );
 };
 
-export default SearchBar;
+export default React.memo(SearchBar);

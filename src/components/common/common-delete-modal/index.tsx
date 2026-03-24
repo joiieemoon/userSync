@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { doc, deleteDoc } from "firebase/firestore";
 import { db } from "../../../services/firebase/firebase.ts";
 import { toast } from "react-toastify";
@@ -13,27 +13,34 @@ const DeleteItemModal: React.FC<DeleteItemModalProps> = ({
   onClose,
   collectionName,
   item,
+  onDelete,
 }) => {
-  const handleDelete = async () => {
+  const [disable, setdisable] = useState(false);
+  const handleDelete = useCallback(async () => {
     if (!item) return;
 
     try {
+      setdisable(true);
       await deleteDoc(doc(db, collectionName, item.id));
+
       toast.success(`Item deleted successfully`, {
         position: "top-center",
       });
+      onDelete && onDelete();
       onClose();
     } catch (error) {
       console.error("Error deleting item:", error);
       toast.error(`Failed to delete item`, { position: "top-center" });
+      setdisable(false);
     }
-  };
+  }, [item, collectionName, onDelete, onClose]);
 
   return (
     <CommonModal
       isOpen={isOpen}
       onClose={onClose}
-      onSubmit={handleDelete}
+      onSubmit={handleDelete} 
+      submitDisabled={disable}
       submitLabel="Delete"
       cancelLabel="Cancel"
       title={
@@ -46,4 +53,4 @@ const DeleteItemModal: React.FC<DeleteItemModalProps> = ({
   );
 };
 
-export default DeleteItemModal;
+export default React.memo(DeleteItemModal);

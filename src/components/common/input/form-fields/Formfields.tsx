@@ -148,4 +148,4 @@ const Inputfields: FC<InputProps> = ({
   );
 };
 
-export default Inputfields;
+export default React.memo(Inputfields);

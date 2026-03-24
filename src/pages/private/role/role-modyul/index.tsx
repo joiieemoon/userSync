@@ -20,10 +20,12 @@ import {
 } from "../../../../redux/slice/uiSlice.ts";
 import { roleService } from "../../../../services/firebase/role-services";
 import { usersService } from "../../../../services/firebase/user-services";
+import { UsersSkeleton } from "../../../../components/feature/role-management/edit-role/index.tsx";
 const RoleModyul = () => {
   const [roles, setRoles] = useState<any[]>([]);
   const [roleToDelete, setRoleToDelete] = useState<any | null>(null);
   const [searchTerm, setsearchTerm] = useState();
+  const [fetch, setfetch] = useState(false);
   const navigation = useNavigate();
   const dispatch = useDispatch();
 
@@ -37,6 +39,7 @@ const RoleModyul = () => {
   useEffect(() => {
     const fetchRoles = async () => {
       try {
+        setfetch(false);
         dispatch(setLoading(true));
         const roleList = await roleService.getAll();
 
@@ -45,11 +48,13 @@ const RoleModyul = () => {
         console.error(error);
       } finally {
         dispatch(setLoading(false));
+        setfetch(true);
       }
     };
 
     fetchRoles();
   }, []);
+
   const {
     currentData: currentRoles,
     currentPage,
@@ -67,7 +72,6 @@ const RoleModyul = () => {
   const toggleSortOrder = () => {
     dispatch(setSortOrder(sortOrder === "asc" ? "desc" : "asc"));
   };
-
   const removeRole = async (roleId: string, roleName: string) => {
     try {
       const usersSnap = await roleService.getUsersByRole(roleName);
@@ -80,17 +84,14 @@ const RoleModyul = () => {
 
       await roleService.delete(roleId);
 
-      toast.success(`Role '${roleName}' deleted successfully!`, {
-        position: "top-center",
-      });
-
       const updatedRoles = await roleService.getAll();
       setRoles(updatedRoles);
     } catch (error: any) {
       toast.error("Error deleting role: " + error.message);
     }
   };
-  if (loading)
+
+  if (loading && !fetch)
     return (
       <div className="p-6 flex justify-center items-center h-screen">
         Loading...
@@ -116,86 +117,88 @@ const RoleModyul = () => {
           />
         )}
       </div>
+      {fetch && (
+        <table className="w-full bg-white rounded-xl shadow-2xl">
+          <thead className="bg-amber-300">
+            <tr>
+              <th className="p-3 text-left">#</th>
+              <th
+                className="p-3 text-left cursor-pointer flex"
+                onClick={toggleSortOrder}
+              >
+                Role Name
+                {sortOrder === "asc" ? (
+                  <FaSortAlphaDown className="ml-1" />
+                ) : (
+                  <FaSortAlphaDownAlt className="ml-1" />
+                )}
+              </th>
+              <th className="p-3 text-left">Created At</th>
+              <th className="p-3 text-left">Permissions</th>
 
-      <table className="w-full bg-white rounded-xl shadow-2xl">
-        <thead className="bg-amber-300">
-          <tr>
-            <th className="p-3 text-left">#</th>
-            <th
-              className="p-3 text-left cursor-pointer flex"
-              onClick={toggleSortOrder}
-            >
-              Role Name
-              {sortOrder === "asc" ? (
-                <FaSortAlphaDown className="ml-1" />
-              ) : (
-                <FaSortAlphaDownAlt className="ml-1" />
+              {(canPermit(currentUserPermissions, "role", "canEdit") ||
+                canPermit(currentUserPermissions, "role", "canDelete")) && (
+                <th className="p-3 text-left">Action</th>
               )}
-            </th>
-            <th className="p-3 text-left">Created At</th>
-            <th className="p-3 text-left">Permissions</th>
+            </tr>
+          </thead>
 
-            {(canPermit(currentUserPermissions, "role", "canEdit") ||
-              canPermit(currentUserPermissions, "role", "canDelete")) && (
-              <th className="p-3 text-left">Action</th>
-            )}
-          </tr>
-        </thead>
-
-        <tbody>
-          {currentRoles.length > 0 ? (
-            currentRoles.map((role, index) => (
-              <tr key={role.id} className="border-b">
-                <td className="p-2">{(currentPage - 1) * 5 + index + 1}</td>
-
-                <td className="p-2">{role.roleName}</td>
-
-                <td className="p-2">
-                  {role.createdAt ? role.createdAt.toLocaleDateString() : "-"}
-                </td>
-
-                <td className="p-2">
-                  {Object.values(role.permissions || {}).reduce(
-                    (count: number, module: any) =>
-                      count + Object.values(module).filter(Boolean).length,
-                    0,
-                  )}
-                </td>
-
-                {(canPermit(currentUserPermissions, "role", "canEdit") ||
-                  canPermit(currentUserPermissions, "role", "canDelete")) && (
-                  <td className="p-2 flex gap-2">
-                    {canPermit(currentUserPermissions, "role", "canEdit") && (
-                      <MdOutlineEdit
-                        className="text-2xl cursor-pointer"
-                        onClick={() => navigation(`/role/edit/${role.id}`)}
-                      />
-                    )}
-
-                    {canPermit(currentUserPermissions, "role", "canDelete") && (
-                      <MdDeleteOutline
-                        className="text-2xl cursor-pointer"
-                        onClick={() => {
-                          setRoleToDelete(role);
-                          dispatch(
-                            setShowModal({ type: "delete", value: true }),
-                          );
-                        }}
-                      />
+          <tbody>
+            {loading && !fetch ? (
+              <UsersSkeleton />
+            ) : currentRoles.length > 0 ? (
+              currentRoles.map((role, index) => (
+                <tr key={role.id} className="border-b">
+                  <td className="p-2">{(currentPage - 1) * 5 + index + 1}</td>
+                  <td className="p-2">{role.roleName}</td>
+                  <td className="p-2">
+                    {role.createdAt ? role.createdAt.toLocaleDateString() : "-"}
+                  </td>
+                  <td className="p-2">
+                    {Object.values(role.permissions || {}).reduce(
+                      (count: number, module: any) =>
+                        count + Object.values(module).filter(Boolean).length,
+                      0,
                     )}
                   </td>
-                )}
+                  {(canPermit(currentUserPermissions, "role", "canEdit") ||
+                    canPermit(currentUserPermissions, "role", "canDelete")) && (
+                    <td className="p-2 flex gap-2">
+                      {canPermit(currentUserPermissions, "role", "canEdit") && (
+                        <MdOutlineEdit
+                          className="text-2xl cursor-pointer"
+                          onClick={() => navigation(`/role/edit/${role.id}`)}
+                        />
+                      )}
+                      {canPermit(
+                        currentUserPermissions,
+                        "role",
+                        "canDelete",
+                      ) && (
+                        <MdDeleteOutline
+                          className="text-2xl cursor-pointer"
+                          onClick={() => {
+                            setRoleToDelete(role);
+                            dispatch(
+                              setShowModal({ type: "delete", value: true }),
+                            );
+                          }}
+                        />
+                      )}
+                    </td>
+                  )}
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={5} className="text-center p-6 text-gray-500">
+                  No roles found.
+                </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={5} className="text-center p-6 text-gray-500">
-                No roles found.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      )}
 
       {totalPages > 1 && (
         <PaginationMain
@@ -210,6 +213,12 @@ const RoleModyul = () => {
         onClose={() => {
           setRoleToDelete(null);
           dispatch(setShowModal({ type: "delete", value: false }));
+        }}
+        onDelete={async () => {
+          if (roleToDelete) {
+            await removeRole(roleToDelete.id, roleToDelete.roleName);
+            dispatch(setShowModal({ type: "delete", value: false }));
+          }
         }}
         collectionName="roles"
         item={roleToDelete ? { id: roleToDelete.id } : null}

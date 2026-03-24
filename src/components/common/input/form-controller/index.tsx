@@ -1,5 +1,6 @@
 import Inputfields from "../form-fields/Formfields";
 import type { formcontrollerProps } from "../../../../types/interfaces";
+import React from "react";
 
 const FormController = ({ control, ...props }: formcontrollerProps) => {
   switch (control) {
@@ -27,4 +28,4 @@ const FormController = ({ control, ...props }: formcontrollerProps) => {
   }
 };
 
-export default FormController;
+export default React.memo(FormController);

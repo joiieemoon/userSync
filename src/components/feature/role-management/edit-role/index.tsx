@@ -4,7 +4,7 @@ import { Sidebarmain } from "../../../layout/sidebar";
 
 import EditRole from "../add-role";
 
-function UsersSkeleton() {
+export function UsersSkeleton() {
   return (
     <div className="space-y-4 mt-40">
       {[...Array(10)].map((_, i) => (

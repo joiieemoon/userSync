@@ -60,4 +60,4 @@ const CommonModal: React.FC<CommonModalProps> = ({
   );
 };
 
-export default CommonModal;
+export default React.memo(CommonModal);
