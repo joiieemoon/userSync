@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ProfileHeader from "../../../components/feature/user-management/profile/profile-header";
 import PersonalDetails from "../../../components/feature/user-management/profile/profile-personal-details";
 import UpdateProfileModal from "../../../modals/update-profile-modal";
-import { useAuthListener } from "../../../redux/auth-store";
+import { useAuthListener } from "../../../redux/slice/auth-listner";
 import type { RootState } from "../../../redux/store/store";
 import Navbar from "../../../components/layout/navbar";
 import { setShowModal, toggleSidebar } from "../../../redux/slice/uiSlice";

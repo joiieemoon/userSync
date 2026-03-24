@@ -1,11 +1,11 @@
 
 import { useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth, db } from "../../services/firebase/firebase.ts";
+import { auth, db } from "../../../services/firebase/firebase.ts";
 import { useDispatch } from "react-redux";
-import { setUser, clearUser } from "../store/auth-slice";
+import { setUser, clearUser } from "../auth-slice/index.ts";
 import { doc, getDoc } from "firebase/firestore";
-import type { AppDispatch } from "../store/store";
+import type { AppDispatch } from "../../store/store/index.ts";
 
 export const useAuthListener = () => {
   const dispatch = useDispatch<AppDispatch>();

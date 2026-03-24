@@ -2,7 +2,7 @@ import loginCover from "../../../../public/logincover.png";
 import { signupFields } from "../../../components/common/input/form-fields/formconfig.ts";
 import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
-import { auth } from "../../../services/firebase/firebase.ts";
+import { auth, db } from "../../../services/firebase/firebase.ts";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { serverTimestamp } from "firebase/firestore";
 import { toast } from "react-toastify";

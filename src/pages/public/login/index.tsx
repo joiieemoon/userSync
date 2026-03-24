@@ -12,9 +12,10 @@ import { useState } from "react";
 import ForgotPassword from "../../../modals/forget-password-modal";
 
 import { useDispatch } from "react-redux";
-import { setUser } from "../../../redux/store/auth-slice";
+import { setUser } from "../../../redux/slice/auth-slice/index.ts";
 import type { AppDispatch } from "../../../redux/store/store";
-import { setUserPermissions } from "../../../redux/permissionslice";
+
+import { setUserPermissions } from "../../../redux/slice/permissionslice/index.ts";
 
 import EditBtn from "../../../components/common/button/edit-button/index.tsx";
 import FormController from "../../../components/common/input/form-controller/index.tsx";

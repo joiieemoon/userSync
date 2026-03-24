@@ -1,13 +1,14 @@
 import React, { useCallback, useState } from "react";
-import { doc, deleteDoc } from "firebase/firestore";
-import { db } from "../../../services/firebase/firebase.ts";
+
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import CommonModal from "../common-modal";
 import { PiWarningCircle } from "react-icons/pi";
 import type { DeleteItemModalProps } from "../../../types/interfaces/index.ts";
+import { useDispatch } from "react-redux";
 
+import { deleteUser } from "../../../redux/thunks/index.ts";
 const DeleteItemModal: React.FC<DeleteItemModalProps> = ({
   isOpen,
   onClose,
@@ -16,16 +17,15 @@ const DeleteItemModal: React.FC<DeleteItemModalProps> = ({
   onDelete,
 }) => {
   const [disable, setdisable] = useState(false);
+  const dispatch = useDispatch();
+
   const handleDelete = useCallback(async () => {
     if (!item) return;
 
     try {
       setdisable(true);
-      await deleteDoc(doc(db, collectionName, item.id));
-
-      toast.success(`Item deleted successfully`, {
-        position: "top-center",
-      });
+      await dispatch(deleteUser(item.id)).unwrap();
+      toast.success(`Item deleted successfully`, { position: "top-center" });
       onDelete && onDelete();
       onClose();
     } catch (error) {
@@ -33,13 +33,13 @@ const DeleteItemModal: React.FC<DeleteItemModalProps> = ({
       toast.error(`Failed to delete item`, { position: "top-center" });
       setdisable(false);
     }
-  }, [item, collectionName, onDelete, onClose]);
+  }, [dispatch, item, onDelete, onClose]);
 
   return (
     <CommonModal
       isOpen={isOpen}
       onClose={onClose}
-      onSubmit={handleDelete} 
+      onSubmit={handleDelete}
       submitDisabled={disable}
       submitLabel="Delete"
       cancelLabel="Cancel"

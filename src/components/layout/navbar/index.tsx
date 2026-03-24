@@ -18,10 +18,11 @@ import type { RootState } from "../../../redux/store/store";
 
 import { BiSolidLogOut } from "react-icons/bi";
 import avatar from "../../../../public/avtar.png";
-import { setUserPermissions } from "../../../redux/permissionslice";
+
+import { setUserPermissions } from "../../../redux/slice/permissionslice/index.ts";
 import { useDispatch } from "react-redux";
 import useUsers from "../../../hooks/use-user";
-import { setUser } from "../../../redux/store/auth-slice";
+import { setUser } from "../../../redux/slice/auth-slice/index.ts";
 import type { NavbarProps } from "../../../types/interfaces";
 
 import { IoMdHome } from "react-icons/io";

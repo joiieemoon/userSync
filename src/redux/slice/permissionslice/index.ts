@@ -1,6 +1,6 @@
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
-import type { Permissions, UserPermissionsState } from "../../types/interfaces"
+import type { Permissions, UserPermissionsState } from "../../../types/interfaces"
 
 
 const initialState: UserPermissionsState = {
