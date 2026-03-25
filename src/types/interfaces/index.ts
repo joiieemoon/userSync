@@ -96,6 +96,7 @@ export type UserModalProps = {
         email: string;
         role: string;
     } | null;
+    onSubmit:()=>void;
 };
 
 //role type 

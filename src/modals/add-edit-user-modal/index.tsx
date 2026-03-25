@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { auth } from "../../services/firebase/firebase.ts";
 import { serverTimestamp } from "firebase/firestore";
 
@@ -32,7 +32,8 @@ const UserModal: React.FC<UserModalProps> = ({
 }) => {
   const isEditMode = !!user;
   const [roles, setRoles] = useState<{ id: string; roleName: string }[]>([]);
-  const [submitForm, setSubmitForm] = useState<() => void>(() => {});
+ 
+  const submitFormRef = useRef<() => void>(() => {});
 
   const [isDisable, setIsDisable] = useState(false);
 
@@ -129,7 +130,8 @@ const UserModal: React.FC<UserModalProps> = ({
     <CommonModal
       isOpen={isOpen}
       onClose={onClose}
-      onSubmit={() => submitForm()}
+
+      onSubmit={() => submitFormRef.current()}
       submitLabel={isEditMode ? "Save" : "Add"}
       cancelLabel="Cancel"
       submitDisabled={isDisable}
@@ -151,8 +153,8 @@ const UserModal: React.FC<UserModalProps> = ({
           handleBlur,
           submitForm,
         }) => {
-          setSubmitForm(() => submitForm);
-
+          // setSubmitForm(() => submitForm);
+          submitFormRef.current = submitForm;
           const fieldsToRender = isEditMode ? editUserFields : signupFields;
 
           return (

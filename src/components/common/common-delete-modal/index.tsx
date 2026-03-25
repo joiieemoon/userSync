@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useActionState, useCallback, useState } from "react";
 import { doc, deleteDoc } from "firebase/firestore";
 import { db } from "../../../services/firebase/firebase.ts";
 import { toast } from "react-toastify";
@@ -40,7 +40,7 @@ const DeleteItemModal: React.FC<DeleteItemModalProps> = ({
     <CommonModal
       isOpen={isOpen}
       onClose={onClose}
-      onSubmit={handleDelete}
+      onSubmit={() => handleDelete()}
       submitDisabled={disable}
       submitLabel="Delete"
       cancelLabel="Cancel"
