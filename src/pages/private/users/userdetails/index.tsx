@@ -90,7 +90,7 @@ export default function UsersDetails() {
       <table className="w-full bg-white rounded-xl shadow-2xl">
         <thead className="bg-amber-300">
           <tr>
-            {" "}
+            
             <th className="p-3 text-left">#</th>
             <th
               className="p-3 text-left flex cursor-pointer items-center"

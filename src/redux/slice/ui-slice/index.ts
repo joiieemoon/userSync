@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { User } from "../../types/interfaces";
+
+import type { User } from "../../../types/interfaces";
 interface UsersUIState {
     sortOrder: "asc" | "desc";
     currentPage: number;

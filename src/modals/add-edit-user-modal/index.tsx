@@ -11,7 +11,7 @@ import CommonModal from "../../components/common/common-modal/index.tsx";
 import {
   editUserFields,
   signupFields,
-} from "../../components/common/input/form-fields/formconfig.ts";
+} from "../../components/common/input/form-fields/formconfig";
 
 import {
   updateProfileValidationSchema,
@@ -32,7 +32,7 @@ const UserModal: React.FC<UserModalProps> = ({
 }) => {
   const isEditMode = !!user;
   const [roles, setRoles] = useState<{ id: string; roleName: string }[]>([]);
- 
+
   const submitFormRef = useRef<() => void>(() => {});
 
   const [isDisable, setIsDisable] = useState(false);
@@ -130,7 +130,6 @@ const UserModal: React.FC<UserModalProps> = ({
     <CommonModal
       isOpen={isOpen}
       onClose={onClose}
-
       onSubmit={() => submitFormRef.current()}
       submitLabel={isEditMode ? "Save" : "Add"}
       cancelLabel="Cancel"

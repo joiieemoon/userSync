@@ -49,7 +49,6 @@ const Home = () => {
         ) : (
           <div className="">
             <h1 className="text-center h-screen mt-7 p-7 flex justify-center items-center border  text-5xl">
-              {" "}
               <Spinnerring />
             </h1>
           </div>

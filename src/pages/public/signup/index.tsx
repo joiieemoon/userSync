@@ -1,5 +1,5 @@
 import loginCover from "../../../../public/logincover.png";
-import { signupFields } from "../../../components/common/input/form-fields/formconfig.ts";
+import { signupFields } from "../../../components/common/input/form-fields/formconfig";
 import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 import { auth, db } from "../../../services/firebase/firebase.ts";

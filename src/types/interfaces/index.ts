@@ -39,7 +39,7 @@ export interface formcontrollerProps {
     control: "input" | "textarea" | "select" | "checkbox";
     [key: string]: any;
 }
-//profile modyul interfaces
+//profile module interfaces
 export interface PersonalDetails {
     user: {
         uid: string;
@@ -153,7 +153,7 @@ export type DeleteItemModalProps = {
     onDelete?: () => void;
 
 };
-//chat modyul interfaces
+//chat module interfaces
 export interface conversation {
     id?: string,
     type: "private" | "group",

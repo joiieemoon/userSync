@@ -1,4 +1,4 @@
-import Inputfields from "../form-fields/Formfields";
+import Inputfields from "../form-fields";
 import type { formcontrollerProps } from "../../../../types/interfaces";
 import React from "react";
 

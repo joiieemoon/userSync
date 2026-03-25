@@ -1,5 +1,5 @@
 import loginCover from "../../../../public/logincover.png";
-import { loginFields } from "../../../components/common/input/form-fields/formconfig.ts";
+import { loginFields } from "../../../components/common/input/form-fields/formconfig/index.ts";
 import { Link } from "react-router-dom";
 import { Formik, Form } from "formik";
 import { auth } from "../../../services/firebase/firebase.ts";
@@ -60,7 +60,9 @@ export const Login = () => {
 
                   let rolePermissions = {};
                   if (data.role) {
-                    const roleData = await roleService.getByName(data.role);
+                    const roleData = await roleService.getUsersByRole(
+                      data.role,
+                    );
                     rolePermissions = roleData?.permissions || {};
                   }
                   dispatch(

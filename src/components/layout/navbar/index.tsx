@@ -119,16 +119,16 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isOpen }) => {
             {location.pathname === "/profile" ? (
               <div
                 onClick={() => navigate("/")}
-                className="flex items-center gap-2 hover:text-green-500 w-full cursor-pointer  text-black "
+                className="flex items-center gap-2 hover:text-green-500 w-full cursor-pointer  text-black  "
               >
                 <IoMdHome className="text-black  " /> Home
               </div>
             ) : (
               <Link
                 to="/profile"
-                className="flex items-center gap-2 hover:text-blue-300 text-gray-600 "
+                className="flex items-center gap-2 hover:text-blue-300 text-gray-600  w-full "
               >
-                <FaRegUserCircle className="text-xl text-gray-400" />
+                <FaRegUserCircle className="text-xl text-gray-400 " />
                 Edit Profile
               </Link>
             )}
