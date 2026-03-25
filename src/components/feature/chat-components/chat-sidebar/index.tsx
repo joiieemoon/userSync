@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Virtuoso } from "react-virtuoso";
-import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
-import { db } from "../../../../services/firebase/firebase";
+import {  onSnapshot  } from "firebase/firestore";
+
 import avtar from "../../../../../public/avtar.png";
 import SearchBar from "../../../common/search-bar";
 import Spinnerring from "../../../common/spinner";
@@ -16,6 +16,7 @@ import {
   AccordionTitle,
   AccordionContent,
 } from "flowbite-react";
+import { chatService } from "../../../../services/firebase/chat-services";
 
 const ChatSidebar: React.FC<ChatSidebarProps> = ({
   chats,
@@ -31,9 +32,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
     const unsubscribers: (() => void)[] = [];
 
     chats.forEach((chat) => {
-      const messagesRef = collection(db, "chats", chat.id, "messages");
-      const q = query(messagesRef, orderBy("createdAt", "asc"));
-
+      const q = chatService.getMessageQuery(chat.id);
       const unsubscribe = onSnapshot(q, (snapshot) => {
         const unread = snapshot.docs.filter((doc) => {
           const msg = doc.data() as any;
@@ -82,7 +81,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
     <div className="w-72 bg-gray-100 rounded-2xl shadow flex flex-col ">
       {/* Top bar */}
       <div className="p-4 flex flex-col items-center justify-between border-b border-gray-300">
-        <AddNewSpaceModal  onUserSelected={(user) => setSelectedUser(user)} />
+        <AddNewSpaceModal onUserSelected={(user) => setSelectedUser(user)} />
         <SearchBar
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}

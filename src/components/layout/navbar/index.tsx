@@ -81,7 +81,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isOpen }) => {
       className={`fixed top-0 z-50 w-full !bg-white text-black   shadow-md px-6 transition-all duration-300
   ${isOpen ? "pl-64" : "pl-6"}`}
     >
-      {/* LEFT SECTION */}
+   
       <div className="flex items-center gap-4 border-none ">
         <button
           onClick={toggleSidebar}

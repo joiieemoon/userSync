@@ -149,7 +149,8 @@ export type DeleteItemModalProps = {
     onClose: () => void;
     collectionName: string;
     item: { id: string } | null;
-    onDelete?:()=>void;
+    onDelete?: () => void;
+
 };
 //chat modyul interfaces
 export interface conversation {
@@ -192,7 +193,7 @@ export interface conversationProps {
     currentUid: string;
 
     onUnreadCountChange?: (chatId: string | null, count: number) => void;
-
+ 
 }
 export interface ChatSidebarProps {
     users: User[];

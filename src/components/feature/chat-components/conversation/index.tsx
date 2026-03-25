@@ -16,6 +16,7 @@ import useChats from "../../../../hooks/use-chat";
 import Spinnerring from "../../../common/spinner";
 import AddNewSpaceModal from "../../../../modals/add-newchat-modal";
 
+
 const Conversation: React.FC<conversationProps> = ({
   selectedUser,
   onClose,
@@ -26,11 +27,6 @@ const Conversation: React.FC<conversationProps> = ({
   const { messages, markAsSeen } = useMessages(chatId, currentUid);
   const { chats, loading, getCreatedBy } = useChats();
   const [searchTerm, setSearchTerm] = useState();
-  if (loading) {
-    <div className="border">
-      <Spinnerring />;
-    </div>;
-  }
 
   useEffect(() => {
     if (!selectedUser) return;
@@ -89,7 +85,13 @@ const Conversation: React.FC<conversationProps> = ({
       minute: "2-digit",
     });
   };
-
+  if (loading) {
+    return (
+      <div className="border">
+        <Spinnerring />;
+      </div>
+    );
+  }
   return (
     <div className="flex flex-col bg-gray-100 h-[calc(100vh-130px)] relative">
       <header className="flex items-center p-4 shadow w-full bg-white z-10">

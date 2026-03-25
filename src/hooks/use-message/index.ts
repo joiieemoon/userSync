@@ -1,7 +1,8 @@
 
 import { useEffect, useState } from "react";
-import { collection, query, orderBy, onSnapshot, doc, updateDoc, arrayUnion } from "firebase/firestore";
-import { db } from "../../services/firebase/firebase";
+import { onSnapshot } from "firebase/firestore";
+
+import { chatService } from "../../services/firebase/chat-services";
 
 
 
@@ -19,11 +20,9 @@ const useMessages = (
             return;
         }
 
-        const q = query(
-            collection(db, "chats", chatId, "messages"),
-            orderBy("createdAt", "asc")
-        );
 
+
+        const q = chatService.getMessageQuery(chatId);
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const msgs = snapshot.docs.map((doc) => ({
                 id: doc.id,
@@ -43,22 +42,17 @@ const useMessages = (
         return () => unsubscribe();
     }, [chatId, currentUid]);
 
-    //
+
+
     const markAsSeen = async () => {
         if (!chatId || !currentUid) return;
 
-        const batchUpdate = messages
+        const unseenIds = messages
             .filter(msg => msg.senderId !== currentUid && (!msg.seenBy || !msg.seenBy.includes(currentUid)))
-            .map(msg => {
-                const messageRef = doc(db, "chats", chatId, "messages", msg.id);
-                return updateDoc(messageRef, {
-                    seenBy: arrayUnion(currentUid),
-                });
-            });
+            .map(msg => msg.id);
 
-        await Promise.all(batchUpdate);
+        await chatService.markMessagesAsSeen(chatId, unseenIds, currentUid);
     };
-
     return { messages, unreadCount, markAsSeen };
 };
 

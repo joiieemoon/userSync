@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 
 import { updateUser } from "../../redux/slice/auth-slice/index.ts";
@@ -44,32 +44,34 @@ export default function UpdateProfileModal({
     });
   };
 
-  const handleSubmit = async (values: typeof initialValues) => {
-    try {
-      let photoURL = values.profilePhoto;
+  const handleSubmit = useCallback(
+    async (values: typeof initialValues) => {
+      try {
+        let photoURL = values.profilePhoto;
 
-      if (selectedFile) {
-        photoURL = await convertToBase64(selectedFile);
+        if (selectedFile) {
+          photoURL = await convertToBase64(selectedFile);
+        }
+
+        const updatedData = {
+          ...values,
+          profilePhoto: photoURL,
+        };
+
+        await usersService.update(user.uid, updatedData);
+        dispatch(updateUser(updatedData));
+
+        toast.success("Profile updated successfully!", {
+          position: "top-center",
+        });
+
+        onClose();
+      } catch (error) {
+        toast.error("Failed to update profile");
       }
-
-      const updatedData = {
-        ...values,
-        profilePhoto: photoURL,
-      };
-
-      await usersService.update(user.uid, updatedData);
-      dispatch(updateUser(updatedData));
-
-      toast.success("Profile updated successfully!", {
-        position: "top-center",
-      });
-
-      onClose();
-    } catch (error) {
-      toast.error("Failed to update profile");
-    }
-  };
-
+    },
+    [onClose, selectedFile, dispatch, user.uid],
+  );
   return (
     <Formik
       initialValues={initialValues}

@@ -49,7 +49,6 @@ const ChatModyul = () => {
           <Conversation
             currentUid={currentUid}
             selectedUser={selectedUser}
-            // onClose={() => setSelectedUser(null)}
             onClose={() => dispatch(clearSelectedUsers())}
           />
         ) : (

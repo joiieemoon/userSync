@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { auth } from "../../services/firebase/firebase.ts";
 import { serverTimestamp } from "firebase/firestore";
 
@@ -49,8 +49,6 @@ const UserModal: React.FC<UserModalProps> = ({
     fetchRoles();
   }, []);
 
-  if (!isOpen) return null;
-
   const initialValues = isEditMode
     ? editUserFields.reduce(
         (acc, field) => ({
@@ -70,61 +68,63 @@ const UserModal: React.FC<UserModalProps> = ({
         phone: "",
       };
 
-  const handleSubmit = async (
-    values: typeof initialValues,
-    { setSubmitting }: any,
-  ) => {
-    try {
-      if (isEditMode && user) {
-        await usersService.update(user.uid, values);
-        toast.success("User updated successfully", { position: "top-center" });
-      } else {
-        const secondaryApp = initializeApp(auth.app.options, "Secondary");
-        const secondaryAuth = getAuth(secondaryApp);
+  const handleSubmit = useCallback(
+    async (values: typeof initialValues, { setSubmitting }: any) => {
+      try {
+        if (isEditMode && user) {
+          await usersService.update(user.uid, values);
+          toast.success("User updated successfully", {
+            position: "top-center",
+          });
+        } else {
+          const secondaryApp = initializeApp(auth.app.options, "Secondary");
+          const secondaryAuth = getAuth(secondaryApp);
 
-        const userCredential = await createUserWithEmailAndPassword(
-          secondaryAuth,
-          values.email,
-          values.password,
-        );
+          const userCredential = await createUserWithEmailAndPassword(
+            secondaryAuth,
+            values.email,
+            values.password,
+          );
 
-        const newUser = userCredential.user;
+          const newUser = userCredential.user;
 
-        if (newUser) {
-          await usersService.create(newUser.uid, {
-            email: values.email,
-            firstName: values.firstName,
-            lastName: values.lastName,
-            password: values.password,
-            phone: values.phone || "",
-            bio: "",
-            role: values.role || "new user",
-            profilePhoto: "",
-            createdAt: serverTimestamp(),
+          if (newUser) {
+            await usersService.create(newUser.uid, {
+              email: values.email,
+              firstName: values.firstName,
+              lastName: values.lastName,
+              password: values.password,
+              phone: values.phone || "",
+              bio: "",
+              role: values.role || "new user",
+              profilePhoto: "",
+              createdAt: serverTimestamp(),
+            });
+          }
+
+          await secondaryAuth.signOut();
+
+          toast.success("User Registered Successfully!!", {
+            position: "top-center",
+            autoClose: 1000,
+            onOpen: () => setIsDisable(true),
+            onClose: () => {
+              setIsDisable(false);
+              onClose();
+            },
           });
         }
 
-        await secondaryAuth.signOut();
-
-        toast.success("User Registered Successfully!!", {
-          position: "top-center",
-          autoClose: 1000,
-          onOpen: () => setIsDisable(true),
-          onClose: () => {
-            setIsDisable(false);
-            onClose();
-          },
-        });
+        onClose();
+      } catch (error: any) {
+        toast.error(error.message, { position: "top-center" });
+      } finally {
+        setSubmitting(false);
       }
-
-      onClose();
-    } catch (error: any) {
-      toast.error(error.message, { position: "top-center" });
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
+    },
+    [isEditMode, user, onClose, setIsDisable],
+  );
+  if (!isOpen) return null;
   return (
     <CommonModal
       isOpen={isOpen}

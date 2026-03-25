@@ -29,7 +29,7 @@ import type { RootState } from "../../redux/store/store";
 
 const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
   onUserSelected,
-  modeselect,
+
   addmode,
   chatId,
 }) => {
@@ -87,7 +87,7 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
     },
     [mode, selectedUsers, dispatch],
   );
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     if (selectedUsers.length === 0) return;
 
     try {
@@ -160,7 +160,17 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
       setGroupNameError(false);
       setOpenModal(false);
     }
-  };
+  }, [
+    chatId,
+    selectedUsers,
+    addmode,
+    groupName,
+    chats,
+    currentUid,
+    mode,
+    onUserSelected,
+    dispatch,
+  ]);
   if (loading) return null;
 
   return (
@@ -248,7 +258,6 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
         </div>
 
         <div className="mt-2 max-h-64 ">
-          {/* {filteredUsers.length === 0 ? ( */}
           {sortedUsers.length === 0 ? (
             <p className="text-center mt-5 text-gray-500">No users found</p>
           ) : (

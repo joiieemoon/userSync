@@ -1,11 +1,12 @@
 
 import { useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth, db } from "../../../services/firebase/firebase.ts";
+import { auth } from "../../../services/firebase/firebase.ts";
 import { useDispatch } from "react-redux";
 import { setUser, clearUser } from "../auth-slice/index.ts";
-import { doc, getDoc } from "firebase/firestore";
+
 import type { AppDispatch } from "../../store/store/index.ts";
+import { usersService } from "../../../services/firebase/user-services/index.ts";
 
 export const useAuthListener = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -14,9 +15,10 @@ export const useAuthListener = () => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
 
-        const snap = await getDoc(doc(db, "Users", firebaseUser.uid));
-        if (snap.exists()) {
-          const data = snap.data();
+
+        const data = await usersService.getById(firebaseUser.uid);
+        if (data) {
+
           dispatch(
             setUser({
               uid: firebaseUser.uid,

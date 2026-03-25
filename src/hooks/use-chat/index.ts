@@ -1,16 +1,14 @@
 import { useState, useEffect } from "react";
 import {
-  collection,
-  query,
-  where,
-  orderBy,
   onSnapshot,
 } from "firebase/firestore";
-import { db, auth } from "../../services/firebase/firebase.ts";
+import { auth } from "../../services/firebase/firebase.ts";
 import type { RootState } from "../../redux/store/store";
 import type { Chat } from "../../types/interfaces/index.ts";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoading } from "../../redux/slice/uiSlice";
+
+import { chatService } from "../../services/firebase/chat-services/index.ts";
 const useChats = () => {
   const [chats, setChats] = useState<Chat[]>([]);
 
@@ -21,11 +19,7 @@ const useChats = () => {
   useEffect(() => {
     if (!currentUid) return;
 
-    const q = query(
-      collection(db, "chats"),
-      where("participants", "array-contains", currentUid),
-      orderBy("lastMessageAt", "desc"),
-    );
+    const q = chatService.getChatsQuery(currentUid);
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const fetchedChats: Chat[] = snapshot.docs.map((doc) => ({
@@ -34,7 +28,7 @@ const useChats = () => {
         createdBy: (doc.data() as any).createdBy || null,
       }));
       setChats(fetchedChats);
-  
+
       dispatch(setLoading(false));
     });
 
