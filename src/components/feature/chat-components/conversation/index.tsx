@@ -4,7 +4,7 @@ import { Avatar } from "flowbite-react";
 import { IoMdClose } from "react-icons/io";
 import FormController from "../../../common/input/form-controller";
 
-import EditBtn from "../../../common/button/edit-button";
+import Commonbutton from "../../../common/button";
 import { createConversation } from "../../../../services/create-conversation";
 import { sendMessage } from "../../../../services/create-conversation";
 import useMessages from "../../../../hooks/use-message";
@@ -15,7 +15,6 @@ import useChats from "../../../../hooks/use-chat";
 
 import Spinnerring from "../../../common/spinner";
 import AddNewSpaceModal from "../../../../modals/add-newchat-modal";
-
 
 const Conversation: React.FC<conversationProps> = ({
   selectedUser,
@@ -184,7 +183,7 @@ const Conversation: React.FC<conversationProps> = ({
               className="w-full border-none !rounded-3xl"
             />
           </div>
-          <EditBtn
+          <Commonbutton
             label=""
             icon={<IoSend />}
             onClick={handleSendMessage}

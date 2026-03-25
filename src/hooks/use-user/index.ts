@@ -1,8 +1,8 @@
 import { useEffect, useState, useMemo } from "react";
 import { db } from "../../services/firebase/firebase.ts";
 import { collection, onSnapshot, Timestamp } from "firebase/firestore";
-import type { RootState } from "../../redux/store/store";
-import { setLoading } from "../../redux/slice/uiSlice";
+import type { RootState } from "../../redux/store/index.ts";
+import { setLoading } from "../../redux/slice/ui-slice";
 import { useDispatch, useSelector } from "react-redux";
 
 const useUsers = () => {
@@ -28,7 +28,7 @@ const useUsers = () => {
     return () => unsubscribeRoles();
   }, []);
 
-  
+
   useEffect(() => {
     const unsubscribeUsers = onSnapshot(
       collection(db, "Users"),

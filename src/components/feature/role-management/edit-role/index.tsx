@@ -39,7 +39,7 @@ const EditRoleMain = () => {
 
           {/* Content */}
           <main className="p-8 pt-19 space-y-6">
-            {/* <RoleModyul /> */}
+            {/* <RoleModule /> */}
             <EditRole />
           </main>
         </div>

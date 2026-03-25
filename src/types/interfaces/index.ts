@@ -96,7 +96,7 @@ export type UserModalProps = {
         email: string;
         role: string;
     } | null;
-    onSubmit:()=>void;
+    onSubmit: () => void;
 };
 
 //role type 
@@ -116,7 +116,7 @@ export type Role = {
     };
 };
 //editbtn 
-export type EditBtnProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+export type CommanbuttonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
     onClick?: () => void;
     label: string;
     icon?: React.ReactNode;
@@ -194,7 +194,7 @@ export interface conversationProps {
     currentUid: string;
 
     onUnreadCountChange?: (chatId: string | null, count: number) => void;
- 
+
 }
 export interface ChatSidebarProps {
     users: User[];

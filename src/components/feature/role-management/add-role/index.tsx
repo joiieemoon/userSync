@@ -3,13 +3,14 @@ import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { toast } from "react-toastify";
 import { useParams, useNavigate } from "react-router-dom";
-import EditBtn from "../../../common/button/edit-button";
+
+import Commanbutton from "../../../common/button";
 
 import FormController from "../../../common/input/form-controller";
 import type { Role, Permissions } from "../../../../types/interfaces";
 import { useDispatch, useSelector } from "react-redux";
-import type { RootState } from "../../../../redux/store/store";
-import { setLoading } from "../../../../redux/slice/uiSlice";
+import type { RootState } from "../../../../redux/store";
+import { setLoading } from "../../../../redux/slice/ui-slice";
 const modulesList = ["user", "role", "chat", "campaign"];
 import { roleService } from "../../../../services/firebase/role-services";
 const permissionKeys: (keyof Permissions)[] = [
@@ -90,7 +91,7 @@ const EditRole: React.FC = () => {
     },
   });
 
-  if (loading   ) {
+  if (loading) {
     return <div className="p-10 text-center">Loading...</div>;
   }
 
@@ -182,12 +183,15 @@ const EditRole: React.FC = () => {
           </div>
 
           <div className="flex justify-end gap-3 mt-6">
-            <EditBtn
+            <Commanbutton
               label="Cancel"
               variant="secondary"
               onClick={() => navigate("/role")}
             />
-            <EditBtn type="submit" label={id ? "Save Changes" : "Add Role"} />
+            <Commanbutton
+              type="submit"
+              label={id ? "Save Changes" : "Add Role"}
+            />
           </div>
         </form>
       </div>

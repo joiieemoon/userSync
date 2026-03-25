@@ -3,10 +3,10 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 import { auth } from "../../services/firebase/firebase.ts";
-import type { RootState } from "../../redux/store/store";
+import type { RootState } from "../../redux/store/index.ts";
 import type { Chat } from "../../types/interfaces/index.ts";
 import { useDispatch, useSelector } from "react-redux";
-import { setLoading } from "../../redux/slice/uiSlice";
+import { setLoading } from "../../redux/slice/ui-slice";
 
 import { chatService } from "../../services/firebase/chat-services/index.ts";
 const useChats = () => {

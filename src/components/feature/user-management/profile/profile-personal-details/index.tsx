@@ -1,4 +1,3 @@
-
 import type { PersonalDetails } from "../../../../../types/interfaces";
 
 export default function PersonalDetails({ user, onEdit }: PersonalDetails) {
@@ -9,7 +8,7 @@ export default function PersonalDetails({ user, onEdit }: PersonalDetails) {
         <h3 className="text-lg font-semibold text-gray-900 ">
           Personal Information
         </h3>
-        {/* <EditBtn onClick={onEdit} /> */}
+       
       </div>
 
       {/* Grid */}

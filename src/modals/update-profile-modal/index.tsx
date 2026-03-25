@@ -2,7 +2,7 @@ import React, { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 
 import { updateUser } from "../../redux/slice/auth-slice/index.ts";
-import type { AppDispatch } from "../../redux/store/store/index.ts";
+import type { AppDispatch } from "../../redux/store/index.ts";
 import { usersService } from "../../services/firebase/user-services";
 import { toast } from "react-toastify";
 import { FileInput } from "flowbite-react";

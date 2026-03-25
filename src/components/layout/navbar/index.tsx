@@ -14,12 +14,12 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { auth } from "../../../services/firebase/firebase.ts";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
-import type { RootState } from "../../../redux/store/store";
+import type { RootState } from "../../../redux/store/index.ts";
 
 import { BiSolidLogOut } from "react-icons/bi";
 import avatar from "../../../../public/avtar.png";
 
-import { setUserPermissions } from "../../../redux/slice/permissionslice/index.ts";
+import { setUserPermissions } from "../../../redux/slice/permission-slice/index.ts";
 import { useDispatch } from "react-redux";
 import useUsers from "../../../hooks/use-user";
 import { setUser } from "../../../redux/slice/auth-slice/index.ts";
@@ -81,7 +81,6 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isOpen }) => {
       className={`fixed top-0 z-50 w-full !bg-white text-black   shadow-md px-6 transition-all duration-300
   ${isOpen ? "pl-64" : "pl-6"}`}
     >
-   
       <div className="flex items-center gap-4 border-none ">
         <button
           onClick={toggleSidebar}

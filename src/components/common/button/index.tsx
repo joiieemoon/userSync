@@ -1,7 +1,7 @@
 import React from "react";
-import type { EditBtnProps } from "../../../../types/interfaces";
+import type { CommanbuttonProps } from "../../../types/interfaces";
 
-const EditBtn = ({
+const Commanbutton = ({
   onClick,
   label,
   icon,
@@ -10,7 +10,7 @@ const EditBtn = ({
   disabled = false,
   className = "",
   ...rest
-}: EditBtnProps) => {
+}: CommanbuttonProps) => {
   const baseStyle =
     "flex items-center text-black justify-center gap-2 px-5 py-2 rounded-full border shadow transform hover:-translate-y-0.5 hover:scale-105 transition-all duration-200 ease-in-out";
 
@@ -38,7 +38,7 @@ const EditBtn = ({
   );
 };
 
-export default React.memo(EditBtn, (prev, next) => {
+export default React.memo(Commanbutton, (prev, next) => {
   return (
     prev.label === next.label &&
     prev.icon === next.icon &&

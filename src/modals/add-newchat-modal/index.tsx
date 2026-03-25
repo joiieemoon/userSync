@@ -3,7 +3,7 @@ import { Virtuoso } from "react-virtuoso";
 import avtar from "../../../public/avtar.png";
 import SearchBar from "../../components/common/search-bar";
 
-import EditBtn from "../../components/common/button/edit-button";
+import Commanbutton from "../../components/common/button";
 
 import CommonModal from "../../components/common/common-modal";
 
@@ -24,8 +24,8 @@ import {
   addSelectedUser,
   removeSelectedUser,
   clearSelectedUsers,
-} from "../../redux/slice/uiSlice";
-import type { RootState } from "../../redux/store/store";
+} from "../../redux/slice/ui-slice";
+import type { RootState } from "../../redux/store";
 
 const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
   onUserSelected,
@@ -177,7 +177,7 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
     <>
       <div className="flex justify-evenly w-full mb-3">
         {addmode === "add" ? (
-          <EditBtn
+          <Commanbutton
             onClick={() => {
               setMode("addmember");
               setOpenModal(true);
@@ -187,7 +187,7 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
           />
         ) : (
           <>
-            <EditBtn
+            <Commanbutton
               onClick={() => {
                 setMode("chat");
                 setOpenModal(true);
@@ -196,7 +196,7 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
               icon={<RiChatNewLine />}
             />
 
-            <EditBtn
+            <Commanbutton
               onClick={() => {
                 setMode("group");
                 setOpenModal(true);

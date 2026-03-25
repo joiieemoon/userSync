@@ -10,7 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { signupvalidationSchema } from "../../../utils/validations/validation-schema/index.ts";
 import { useState } from "react";
 
-import EditBtn from "../../../components/common/button/edit-button/index.tsx";
+import Commanbutton from "../../../components/common/button";
 import FormController from "../../../components/common/input/form-controller/index.tsx";
 import { usersService } from "../../../services/firebase/user-services/index.ts";
 export const Signup = () => {
@@ -123,7 +123,7 @@ export const Signup = () => {
                 ))}
               </div>
 
-              <EditBtn
+              <Commanbutton
                 type="submit"
                 disabled={isSubmitting || isDisable}
                 label={isSubmitting || isDisable ? "Sign up......" : "Sign up"}

@@ -1,6 +1,7 @@
 import React, { ReactNode } from "react";
 
-import EditBtn from "../button/edit-button/index.tsx";
+
+import Commanbutton from "../button";
 import type { CommonModalProps } from "../../../types/interfaces/index.ts";
 
 const CommonModal: React.FC<CommonModalProps> = ({
@@ -38,14 +39,14 @@ const CommonModal: React.FC<CommonModalProps> = ({
           footer
         ) : (
           <div className="flex justify-center  gap-4 ">
-            <EditBtn
+            <Commanbutton
               type="button"
               label={cancelLabel}
               variant="secondary"
               onClick={onClose}
               icon=""
             />
-            <EditBtn
+            <Commanbutton
               type="button"
               label={submitLabel}
               variant="primary"

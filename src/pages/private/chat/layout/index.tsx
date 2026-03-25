@@ -1,9 +1,9 @@
 import Navbar from "../../../../components/layout/navbar";
 
 import { Sidebarmain } from "../../../../components/layout/sidebar";
-import ChatModyul from "../chat-modyul";
+import ChatModule from "../chat-module";
 import useTitle from "../../../../hooks/use-title";
-import { toggleSidebar } from "../../../../redux/slice/uiSlice";
+import { toggleSidebar } from "../../../../redux/slice/ui-slice";
 import { useDispatch, useSelector } from "react-redux";
 const ChatLayout = () => {
   useTitle("User Sync-Chat");
@@ -27,7 +27,7 @@ const ChatLayout = () => {
         >
           {/* Content */}
           <main className="p-6  mt-13  space-y-7 h-[calc(100vh-80px)]">
-            <ChatModyul />
+            <ChatModule />
           </main>
         </div>
       </div>

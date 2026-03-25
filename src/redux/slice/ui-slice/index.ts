@@ -37,7 +37,7 @@ const initialState: UIState = {
 
 
 
-const uiSlice = createSlice({
+const uislice = createSlice({
     name: "ui",
     initialState,
     reducers: {
@@ -105,6 +105,6 @@ export const {
     resetUsersUI,
     toggleSidebar,
     setSidebar,
-} = uiSlice.actions;
+} = uislice.actions;
 
-export default uiSlice.reducer;
+export default uislice.reducer;

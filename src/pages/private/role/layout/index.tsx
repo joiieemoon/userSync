@@ -3,10 +3,10 @@ import React, { useState } from "react";
 import { Sidebarmain } from "../../../../components/layout/sidebar";
 
 import Navbar from "../../../../components/layout/navbar";
-import RoleModyul from "../role-modyul";
+import RoleModule from "../role-module";
 import useTitle from "../../../../hooks/use-title";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleSidebar } from "../../../../redux/slice/uiSlice";
+import { toggleSidebar } from "../../../../redux/slice/ui-slice";
 const Role = () => {
   const isSidebarOpen = useSelector((state: any) => state.ui.users.sidebarOpen);
   const dispatch = useDispatch();
@@ -28,7 +28,7 @@ const Role = () => {
 
         {/* Content */}
         <main className="p-8 pt-19 space-y-6">
-          <RoleModyul />
+          <RoleModule />
         </main>
       </div>
     </div>

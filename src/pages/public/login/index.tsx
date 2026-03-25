@@ -13,11 +13,11 @@ import ForgotPassword from "../../../modals/forget-password-modal";
 
 import { useDispatch } from "react-redux";
 import { setUser } from "../../../redux/slice/auth-slice/index.ts";
-import type { AppDispatch } from "../../../redux/store/store";
+import type { AppDispatch } from "../../../redux/store/index.ts";
 
-import { setUserPermissions } from "../../../redux/slice/permissionslice/index.ts";
+import { setUserPermissions } from "../../../redux/slice/permission-slice/index.ts";
 
-import EditBtn from "../../../components/common/button/edit-button/index.tsx";
+import Commanbutton from "../../../components/common/button";
 import FormController from "../../../components/common/input/form-controller/index.tsx";
 
 import { usersService } from "../../../services/firebase/user-services/index.ts";
@@ -150,7 +150,7 @@ export const Login = () => {
               ))}
 
               <div className="flex justify-center items-center">
-                <EditBtn
+                <Commanbutton
                   type="submit"
                   disabled={isSubmitting || isDisable}
                   label={isSubmitting || isDisable ? "Login..." : "Login"}

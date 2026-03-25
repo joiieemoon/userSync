@@ -5,7 +5,7 @@ import App from "./App.tsx";
 import "flowbite";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
-import { store } from "./redux/store/store";
+import { store } from "./redux/store/index.ts";
 
 document.documentElement.classList.remove("dark");
 createRoot(document.getElementById("root")!).render(

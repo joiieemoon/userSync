@@ -5,9 +5,9 @@ import ProfileHeader from "../../../components/feature/user-management/profile/p
 import PersonalDetails from "../../../components/feature/user-management/profile/profile-personal-details";
 import UpdateProfileModal from "../../../modals/update-profile-modal";
 import { useAuthListener } from "../../../redux/slice/auth-listner";
-import type { RootState } from "../../../redux/store/store";
+import type { RootState } from "../../../redux/store";
 import Navbar from "../../../components/layout/navbar";
-import { setShowModal, toggleSidebar } from "../../../redux/slice/uiSlice";
+import { setShowModal, toggleSidebar } from "../../../redux/slice/ui-slice";
 import { Sidebarmain } from "../../../components/layout/sidebar";
 
 import useTitle from "../../../hooks/use-title";

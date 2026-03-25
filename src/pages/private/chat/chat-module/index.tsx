@@ -12,9 +12,9 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   clearSelectedUsers,
   setSelectedUsers,
-} from "../../../../redux/slice/uiSlice";
-import type { RootState } from "../../../../redux/store/store";
-const ChatModyul = () => {
+} from "../../../../redux/slice/ui-slice";
+import type { RootState } from "../../../../redux/store";
+const ChatModule = () => {
   const currentUid = auth.currentUser?.uid || "";
   const { users, loading } = useUsers();
   const { chats, existingChatUserIds } = useChats();
@@ -59,4 +59,4 @@ const ChatModyul = () => {
   );
 };
 
-export default ChatModyul;
+export default ChatModule;

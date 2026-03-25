@@ -1,7 +1,7 @@
-import EditBtn from "../../../../common/button/edit-button";
+import Commanbutton from "../../../../common/button";
 import { useSelector } from "react-redux";
 
-import type { RootState } from "../../../../../redux/store/store";
+import type { RootState } from "../../../../../redux/store";
 import avtar from "../../../../../../public/avtar.png";
 import { MdOutlineEdit } from "react-icons/md";
 import type { ProfileHeaderprops } from "../../../../../types/interfaces";
@@ -43,7 +43,7 @@ export default function ProfileHeader({ onEdit }: ProfileHeaderprops) {
         </div>
 
         {/* RIGHT */}
-        <EditBtn
+        <Commanbutton
           onClick={onEdit}
           icon={<MdOutlineEdit className="text-xl" />}
           label="edit"

@@ -4,22 +4,22 @@ import { FaSortAlphaDown, FaSortAlphaDownAlt } from "react-icons/fa";
 import { canPermit } from "../../../../services/can-permission/index.ts";
 
 import SearchBar from "../../../../components/common/search-bar/index.tsx";
-import Commanbutton from "../../../../components/common/button";
+import Commanbutton from "../../../../components/common/button/index.tsx";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { Spinner } from "flowbite-react/components/Spinner";
-import DeleteItemModal from "../../../../components/common/common-delete-modal";
-import { usePagination } from "../../../../hooks/use-pagination";
-import { PaginationMain } from "../../../../components/common/pagination";
+import DeleteItemModal from "../../../../components/common/common-delete-modal/index.tsx";
+import { usePagination } from "../../../../hooks/use-pagination/index.ts";
+import { PaginationMain } from "../../../../components/common/pagination/index.tsx";
 import type { RootState } from "../../../../redux/store/index.ts";
 import {
   setSortOrder,
   setLoading,
   setShowModal,
 } from "../../../../redux/slice/ui-slice";
-import { roleService } from "../../../../services/firebase/role-services";
-import { usersService } from "../../../../services/firebase/user-services";
+import { roleService } from "../../../../services/firebase/role-services/index.ts";
+import { usersService } from "../../../../services/firebase/user-services/index.ts";
 import { UsersSkeleton } from "../../../../components/feature/role-management/edit-role/index.tsx";
 const RoleModule = () => {
   const [roles, setRoles] = useState<any[]>([]);

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import type { RootState } from "../../../redux/store/store";
+import type { RootState } from "../../../redux/store";
 import Navbar from "../../../components/layout/navbar";
 import { Sidebarmain } from "../../../components/layout/sidebar";
 import dashboardBg from "../../../../public/dashboardbg.jpg";

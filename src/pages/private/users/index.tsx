@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Navbar from "../../../components/layout/navbar";
 import { Sidebarmain } from "../../../components/layout/sidebar";
 import useTitle from "../../../hooks/use-title";
-import { toggleSidebar } from "../../../redux/slice/uiSlice";
+import { toggleSidebar } from "../../../redux/slice/ui-slice";
 import useUsers from "../../../hooks/use-user";
 
 // Lazy load UsersDetails

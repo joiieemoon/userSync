@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Dashboard from "../dashboard/index.tsx";
 import Spinnerring from "../../../components/common/spinner/index.tsx";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleSidebar } from "../../../redux/slice/uiSlice";
+import { toggleSidebar } from "../../../redux/slice/ui-slice";
 import { usersService } from "../../../services/firebase/user-services/index.ts";
 
 const Home = () => {

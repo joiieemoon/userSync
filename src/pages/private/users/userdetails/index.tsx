@@ -6,17 +6,20 @@ import { FaSortAlphaDown, FaSortAlphaDownAlt } from "react-icons/fa";
 import { useState, useMemo } from "react";
 import { auth } from "../../../../services/firebase/firebase.ts";
 import SearchBar from "../../../../components/common/search-bar/index.tsx";
-import EditBtn from "../../../../components/common/button/edit-button/index.tsx";
+import Commanbutton from "../../../../components/common/button";
 import { PaginationMain } from "../../../../components/common/pagination/index.tsx";
-import { canPermit } from "../../../../helper/canPermit";
+import { canPermit } from "../../../../services/can-permission/index.ts";
 import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
 import Spinnerring from "../../../../components/common/spinner/index.tsx";
 import UserModal from "../../../../modals/add-edit-user-modal";
 import DeleteItemModal from "../../../../components/common/common-delete-modal";
 import { usePagination } from "../../../../hooks/use-pagination";
 import { useDispatch, useSelector } from "react-redux";
-import type { RootState } from "../../../../redux/store/store";
-import { setSortOrder, setShowModal } from "../../../../redux/slice/uiSlice.ts";
+import type { RootState } from "../../../../redux/store/index.ts";
+import {
+  setSortOrder,
+  setShowModal,
+} from "../../../../redux/slice/ui-slice";
 export default function UsersDetails() {
   const { users, loading } = useUsers();
 
@@ -73,7 +76,7 @@ export default function UsersDetails() {
         />
 
         {canPermit(currentUserPermissions, "user", "canAdd") && (
-          <EditBtn
+          <Commanbutton
             label="Add User"
             icon={<MdAdd className="text-xl" />}
             onClick={() => {
