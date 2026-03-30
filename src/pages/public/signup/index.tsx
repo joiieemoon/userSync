@@ -12,7 +12,7 @@ import { useState } from "react";
 
 import Commanbutton from "../../../components/common/button";
 import FormController from "../../../components/common/input/form-controller/index.tsx";
-import { usersService } from "../../../services/firebase/user-services/index.ts";
+import { usersService } from "../../../services/rest-api-services/user-services/index.ts";
 export const Signup = () => {
   const [isDisable, setisDisable] = useState(false);
   const navigate = useNavigate();

@@ -1,78 +1,52 @@
-import { useEffect, useState, useMemo } from "react";
-import { db } from "../../services/firebase/firebase.ts";
-import { collection, onSnapshot, Timestamp } from "firebase/firestore";
-import type { RootState } from "../../redux/store/index.ts";
-import { setLoading } from "../../redux/slice/ui-slice";
-import { useDispatch, useSelector } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
+
+import { usersService } from "../../services/rest-api-services/user-services";
+
+import { roleService } from "../../services/rest-api-services/role-services";
+
+const fetchUsersAndRoles = async () => {
+
+  const rolesData = await roleService.getAll();
+  const rolesMap: Record<string, any> = {};
+  rolesData.forEach((role: any) => {
+    rolesMap[role.roleName?.toLowerCase()] = {
+      roleName: role.roleName,
+      permissions: role.permissions || {},
+    };
+  });
+
+
+  const rawUsers = await usersService.getUsers();
+
+  const users = rawUsers.map((data: any) => {
+    const roleKey = data.role?.toLowerCase();
+    const roleInfo = rolesMap[roleKey] || { roleName: "No Role", permissions: {} };
+
+    return {
+      uid: data.id,
+      firstName: data.firstName || data.name?.split(" ")[0] || "",
+      lastName: data.lastName || data.name?.split(" ")[1] || "",
+      email: data.email || "",
+      phone: data.phone || "",
+      role: data.role || "",
+      createdAt: data.createdAt || "-",
+      roleName: roleInfo.roleName,
+      permissions: roleInfo.permissions,
+      profilePhoto: data.profilePhoto || "",
+    };
+  });
+
+  return users;
+};
 
 const useUsers = () => {
-  const [rawUsers, setRawUsers] = useState<any[]>([]);
-  const [rolesMap, setRolesMap] = useState<Record<string, any>>({});
-  const { loading } = useSelector((state: RootState) => state.ui.users);
-  const dispatch = useDispatch();
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["users"],
+    queryFn: fetchUsersAndRoles,
+    staleTime: 5 * 60 * 1000,
+  });
 
-
-  useEffect(() => {
-    const unsubscribeRoles = onSnapshot(collection(db, "roles"), (snapshot) => {
-      const map: Record<string, any> = {};
-      snapshot.forEach((doc) => {
-        const data = doc.data();
-        map[data.roleName?.toLowerCase()] = {
-          roleName: data.roleName,
-          permissions: data.permissions || {},
-        };
-      });
-      setRolesMap(map);
-    });
-
-    return () => unsubscribeRoles();
-  }, []);
-
-
-  useEffect(() => {
-    const unsubscribeUsers = onSnapshot(
-      collection(db, "Users"),
-      (snapshot) => {
-        const list = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-        setRawUsers(list);
-        dispatch(setLoading(false));
-      },
-      (error) => {
-        console.error("Error fetching users:", error);
-        dispatch(setLoading(false));
-      }
-    );
-
-    return () => unsubscribeUsers();
-  }, [dispatch]);
-
-
-  const users = useMemo(() => {
-    return rawUsers.map((data) => {
-      const createdAt =
-        data.createdAt instanceof Timestamp
-          ? data.createdAt.toDate().toLocaleDateString()
-          : "-";
-
-      const roleKey = data.role?.toLowerCase();
-      const roleInfo = rolesMap[roleKey] || { roleName: "No Role", permissions: {} };
-
-      return {
-        uid: data.id,
-        firstName: data.firstName || "",
-        lastName: data.lastName || "",
-        email: data.email || "",
-        phone: data.phone || "",
-        role: data.role || "",
-        createdAt,
-        roleName: roleInfo.roleName,
-        permissions: roleInfo.permissions,
-        profilePhoto: data.profilePhoto || "",
-      };
-    });
-  }, [rawUsers, rolesMap]);
-
-  return { users, loading };
+  return { users: data || [], loading: isLoading, error: isError };
 };
 
 export default useUsers;

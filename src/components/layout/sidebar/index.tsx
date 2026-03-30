@@ -24,9 +24,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
     (state: RootState) => state.userPermissions,
   );
 
-  if (!username) return null;
-
-  if (!username) return null;
+  // if (!username) return null;
 
   return (
     <div
@@ -53,31 +51,31 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
               Dashboard
             </SidebarItem>
 
-            {canPermit(permissions, "user", "canView") && (
-              <SidebarItem
-                onClick={() => navigate("/users")}
-                icon={HiUser}
-                className={`cursor-pointer !bg-white text-black dark:text-black
+            {/* {canPermit(permissions, "user", "canView") && ( */}
+            <SidebarItem
+              onClick={() => navigate("/users")}
+              icon={HiUser}
+              className={`cursor-pointer !bg-white text-black dark:text-black
               hover:!bg-gray-100 hover:text-blue-700 ${
                 location.pathname === "/users" ? "bg-blue-50 text-blue-600" : ""
               }`}
-              >
-                Users
-              </SidebarItem>
-            )}
+            >
+              Users
+            </SidebarItem>
+            {/* )} */}
 
-            {canPermit(permissions, "role", "canView") && (
-              <SidebarItem
-                onClick={() => navigate("/role")}
-                icon={HiShoppingBag}
-                className={`cursor-pointer !bg-white text-black dark:text-black
+            {/* {canPermit(permissions, "role", "canView") && ( */}
+            <SidebarItem
+              onClick={() => navigate("/role")}
+              icon={HiShoppingBag}
+              className={`cursor-pointer !bg-white text-black dark:text-black
               hover:!bg-gray-100 hover:text-blue-700 ${
                 location.pathname === "/role" ? "bg-white-50 " : ""
               }`}
-              >
-                Role
-              </SidebarItem>
-            )}
+            >
+              Role
+            </SidebarItem>
+            {/* )} */}
 
             <SidebarItem
               onClick={() => navigate("/chat")}

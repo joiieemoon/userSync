@@ -3,18 +3,18 @@ import { useDispatch } from "react-redux";
 
 import { updateUser } from "../../redux/slice/auth-slice/index.ts";
 import type { AppDispatch } from "../../redux/store/index.ts";
-import { usersService } from "../../services/firebase/user-services";
+import { usersService } from "../../services/rest-api-services/user-services/index.ts";
 import { toast } from "react-toastify";
 import { FileInput } from "flowbite-react";
 import "react-toastify/dist/ReactToastify.css";
-
+import { useMutation } from "@tanstack/react-query";
 import { updateProfileValidationSchema } from "../../utils/validations/validation-schema/index.ts";
 
 import { Formik, Form } from "formik";
 import avatar from "../../../public/avtar.png";
 import CommonModal from "../../components/common/common-modal/index.tsx";
 import FormController from "../../components/common/input/form-controller/index.tsx";
-import type { updateProfileProps } from "../../types/interfaces/index.ts";
+import type { updateProfileProps, User } from "../../types/interfaces/index.ts";
 
 export default function UpdateProfileModal({
   user,
@@ -43,35 +43,43 @@ export default function UpdateProfileModal({
       reader.onerror = reject;
     });
   };
-
-  const handleSubmit = useCallback(
-    async (values: typeof initialValues) => {
-      try {
-        let photoURL = values.profilePhoto;
-
-        if (selectedFile) {
-          photoURL = await convertToBase64(selectedFile);
-        }
-
-        const updatedData = {
-          ...values,
-          profilePhoto: photoURL,
-        };
-
-        await usersService.update(user.uid, updatedData);
-        dispatch(updateUser(updatedData));
-
-        toast.success("Profile updated successfully!", {
-          position: "top-center",
-        });
-
-        onClose();
-      } catch (error) {
-        toast.error("Failed to update profile");
-      }
+  const mutation = useMutation({
+    mutationFn: async (updatedData: typeof initialValues) => {
+      return usersService.updateUser(user.uid, updatedData);
     },
-    [onClose, selectedFile, dispatch, user.uid],
-  );
+    onSuccess: (data: User) => {
+      dispatch(updateUser(data));
+      toast.success("Profile updated successfully!", {
+        position: "top-center",
+      });
+      onClose();
+    },
+    onError: (error: any) => {
+      toast.error("Failed to update profile", { position: "top-center" });
+    },
+  }); 
+
+  const handleSubmit = async (values: typeof initialValues) => {
+    try {
+      let photoURL = values.profilePhoto;
+
+      if (selectedFile) {
+        photoURL = await convertToBase64(selectedFile);
+      }
+
+      const updatedData = {
+        ...values,
+        profilePhoto: photoURL,
+      };
+
+      mutation.mutate(updatedData);
+    } catch (error) {
+      toast.error("Failed to update profile during file conversion", {
+        position: "top-center",
+      });
+    }
+  };
+
   return (
     <Formik
       initialValues={initialValues}

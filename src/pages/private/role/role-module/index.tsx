@@ -18,8 +18,8 @@ import {
   setLoading,
   setShowModal,
 } from "../../../../redux/slice/ui-slice";
-import { roleService } from "../../../../services/firebase/role-services/index.ts";
-import { usersService } from "../../../../services/firebase/user-services/index.ts";
+import { roleService } from "../../../../services/rest-api-services/role-services/index.ts";
+import { usersService } from "../../../../services/rest-api-services/user-services/index.ts";
 import { UsersSkeleton } from "../../../../components/feature/role-management/edit-role/index.tsx";
 const RoleModule = () => {
   const [roles, setRoles] = useState<any[]>([]);
@@ -42,7 +42,7 @@ const RoleModule = () => {
         setfetch(false);
         dispatch(setLoading(true));
         const roleList = await roleService.getAll();
-
+        
         setRoles(roleList);
       } catch (error) {
         console.error(error);
@@ -77,7 +77,7 @@ const RoleModule = () => {
       const usersSnap = await roleService.getUsersByRole(roleName);
 
       const updatePromises = usersSnap.map((userDoc) =>
-        usersService.update(userDoc.id, { role: "No Role" }),
+        usersService.updateUser(userDoc.id, { role: "No Role" }),
       );
 
       await Promise.all(updatePromises);
@@ -98,7 +98,7 @@ const RoleModule = () => {
         <Spinner color="success" />
       </div>
     );
-
+  console.log("can add ", canPermit(currentUserPermissions, "role", "canAdd"));
   return (
     <div className="p-6 mt-10 rounded-2xl shadow-2xl">
       <h2 className="text-3xl font-semibold mb-4">Roles</h2>
@@ -108,7 +108,11 @@ const RoleModule = () => {
           value={searchTerm}
           onChange={(e) => setsearchTerm(e.target.value)}
         />
-
+        <Commanbutton
+          label="Add Role"
+          icon={<MdAdd className="text-xl" />}
+          onClick={() => navigation("/role/add")}
+        />
         {canPermit(currentUserPermissions, "role", "canAdd") && (
           <Commanbutton
             label="Add Role"
@@ -135,7 +139,7 @@ const RoleModule = () => {
               </th>
               <th className="p-3 text-left">Created At</th>
               <th className="p-3 text-left">Permissions</th>
-
+              <th className="p-3 text-left">Action</th>
               {(canPermit(currentUserPermissions, "role", "canEdit") ||
                 canPermit(currentUserPermissions, "role", "canDelete")) && (
                 <th className="p-3 text-left">Action</th>
@@ -152,7 +156,10 @@ const RoleModule = () => {
                   <td className="p-2">{(currentPage - 1) * 5 + index + 1}</td>
                   <td className="p-2">{role.roleName}</td>
                   <td className="p-2">
-                    {role.createdAt ? role.createdAt.toLocaleDateString() : "-"}
+                    {/* {role.createdAt ? role.createdAt.toLocaleDateString() : "-"} */}
+                    {role.createdAt
+                      ? new Date(role.createdAt).toLocaleString()
+                      : "-"}
                   </td>
                   <td className="p-2">
                     {Object.values(role.permissions || {}).reduce(
@@ -160,6 +167,24 @@ const RoleModule = () => {
                         count + Object.values(module).filter(Boolean).length,
                       0,
                     )}
+                  </td>
+
+                  <td>
+                    <div className="flex">
+                      <MdOutlineEdit
+                        className="text-2xl cursor-pointer"
+                        onClick={() => navigation(`/role/edit/${role.id}`)}
+                      />
+                      <MdDeleteOutline
+                        className="text-2xl cursor-pointer"
+                        onClick={() => {
+                          setRoleToDelete(role);
+                          dispatch(
+                            setShowModal({ type: "delete", value: true }),
+                          );
+                        }}
+                      />
+                    </div>{" "}
                   </td>
                   {(canPermit(currentUserPermissions, "role", "canEdit") ||
                     canPermit(currentUserPermissions, "role", "canDelete")) && (
@@ -170,6 +195,7 @@ const RoleModule = () => {
                           onClick={() => navigation(`/role/edit/${role.id}`)}
                         />
                       )}
+
                       {canPermit(
                         currentUserPermissions,
                         "role",

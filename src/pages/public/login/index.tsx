@@ -20,8 +20,8 @@ import { setUserPermissions } from "../../../redux/slice/permission-slice/index.
 import Commanbutton from "../../../components/common/button";
 import FormController from "../../../components/common/input/form-controller/index.tsx";
 
-import { usersService } from "../../../services/firebase/user-services/index.ts";
-import { roleService } from "../../../services/firebase/role-services/index.ts";
+import { usersService } from "../../../services/rest-api-services/user-services/index.ts";
+import { roleService } from "../../../services/rest-api-services/role-services/index.ts";
 
 export const Login = () => {
   const [showForgot, setShowForgot] = useState(false);

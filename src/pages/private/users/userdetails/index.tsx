@@ -16,12 +16,9 @@ import DeleteItemModal from "../../../../components/common/common-delete-modal";
 import { usePagination } from "../../../../hooks/use-pagination";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../../../../redux/store/index.ts";
-import {
-  setSortOrder,
-  setShowModal,
-} from "../../../../redux/slice/ui-slice";
+import { setSortOrder, setShowModal } from "../../../../redux/slice/ui-slice";
 export default function UsersDetails() {
-  const { users, loading } = useUsers();
+  const { users } = useUsers();
 
   const [userToDelete, setUserToDelete] = useState<any>(null);
   const [userToEdit, setUserToEdit] = useState<any>(null);
@@ -62,7 +59,7 @@ export default function UsersDetails() {
   const toggleSortOrder = () => {
     dispatch(setSortOrder(sortOrder === "asc" ? "desc" : "asc"));
   };
-  if (loading) return <Spinnerring />;
+  // if (loading) return <Spinnerring />;
   return (
     <div className="p-6 mt-10 rounded-2xl shadow-2xl">
       <h2 className="text-3xl mt-2 font-semibold mb-2">All Users</h2>
@@ -85,12 +82,20 @@ export default function UsersDetails() {
             }}
           />
         )}
+
+        <Commanbutton
+          label="Add User"
+          icon={<MdAdd className="text-xl" />}
+          onClick={() => {
+            setUserToEdit(null);
+            dispatch(setShowModal({ type: "add", value: true }));
+          }}
+        />
       </div>
 
       <table className="w-full bg-white rounded-xl shadow-2xl">
         <thead className="bg-amber-300">
           <tr>
-            
             <th className="p-3 text-left">#</th>
             <th
               className="p-3 text-left flex cursor-pointer items-center"
@@ -151,6 +156,14 @@ export default function UsersDetails() {
                     )}
                   </td>
                 )}
+
+                <MdOutlineEdit
+                  className="cursor-pointer text-2xl"
+                  onClick={() => {
+                    setUserToEdit(u);
+                    dispatch(setShowModal({ type: "edit", value: true }));
+                  }}
+                />
               </tr>
             ))
           ) : (
@@ -183,6 +196,7 @@ export default function UsersDetails() {
 
       <UserModal
         isOpen={showModal.add || showModal.edit}
+        // isOpen={true}
         onClose={() => {
           dispatch(setShowModal({ type: "add", value: false }));
           dispatch(setShowModal({ type: "edit", value: false }));

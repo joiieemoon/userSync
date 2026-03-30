@@ -8,7 +8,6 @@ export default function PersonalDetails({ user, onEdit }: PersonalDetails) {
         <h3 className="text-lg font-semibold text-gray-900 ">
           Personal Information
         </h3>
-       
       </div>
 
       {/* Grid */}

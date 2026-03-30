@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { auth } from "../../services/firebase/firebase.ts";
-import { serverTimestamp } from "firebase/firestore";
 
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { Formik, Form } from "formik";
@@ -22,8 +21,8 @@ import { getAuth } from "firebase/auth";
 
 import FormController from "../../components/common/input/form-controller/index.tsx";
 import type { UserModalProps } from "../../types/interfaces";
-import { usersService } from "../../services/firebase/user-services/index.ts";
-import { roleService } from "../../services/firebase/role-services";
+import { usersService } from "../../services/rest-api-services/user-services/index.ts";
+import { roleService } from "../../services/rest-api-services/role-services/index.ts";
 
 const UserModal: React.FC<UserModalProps> = ({
   isOpen,
@@ -73,7 +72,7 @@ const UserModal: React.FC<UserModalProps> = ({
     async (values: typeof initialValues, { setSubmitting }: any) => {
       try {
         if (isEditMode && user) {
-          await usersService.update(user.uid, values);
+          await usersService.updateUser(user.uid, values);
           toast.success("User updated successfully", {
             position: "top-center",
           });
@@ -90,7 +89,8 @@ const UserModal: React.FC<UserModalProps> = ({
           const newUser = userCredential.user;
 
           if (newUser) {
-            await usersService.create(newUser.uid, {
+            await usersService.addUser({
+              id: newUser.uid,
               email: values.email,
               firstName: values.firstName,
               lastName: values.lastName,
@@ -99,7 +99,7 @@ const UserModal: React.FC<UserModalProps> = ({
               bio: "",
               role: values.role || "new user",
               profilePhoto: "",
-              createdAt: serverTimestamp(),
+              createdAt: new Date().toISOString(),
             });
           }
 

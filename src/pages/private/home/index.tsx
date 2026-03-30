@@ -7,7 +7,7 @@ import Dashboard from "../dashboard/index.tsx";
 import Spinnerring from "../../../components/common/spinner/index.tsx";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleSidebar } from "../../../redux/slice/ui-slice";
-import { usersService } from "../../../services/firebase/user-services/index.ts";
+import { usersService } from "../../../services/rest-api-services/user-services/index.ts";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -20,8 +20,8 @@ const Home = () => {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
-        const userData = await usersService.getById(user.uid);
-        setUserDetails(userData);
+        // const userData = await usersService.getById(user.uid);
+        // setUserDetails(userData);
       }
     });
 

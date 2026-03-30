@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../../../../redux/store";
 import { setLoading } from "../../../../redux/slice/ui-slice";
 const modulesList = ["user", "role", "chat", "campaign"];
-import { roleService } from "../../../../services/firebase/role-services";
+import { roleService } from "../../../../services/rest-api-services/role-services";
 const permissionKeys: (keyof Permissions)[] = [
   "canView",
   "canAdd",

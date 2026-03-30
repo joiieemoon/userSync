@@ -22,7 +22,7 @@ const authSlice = createSlice({
     },
     updateUser: (state, action: PayloadAction<Partial<User>>) => {
       if (state.user) {
-        // Update only the fields provided in action.payload
+     
         state.user = { ...state.user, ...action.payload };
       }
     },

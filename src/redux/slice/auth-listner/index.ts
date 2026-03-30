@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { setUser, clearUser } from "../auth-slice/index.ts";
 
 import type { AppDispatch } from "../../store/index.ts";
-import { usersService } from "../../../services/firebase/user-services/index.ts";
+import { usersService } from "../../../services/rest-api-services/user-services/index.ts";
 
 export const useAuthListener = () => {
   const dispatch = useDispatch<AppDispatch>();
