@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Virtuoso } from "react-virtuoso";
-import {  onSnapshot  } from "firebase/firestore";
+import { onSnapshot } from "firebase/firestore";
 
 import avtar from "../../../../../public/avtar.png";
 import SearchBar from "../../../common/search-bar";

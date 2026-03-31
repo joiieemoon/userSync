@@ -1,21 +1,43 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import type { RootState } from "../../../redux/store";
+import React, { useState, useEffect } from "react";
+// import { useSelector } from "react-redux";
+// import type { RootState } from "../../../redux/store";
 import Navbar from "../../../components/layout/navbar";
 import { Sidebarmain } from "../../../components/layout/sidebar";
 import dashboardBg from "../../../../public/dashboardbg.jpg";
 import avatar from "../../../../public/avtar.png";
 import useTitle from "../../../hooks/use-title";
 import Spinnerring from "../../../components/common/spinner";
+
+import { usersService } from "../../../services/rest-api-services/user-services";
+
+import withAdminAccess from "../../../components/hoc/with-admin";
 const Dashboard = () => {
-  const user = useSelector((state: RootState) => state.auth.user);
+
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+
+  const [user, setUser] = useState<any | null>(null);
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userData = await usersService.getUserById(2);
+        setUser(userData);
+      } catch (err) {
+        console.error("Failed to fetch user", err);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  // console.log(user);
   useTitle("User Sync-Dashboard");
+
   if (!user) {
     return <Spinnerring />;
   }
+
   return (
     <>
       <div className="relative flex min-h-screen overflow-hidden !bg-white">
@@ -63,7 +85,12 @@ const Dashboard = () => {
                 <h2 className="text-4xl md:text-5xl font-bold text-black mb-3">
                   Welcome, {user?.firstName || "User"}
                 </h2>
-
+                <p className="text-black/70 text-lg ">
+                  ROLE: {user?.role || "No bio available"} id:{user?.id || ""}
+                </p>
+                <p className="text-black/70 text-lg mb-10">
+                  Email: {user?.email || "N/A"}
+                </p>
                 <p className="text-black/70 text-lg mb-10">
                   Manage your profile, explore users, and control your dashboard
                   from here.
@@ -77,4 +104,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default withAdminAccess(Dashboard);

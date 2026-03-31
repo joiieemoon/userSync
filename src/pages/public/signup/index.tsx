@@ -40,6 +40,7 @@ export const Signup = () => {
               const user = userCreadential.user;
 
               if (user) {
+                // await usersService.create(user.uid, {
                 await usersService.create(user.uid, {
                   email: user.email,
                   firstName: values.firstName,

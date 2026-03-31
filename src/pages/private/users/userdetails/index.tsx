@@ -1,9 +1,9 @@
 "use client";
-
+import { toast } from "react-toastify";
 import useUsers from "../../../../hooks/use-user";
 import { MdAdd } from "react-icons/md";
 import { FaSortAlphaDown, FaSortAlphaDownAlt } from "react-icons/fa";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { auth } from "../../../../services/firebase/firebase.ts";
 import SearchBar from "../../../../components/common/search-bar/index.tsx";
 import Commanbutton from "../../../../components/common/button";
@@ -17,6 +17,8 @@ import { usePagination } from "../../../../hooks/use-pagination";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../../../../redux/store/index.ts";
 import { setSortOrder, setShowModal } from "../../../../redux/slice/ui-slice";
+import { usersService } from "../../../../services/rest-api-services/user-services/index.ts";
+import useDebounce from "../../../../hooks/use-debouce/index.tsx";
 export default function UsersDetails() {
   const { users } = useUsers();
 
@@ -24,7 +26,15 @@ export default function UsersDetails() {
   const [userToEdit, setUserToEdit] = useState<any>(null);
 
   const [searchTerm, setsearchTerm] = useState();
+  const debouncedSearchTerm = useDebounce(searchTerm || "", 500);
+  useEffect(() => {
+    if (debouncedSearchTerm && debouncedSearchTerm.length > 0) {
+      console.log("this is debouced search", debouncedSearchTerm);
+    }
+  }, [debouncedSearchTerm]);
   const dispatch = useDispatch();
+  const searchForPagination =
+    debouncedSearchTerm.length >= 2 ? debouncedSearchTerm : "";
   const { sortOrder, showModal } = useSelector(
     (state: RootState) => state.ui.users,
   );
@@ -41,7 +51,7 @@ export default function UsersDetails() {
     () => users.filter((u) => u.uid !== currentUid),
     [users, currentUid],
   );
-
+  // console.log(searchTerm);
   const {
     currentData: currentUsers,
     currentPage,
@@ -50,12 +60,24 @@ export default function UsersDetails() {
   } = usePagination({
     data: baseUsers,
     itemsPerPage: 10,
-    searchTerm,
+    searchTerm: searchForPagination,
     sortField: "firstName",
     sortOrder,
     filterFields: ["firstName", "email", "phone", "role"],
   });
-
+  const removeUser = async (id) => {
+    try {
+      await usersService.deleteUser(id);
+      toast.success("User deleted successfully fromm delettee", {
+        position: "top-center",
+      });
+      setUserToDelete(null);
+      dispatch(setShowModal({ type: "delete", value: false }));
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      toast.error("Failed to delete user", { position: "top-center" });
+    }
+  };
   const toggleSortOrder = () => {
     dispatch(setSortOrder(sortOrder === "asc" ? "desc" : "asc"));
   };
@@ -68,7 +90,7 @@ export default function UsersDetails() {
         <SearchBar
           value={searchTerm}
           onChange={(e) => setsearchTerm(e.target.value)}
-          placeholder="Search users..."
+          placeholder="Search users...(min 2 characters)"
           name="searchUser"
         />
 
@@ -112,6 +134,7 @@ export default function UsersDetails() {
             <th className="p-3 text-left">Phone</th>
             <th className="p-3 text-left">Role</th>
             <th className="p-3 text-left">Created At</th>
+            <th className="p-3 text-left">Action</th>
             {(canPermit(currentUserPermissions, "user", "canEdit") ||
               canPermit(currentUserPermissions, "user", "canDelete")) && (
               <th className="p-3 text-left">Action</th>
@@ -148,6 +171,7 @@ export default function UsersDetails() {
                         className="cursor-pointer text-2xl"
                         onClick={() => {
                           setUserToDelete(u);
+                          removeUser(u.uid);
                           dispatch(
                             setShowModal({ type: "delete", value: true }),
                           );
@@ -156,14 +180,22 @@ export default function UsersDetails() {
                     )}
                   </td>
                 )}
-
-                <MdOutlineEdit
-                  className="cursor-pointer text-2xl"
-                  onClick={() => {
-                    setUserToEdit(u);
-                    dispatch(setShowModal({ type: "edit", value: true }));
-                  }}
-                />
+                <div className="flex items-center justify-start gap-2 mt-2">
+                  <MdOutlineEdit
+                    className="cursor-pointer text-2xl"
+                    onClick={() => {
+                      setUserToEdit(u);
+                      dispatch(setShowModal({ type: "edit", value: true }));
+                    }}
+                  />
+                  <MdDeleteOutline
+                    className="cursor-pointer text-2xl"
+                    onClick={() => {
+                      setUserToDelete(u);
+                      dispatch(setShowModal({ type: "delete", value: true }));
+                    }}
+                  />
+                </div>
               </tr>
             ))
           ) : (
@@ -186,9 +218,12 @@ export default function UsersDetails() {
 
       <DeleteItemModal
         isOpen={showModal.delete}
-        onClose={() => {
-          setUserToDelete(null);
-          dispatch(setShowModal({ type: "delete", value: false }));
+        onClose={async () => {
+          if (userToDelete) {
+            await usersService.deleteUser(userToDelete.uid);
+            setUserToDelete(null);
+            dispatch(setShowModal({ type: "delete", value: false }));
+          }
         }}
         collectionName="Users"
         item={userToDelete ? { id: userToDelete.uid } : null}

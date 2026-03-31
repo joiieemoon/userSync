@@ -1,6 +1,5 @@
 import React, { ReactNode } from "react";
-
-
+import ReactDom from "react-dom"; 
 import Commanbutton from "../button";
 import type { CommonModalProps } from "../../../types/interfaces/index.ts";
 
@@ -19,7 +18,7 @@ const CommonModal: React.FC<CommonModalProps> = ({
 }) => {
   if (!isOpen) return null;
 
-  return (
+  return ReactDom.createPortal(
     <div
       className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
       onClick={onClose}
@@ -57,7 +56,8 @@ const CommonModal: React.FC<CommonModalProps> = ({
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.getElementById("portal-root")!,
   );
 };
 

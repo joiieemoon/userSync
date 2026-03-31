@@ -28,7 +28,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const userData = await usersService.getUserById(user?.id || 36);
+        const userData = await usersService.getUserById(2);
         setUser(userData);
       } catch (err) {
         console.error("Failed to fetch user", err);

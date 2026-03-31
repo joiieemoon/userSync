@@ -21,6 +21,7 @@ import {
 import { roleService } from "../../../../services/rest-api-services/role-services/index.ts";
 import { usersService } from "../../../../services/rest-api-services/user-services/index.ts";
 import { UsersSkeleton } from "../../../../components/feature/role-management/edit-role/index.tsx";
+import useDebounce from "../../../../hooks/use-debouce/index.tsx";
 const RoleModule = () => {
   const [roles, setRoles] = useState<any[]>([]);
   const [roleToDelete, setRoleToDelete] = useState<any | null>(null);
@@ -29,6 +30,13 @@ const RoleModule = () => {
   const navigation = useNavigate();
   const dispatch = useDispatch();
 
+  const debouncedSearchTerm = useDebounce(searchTerm || "", 500);
+  useEffect(() => {
+    if (debouncedSearchTerm && debouncedSearchTerm.length > 2) {
+      console.log("this is debouced search", debouncedSearchTerm);
+      setsearchTerm(debouncedSearchTerm);
+    }
+  }, [debouncedSearchTerm]);
   const currentUserPermissions = useSelector(
     (state: RootState) => state.userPermissions.permissions,
   );
@@ -42,7 +50,7 @@ const RoleModule = () => {
         setfetch(false);
         dispatch(setLoading(true));
         const roleList = await roleService.getAll();
-        
+
         setRoles(roleList);
       } catch (error) {
         console.error(error);
@@ -63,7 +71,7 @@ const RoleModule = () => {
   } = usePagination({
     data: roles,
     itemsPerPage: 10,
-    searchTerm,
+    searchTerm: debouncedSearchTerm,
     sortField: "roleName",
     sortOrder,
     filterFields: ["roleName"],
@@ -98,7 +106,7 @@ const RoleModule = () => {
         <Spinner color="success" />
       </div>
     );
-  console.log("can add ", canPermit(currentUserPermissions, "role", "canAdd"));
+
   return (
     <div className="p-6 mt-10 rounded-2xl shadow-2xl">
       <h2 className="text-3xl font-semibold mb-4">Roles</h2>

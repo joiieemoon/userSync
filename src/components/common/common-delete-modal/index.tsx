@@ -22,11 +22,13 @@ const DeleteItemModal: React.FC<DeleteItemModalProps> = ({
 
     try {
       setdisable(true);
+
       await deleteDoc(doc(db, collectionName, item.id));
 
       toast.success(`Item deleted successfully`, {
         position: "top-center",
       });
+
       onDelete && onDelete();
       onClose();
     } catch (error) {

@@ -71,11 +71,13 @@ const UserModal: React.FC<UserModalProps> = ({
   const handleSubmit = useCallback(
     async (values: typeof initialValues, { setSubmitting }: any) => {
       try {
+        setIsDisable(true);
         if (isEditMode && user) {
           await usersService.updateUser(user.uid, values);
           toast.success("User updated successfully", {
             position: "top-center",
           });
+          setIsDisable(false);
         } else {
           const secondaryApp = initializeApp(auth.app.options, "Secondary");
           const secondaryAuth = getAuth(secondaryApp);
@@ -171,7 +173,7 @@ const UserModal: React.FC<UserModalProps> = ({
                       onBlur={handleBlur}
                       error={!!touched.role && !!errors.role}
                       errorMessage={errors.role}
-                      disabled={user?.role === "admin"}
+                      // disabled={user?.role === "admin"}
                     >
                       <option value="">Select Role</option>
                       {roles

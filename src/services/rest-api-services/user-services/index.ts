@@ -49,7 +49,7 @@ export const usersService = {
     },
 
     updateUser: async (id: string, updatedData: User) => {
-        const response = await apiClient.put(`${ENDPOINTS.USER}/${36}`, updatedData);
+        const response = await apiClient.put(`${ENDPOINTS.USER}/${2}`, updatedData);
         return response.data;
     },
 

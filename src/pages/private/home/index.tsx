@@ -7,8 +7,8 @@ import Dashboard from "../dashboard/index.tsx";
 import Spinnerring from "../../../components/common/spinner/index.tsx";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleSidebar } from "../../../redux/slice/ui-slice";
-import { usersService } from "../../../services/rest-api-services/user-services/index.ts";
 
+import { usersService } from "../../../services/rest-api-services/user-services/index.ts";
 const Home = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -20,8 +20,9 @@ const Home = () => {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
-        // const userData = await usersService.getById(user.uid);
-        // setUserDetails(userData);
+        const userData = await usersService.getById("36");
+        console.log("user data", userData);
+        setUserDetails(userData);
       }
     });
 
@@ -43,14 +44,14 @@ const Home = () => {
 
       <div className="flex-1 min-h-screen bg-gray-100 dark:bg-gray-200">
         <Navbar toggleSidebar={handleToggleSidebar} user={userDetails} />
-
+        <Dashboard />
         {userDetails ? (
           <Dashboard />
         ) : (
           <div className="">
-            <h1 className="text-center h-screen mt-7 p-7 flex justify-center items-center border  text-5xl">
+            {/* <h1 className="text-center h-screen mt-7 p-7 flex justify-center items-center border  text-5xl">
               <Spinnerring />
-            </h1>
+            </h1> */}
           </div>
         )}
       </div>
