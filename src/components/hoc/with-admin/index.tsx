@@ -36,7 +36,7 @@ const withAdminAccess = (WrappedComponent: React.ComponentType) => {
 
             <p className="mt-2  px-3 py-1 rounded bg-red-500">this is admin access only</p>
 
-            <div className="flex w-full justify-evenly mt-3 m-3">
+            <div className="flex w-full justify-evenly mt-2 m-3">
               <Button
                 label={`Normal Clicks: ${normalCount}`}
                 variant="secondary"

@@ -11,27 +11,33 @@ import Spinnerring from "../../../components/common/spinner";
 import { usersService } from "../../../services/rest-api-services/user-services";
 
 import withAdminAccess from "../../../components/hoc/with-admin";
+import BarChart from "../../../components/charts";
+import ApexChart from "../../../components/charts";
+import users from "../users";
 const Dashboard = () => {
-
-
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   const [user, setUser] = useState<any | null>(null);
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const userData = await usersService.getUserById(2);
         setUser(userData);
       } catch (err) {
-        console.error("Failed to fetch user", err);
+        console.error(err);
+      } finally {
+        // setLoading(false);
+        // return userData;
+        console.log("fail to load");
       }
     };
 
     fetchUser();
   }, []);
 
-  // console.log(user);
+  console.log(user);
   useTitle("User Sync-Dashboard");
 
   if (!user) {
@@ -58,7 +64,7 @@ const Dashboard = () => {
 
         {!user ? (
           <div className="flex items-center justify-center min-h-screen ">
-            <Spinner aria-label="Loading profile" />
+            <Spinnerring aria-label="Loading profile" />
           </div>
         ) : (
           <div
@@ -97,6 +103,15 @@ const Dashboard = () => {
                 </p>
               </div>
             </main>
+            {/* <div className="border h-20 flex justify-center ">
+              <div className="flex justify-center items-center border h-full w-30 bg-amber-300 rounded-2xl text-2xl ">
+                <h1>Total users{users.length}</h1>
+              </div>
+            </div> */}
+            {/* <BarChart /> */}
+            <div className="flex justify-center flex-wrap gap-6 p-6">
+              <ApexChart />
+            </div>
           </div>
         )}
       </div>
@@ -104,4 +119,5 @@ const Dashboard = () => {
   );
 };
 
-export default withAdminAccess(Dashboard);
+// export default withAdminAccess(Dashboard);
+export default Dashboard;

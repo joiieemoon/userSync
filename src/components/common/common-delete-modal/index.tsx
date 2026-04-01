@@ -28,7 +28,7 @@ const DeleteItemModal: React.FC<DeleteItemModalProps> = ({
       toast.success(`Item deleted successfully`, {
         position: "top-center",
       });
-
+setdisable(false);
       onDelete && onDelete();
       onClose();
     } catch (error) {
