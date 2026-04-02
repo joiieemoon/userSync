@@ -1,10 +1,11 @@
 import ReactApexChart from "react-apexcharts";
-import React from "react";
+// import React from "react";
 import useUsers from "../../hooks/use-user";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setLoading } from "../../redux/slice/ui-slice";
 import { roleService } from "../../services/rest-api-services/role-services/index.ts";
+import HighchartDemo from "./highchars.tsx";
 
 const ApexChart = () => {
   const months = [
@@ -191,8 +192,6 @@ const ApexChart = () => {
   };
   const options = {
     chart: {
-      id: 1,
-      group: "syncsingle",
       height: 350,
       type: "line",
       background: "#ffffff",
@@ -605,6 +604,7 @@ const ApexChart = () => {
       options: rangeOptions,
       series: rangeSeries,
     },
+  
     {
       title: "Box Plot (dummy data)",
       type: "boxPlot",
@@ -661,6 +661,7 @@ const ApexChart = () => {
           <h2 className="flex justify-center text-2xl">{chart.type} Chart</h2>
         </div>
       ))}
+      <HighchartDemo />
     </>
   );
 };
