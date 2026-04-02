@@ -10,8 +10,8 @@ import Spinnerring from "../../../components/common/spinner";
 
 import { usersService } from "../../../services/rest-api-services/user-services";
 
-import withAdminAccess from "../../../components/hoc/with-admin";
-import BarChart from "../../../components/charts";
+// import withAdminAccess from "../../../components/hoc/with-admin";
+
 import ApexChart from "../../../components/charts";
 import users from "../users";
 const Dashboard = () => {
@@ -103,11 +103,7 @@ const Dashboard = () => {
                 </p>
               </div>
             </main>
-            {/* <div className="border h-20 flex justify-center ">
-              <div className="flex justify-center items-center border h-full w-30 bg-amber-300 rounded-2xl text-2xl ">
-                <h1>Total users{users.length}</h1>
-              </div>
-            </div> */}
+           
             {/* <BarChart /> */}
             <div className="flex justify-center flex-wrap gap-6 p-6">
               <ApexChart />
