@@ -1,6 +1,9 @@
 import { useState, useEffect, useMemo } from "react";
 import type { UsePaginationProps } from "../../types/interfaces";
 
+
+
+
 export function usePagination<T>({
     data,
     itemsPerPage = 10,
@@ -10,6 +13,7 @@ export function usePagination<T>({
     filterFields = [],
 }: UsePaginationProps<T>) {
     const [currentPage, setCurrentPage] = useState(1);
+    const [sortedData, setSortedData] = useState<T[]>(data);
 
 
     useEffect(() => {
@@ -30,17 +34,25 @@ export function usePagination<T>({
     }, [data, searchTerm, filterFields]);
 
 
-    const sortedData = useMemo(() => {
-        if (!sortField) return filteredData;
 
-        return [...filteredData].sort((a, b) => {
-            const valA = String(a[sortField] || "").toLowerCase();
-            const valB = String(b[sortField] || "").toLowerCase();
+    useEffect(() => {
+        if (!sortField) {
+            setSortedData(filteredData);
+            return;
+        }
 
-            return sortOrder === "asc"
-                ? valA.localeCompare(valB)
-                : valB.localeCompare(valA);
-        });
+        const worker = new Worker(
+            new URL("../../workers/sortedata-worker", import.meta.url)
+        );
+
+        worker.postMessage({ data: filteredData, sortField, sortOrder });
+
+        worker.onmessage = (e) => {
+            setSortedData(e.data);
+            worker.terminate();
+        };
+
+        return () => worker.terminate();
     }, [filteredData, sortField, sortOrder]);
 
 

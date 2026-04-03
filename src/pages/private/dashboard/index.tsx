@@ -13,13 +13,20 @@ import { usersService } from "../../../services/rest-api-services/user-services"
 // import withAdminAccess from "../../../components/hoc/with-admin";
 
 import ApexChart from "../../../components/charts";
-import users from "../users";
+import WorkerApp from "../../../workers/worker-comp";
+// import users from "../users";
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   const [user, setUser] = useState<any | null>(null);
-
+  const worker = new Worker(
+    new URL("../../../workers/example-worker", import.meta.url),
+  );
+  worker.postMessage(10);
+worker.onmessage=function (event){
+  console.log(event.data);
+}
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -101,9 +108,10 @@ const Dashboard = () => {
                   Manage your profile, explore users, and control your dashboard
                   from here.
                 </p>
+                <WorkerApp />
               </div>
             </main>
-           
+
             {/* <BarChart /> */}
             <div className="flex justify-center flex-wrap gap-6 p-6">
               <ApexChart />
