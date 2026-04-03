@@ -1,4 +1,3 @@
-// charts-config.ts
 import {
   months,
   monthyear,
@@ -7,6 +6,8 @@ import {
   Languages,
   LanguagePercentages,
   LanguageColors,
+  progressSeries,
+  rolecreatedvalues,
 } from "../static-val";
 
 export const chartsConfig = (users: any[] = [], roles: any[] = []) => {
@@ -23,14 +24,14 @@ export const chartsConfig = (users: any[] = [], roles: any[] = []) => {
   );
   const GroupSeries = [
     { name: "Users Created", data: counts },
-    { name: "Roles Created", data: [4, 6, 2, 8, 5, 3, 7, 4, 6, 2, 8, 5] },
+    { name: "Roles Created", data: rolecreatedvalues },
   ];
   const mixedSeries = [
     { name: "Users Created", type: "column", data: counts },
     {
       name: "Roles Created",
       type: "line",
-      data: [4, 6, 2, 8, 5, 3, 7, 4, 6, 2, 8, 5],
+      data: rolecreatedvalues,
     },
     {
       name: "Growth",
@@ -44,7 +45,7 @@ export const chartsConfig = (users: any[] = [], roles: any[] = []) => {
       data: months.map((m, i) => ({ x: m, y: twovalues[i] })),
     },
   ];
- const Languageseries = LanguagePercentages.map((p, i) => ({
+  const Languageseries = LanguagePercentages.map((p, i) => ({
     name: Languages[i],
     data: [p],
   }));
@@ -67,23 +68,16 @@ export const chartsConfig = (users: any[] = [], roles: any[] = []) => {
   const candleSeries = [
     { data: months.map((m, i) => ({ x: m, y: values[i] })) },
   ];
+  const bubbleData = counts.map((count, index) => ({
+    x: index + 1,
+    y: count,
+    z: rolecreatedvalues[index] || 0,
+  }));
   const bubbleSeries = [
     {
       name: "User Growth",
-      data: [
-        { x: 1, y: 20, z: 15 },
-        { x: 2, y: 35, z: 25 },
-        { x: 3, y: 25, z: 18 },
-        { x: 4, y: 50, z: 40 },
-        { x: 5, y: 45, z: 35 },
-        { x: 6, y: 60, z: 50 },
-        { x: 7, y: 70, z: 60 },
-        { x: 8, y: 65, z: 55 },
-        { x: 9, y: 80, z: 70 },
-        { x: 10, y: 75, z: 65 },
-        { x: 11, y: 90, z: 80 },
-        { x: 12, y: 100, z: 90 },
-      ],
+
+      data: bubbleData,
     },
   ];
   const scatterSeries = [
@@ -280,13 +274,13 @@ export const chartsConfig = (users: any[] = [], roles: any[] = []) => {
       title: "Polar Area(dummy data)",
       type: "polarArea",
       options: pieoptions,
-      series: [20, 30, 40, 50, 60, 70, 80],
+      series: rolecreatedvalues,
     },
     {
-      title: "Radial Bar",
+      title: "Radial Bar (dummy data)",
       type: "radialBar",
       options: pieoptions,
-      series: pieSeries,
+      series: [20, 30, 40, 50],
     },
     { title: "Radar Chart", type: "radar", options, series },
     {
@@ -299,7 +293,7 @@ export const chartsConfig = (users: any[] = [], roles: any[] = []) => {
       title: "Progress (dummy data)",
       type: "bar",
       options: progressOptions,
-      series: progressOptions.series,
+      series: progressSeries,
     },
     {
       title: "Range Area (dummy data)",

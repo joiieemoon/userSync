@@ -51,3 +51,10 @@ export const Languageseries = LanguagePercentages.map((percent, index) => ({
     data: [percent],
 }));
 export const LanguageColors = ["#3178C6", "#264de4", "#E34F26"];
+export const progressSeries = [
+    {
+        name: "Progress",
+        data: [70, 90, 50],
+    },
+];
+export const rolecreatedvalues = [4, 6, 2, 8, 5, 3, 7, 4, 6, 2, 8, 5];
