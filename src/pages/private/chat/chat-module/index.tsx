@@ -1,7 +1,6 @@
-
 import { auth } from "../../../../services/firebase/firebase";
 import dashboardBg from "../../../../../public/dashboardbg.jpg";
-import useUsers from "../../../../hooks/use-user";
+// import useUsers from "../../../../hooks/use-user";
 import useChats from "../../../../hooks/use-chat";
 
 import Conversation from "../../../../components/feature/chat-components/conversation";
@@ -9,14 +8,44 @@ import ChatSidebar from "../../../../components/feature/chat-components/chat-sid
 import Spinnerring from "../../../../components/common/spinner";
 import NoConversation from "../../../../components/feature/chat-components/no-conversation";
 import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 import {
   clearSelectedUsers,
   setSelectedUsers,
 } from "../../../../redux/slice/ui-slice";
 import type { RootState } from "../../../../redux/store";
+import { usersService } from "../../../../services/rest-api-services/user-services";
+
+import { socket } from "../../../../services/socket";
+
 const ChatModule = () => {
   const currentUid = auth.currentUser?.uid || "";
-  const { users, loading } = useUsers();
+  // const { users, loading } = useUsers();
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setloading] = useState(true);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const data = await usersService.getAlluser();
+        setUsers(data);
+        setloading(false);
+      } catch (error) {
+        console.error("fail to fetch users", error);
+      }
+    };
+    fetchUser();
+  }, []);
+
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log("Connected:", socket.id);
+    });
+
+    return () => {
+      socket.off("connect");
+    };
+  }, []);
   const { chats, existingChatUserIds } = useChats();
 
   const dispatch = useDispatch();

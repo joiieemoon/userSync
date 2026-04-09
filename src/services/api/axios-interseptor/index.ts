@@ -17,7 +17,7 @@ axiosInstance.interceptors.request.use(
         }
 
         config.headers.Authorization = `Bearer ${dummyToken}`;
-        console.log("Request sent with token:", config.url);
+        // console.log("Request sent with token:", config.url);
        
         return config;
     },

@@ -7,7 +7,7 @@ import dashboardBg from "../../../../public/dashboardbg.jpg";
 import avatar from "../../../../public/avtar.png";
 import useTitle from "../../../hooks/use-title";
 import Spinnerring from "../../../components/common/spinner";
-
+import { socket } from "../../../services/socket";
 import { usersService } from "../../../services/rest-api-services/user-services";
 
 // import withAdminAccess from "../../../components/hoc/with-admin";
@@ -24,9 +24,9 @@ const Dashboard = () => {
     new URL("../../../workers/example-worker", import.meta.url),
   );
   worker.postMessage(10);
-worker.onmessage=function (event){
-  console.log(event.data);
-}
+  worker.onmessage = function (event) {
+    console.log(event.data);
+  };
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -44,9 +44,11 @@ worker.onmessage=function (event){
     fetchUser();
   }, []);
 
-  console.log(user);
+  // console.log(user);
   useTitle("User Sync-Dashboard");
-
+  socket.on("connect", () => {
+    console.log("Connected:", socket.id);
+  });
   if (!user) {
     return <Spinnerring />;
   }

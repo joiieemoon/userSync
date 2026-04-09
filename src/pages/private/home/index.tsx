@@ -21,7 +21,7 @@ const Home = () => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
         const userData = await usersService.getById("36");
-        console.log("user data", userData);
+        // console.log("user data", userData);
         setUserDetails(userData);
       }
     });

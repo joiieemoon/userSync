@@ -1,31 +1,31 @@
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 import { IoSend } from "react-icons/io5";
 import { Avatar } from "flowbite-react";
 import { IoMdClose } from "react-icons/io";
 import FormController from "../../../common/input/form-controller";
-
 import Commonbutton from "../../../common/button";
-import { createConversation } from "../../../../services/create-conversation";
-import { sendMessage } from "../../../../services/create-conversation";
+import {
+  createConversation,
+  sendMessage,
+} from "../../../../services/create-conversation";
 import useMessages from "../../../../hooks/use-message";
 import { Virtuoso } from "react-virtuoso";
-
 import type { conversationProps } from "../../../../types/interfaces";
 import useChats from "../../../../hooks/use-chat";
-
 import Spinnerring from "../../../common/spinner";
 import AddNewSpaceModal from "../../../../modals/add-newchat-modal";
-
+import { socket } from "../../../../services/socket";
 const Conversation: React.FC<conversationProps> = ({
   selectedUser,
   onClose,
   currentUid,
 }) => {
   const [chatId, setChatId] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showAddMemberModal, setShowAddMemberModal] = useState(false);
 
   const { messages, markAsSeen } = useMessages(chatId, currentUid);
   const { chats, loading, getCreatedBy } = useChats();
-  const [searchTerm, setSearchTerm] = useState();
 
   useEffect(() => {
     if (!selectedUser) return;
@@ -53,6 +53,12 @@ const Conversation: React.FC<conversationProps> = ({
   }, [selectedUser, chats]);
 
   useEffect(() => {
+    if (chatId) {
+      socket.emit("joinConversation", chatId);
+    }
+  }, [chatId]);
+
+  useEffect(() => {
     if (!chatId || !currentUid || messages.length === 0) return;
     markAsSeen();
   }, [chatId, messages, currentUid]);
@@ -61,14 +67,34 @@ const Conversation: React.FC<conversationProps> = ({
     if (!selectedUser || !searchTerm.trim()) return;
 
     if (chatId) {
-      await sendMessage(chatId, currentUid, searchTerm);
+      socket.emit("sendMessage", {
+        conversationId: chatId,
+        message: {
+          text: searchTerm,
+          senderId: currentUid,
+          seenBy: [],
+        },
+      });
+
     } else {
+   
+
       const result = await createConversation(
         currentUid,
         selectedUser.uid,
         searchTerm,
       );
+
       setChatId(result.chatId);
+
+      socket.emit("sendMessage", {
+        conversationId: result.chatId,
+        message: {
+          text: searchTerm,
+          senderId: currentUid,
+          seenBy: [],
+        },
+      });
     }
 
     setSearchTerm("");
@@ -76,7 +102,9 @@ const Conversation: React.FC<conversationProps> = ({
 
   const formatTime = (timestamp: any) => {
     if (!timestamp) return "";
-    const date = timestamp.toDate();
+
+    const date = timestamp?.toDate?.() || new Date(timestamp);
+
     return date.toLocaleTimeString([], {
       day: "2-digit",
       month: "short",
@@ -87,10 +115,11 @@ const Conversation: React.FC<conversationProps> = ({
   if (loading) {
     return (
       <div className="border">
-        <Spinnerring />;
+        <Spinnerring />
       </div>
     );
   }
+
   return (
     <div className="flex flex-col bg-gray-100 h-[calc(100vh-130px)] relative">
       <header className="flex items-center p-4 shadow w-full bg-white z-10">
@@ -99,7 +128,7 @@ const Conversation: React.FC<conversationProps> = ({
           img={!selectedUser?.isGroup ? selectedUser?.profilePhoto : undefined}
           rounded
         />
-        <div className="ml-3 flex justify-between w-full  items-center">
+        <div className="ml-3 flex justify-between w-full items-center">
           <div>
             <h2 className="font-semibold text-lg">{selectedUser?.firstName}</h2>
             {!selectedUser?.isGroup && (
@@ -108,18 +137,17 @@ const Conversation: React.FC<conversationProps> = ({
               </p>
             )}
           </div>
+
           <div className="flex">
-            <div className="cursor-pointer  mr-3.5">
+            <div className="cursor-pointer mr-3.5">
               {selectedUser?.isGroup &&
                 chatId &&
                 getCreatedBy(chatId) === currentUid && (
-                  <>
-                    <AddNewSpaceModal
-                      addmode="add"
-                      chatId={chatId}
-                      onClose={() => setShowAddMemberModal(false)}
-                    />
-                  </>
+                  <AddNewSpaceModal
+                    addmode="add"
+                    chatId={chatId}
+                    onClose={() => setShowAddMemberModal(false)}
+                  />
                 )}
             </div>
 
@@ -142,11 +170,12 @@ const Conversation: React.FC<conversationProps> = ({
             followOutput="auto"
             itemContent={(index, msg) => (
               <div
-                className={`flex mt-2 ${msg.senderId === currentUid ? "justify-end" : "justify-start"}`}
+                className={`flex mt-2 ${
+                  msg.senderId === currentUid ? "justify-end" : "justify-start"
+                }`}
               >
                 <div className="inline-flex flex-col max-w-[70%]">
                   <span className="text-gray-400 text-[10px] mb-1">
-                    {}
                     {formatTime(msg.createdAt)}
                   </span>
                   <div
@@ -187,7 +216,7 @@ const Conversation: React.FC<conversationProps> = ({
             label=""
             icon={<IoSend />}
             onClick={handleSendMessage}
-            disabled={searchTerm === ""}
+            disabled={!searchTerm.trim()}
           />
         </div>
       </footer>

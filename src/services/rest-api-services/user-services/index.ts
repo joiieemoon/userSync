@@ -1,4 +1,4 @@
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, getDocs, collection } from "firebase/firestore";
 import type { User } from "../../../types/interfaces";
 import { apiClient } from "../../api/api-client";
 import { ENDPOINTS } from "../../api/end-point";
@@ -18,6 +18,21 @@ export const usersService = {
         }
     },
 
+    getAlluser: async () => {
+        try {
+            const querySnapshot = await getDocs(collection(db, "Users"));
+
+            const users = querySnapshot.docs.map(doc => ({
+                uid: doc.id,
+                ...doc.data(),
+            }));
+
+            return users;
+        } catch (error) {
+            console.error("fail to get firebase users", error);
+            return [];
+        }
+    },
 
     getUsers: async () => {
         try {

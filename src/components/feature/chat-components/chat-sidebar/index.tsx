@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Virtuoso } from "react-virtuoso";
-import { onSnapshot } from "firebase/firestore";
+
 
 import avtar from "../../../../../public/avtar.png";
 import SearchBar from "../../../common/search-bar";
@@ -16,8 +16,8 @@ import {
   AccordionTitle,
   AccordionContent,
 } from "flowbite-react";
-import { chatService } from "../../../../services/firebase/chat-services";
 
+import { socket } from "../../../../services/socket";
 const ChatSidebar: React.FC<ChatSidebarProps> = ({
   chats,
   users,
@@ -28,29 +28,34 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
   const [searchTerm, setSearchTerm] = useState("");
   const [unreadCounts, setUnreadCounts] = useState<Record<string, number>>({});
 
+
   useEffect(() => {
-    const unsubscribers: (() => void)[] = [];
 
     chats.forEach((chat) => {
-      const q = chatService.getMessageQuery(chat.id);
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        const unread = snapshot.docs.filter((doc) => {
-          const msg = doc.data() as any;
-          return (
-            msg.senderId !== currentUid &&
-            (!msg.seenBy || !msg.seenBy.includes(currentUid))
-          );
-        }).length;
-
-        setUnreadCounts((prev) => ({ ...prev, [chat.id]: unread }));
-      });
-
-      unsubscribers.push(unsubscribe);
+      socket.emit("joinConversation", chat.id);
     });
 
-    return () => unsubscribers.forEach((unsub) => unsub());
-  }, [chats, currentUid]);
 
+    socket.on("newMessage", (msg) => {
+      if (msg.senderId !== currentUid) {
+        setUnreadCounts((prev) => ({
+          ...prev,
+          [msg.conversationId]: (prev[msg.conversationId] || 0) + 1,
+        }));
+      }
+    });
+
+   
+    socket.on("messagesRead", (userId) => {
+      
+      setUnreadCounts({});
+    });
+
+    return () => {
+      socket.off("newMessage");
+      socket.off("messagesRead");
+    };
+  }, [chats, currentUid]);
   if (loading) return <Spinnerring />;
 
   const directChats = chats.filter((c) => c.type === "private");

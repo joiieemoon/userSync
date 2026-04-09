@@ -9,7 +9,7 @@ import CommonModal from "../../components/common/common-modal";
 
 import { RiChatNewLine } from "react-icons/ri";
 import type { AddNewSpaceModalProps, User } from "../../types/interfaces";
-import useUsers from "../../hooks/use-user";
+// import useUsers from "../../hooks/use-user";
 import useChats from "../../hooks/use-chat";
 import {
   addMembersToGroup,
@@ -26,6 +26,7 @@ import {
   clearSelectedUsers,
 } from "../../redux/slice/ui-slice";
 import type { RootState } from "../../redux/store";
+import { usersService } from "../../services/rest-api-services/user-services";
 
 const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
   onUserSelected,
@@ -33,10 +34,25 @@ const AddNewSpaceModal: React.FC<AddNewSpaceModalProps> = ({
   addmode,
   chatId,
 }) => {
-  const { users } = useUsers();
+  // const { users } = useUsers();
+  const [users, setUsers] = useState<User[]>([]);
+  const [openModal, setOpenModal] = useState(false);  
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const data = await usersService.getAlluser();
+        setUsers(data);
+      } catch (error) {
+        console.error("fail to fetch users", error);
+      }
+    };
+
+    if (openModal) {
+      fetchUsers();
+    }
+  }, [openModal]);
   const { chats, currentUid, existingChatUserIds, loading } = useChats();
 
-  const [openModal, setOpenModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
   const dispatch = useDispatch();

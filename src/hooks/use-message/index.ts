@@ -1,37 +1,26 @@
-
 import { useEffect, useState } from "react";
-import { onSnapshot } from "firebase/firestore";
-
-import { chatService } from "../../services/firebase/chat-services";
-
-
+import { socket } from "../../services/socket";
 
 const useMessages = (
     chatId: string | null,
     currentUid: string | null
-): { messages: Message[]; unreadCount: number; markAsSeen: () => void } => {
+) => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [unreadCount, setUnreadCount] = useState(0);
 
+    // JOIN + FETCH OLD MESSAGES
     useEffect(() => {
-        if (!chatId || !currentUid) {
-            setMessages([]);
-            setUnreadCount(0);
-            return;
-        }
+        if (!chatId) return;
 
+        setMessages([]); // reset on chat change
 
+        socket.emit("joinConversation", chatId);
 
-        const q = chatService.getMessageQuery(chatId);
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-            const msgs = snapshot.docs.map((doc) => ({
-                id: doc.id,
-                ...(doc.data() as Message),
-            }));
+        socket.on("messagesList", (msgs) => {
             setMessages(msgs);
 
             const unread = msgs.filter(
-                (msg) =>
+                (msg: Message) =>
                     msg.senderId !== currentUid &&
                     (!msg.seenBy || !msg.seenBy.includes(currentUid))
             ).length;
@@ -39,20 +28,49 @@ const useMessages = (
             setUnreadCount(unread);
         });
 
-        return () => unsubscribe();
+        return () => {
+            socket.off("messagesList");
+        };
+    }, [chatId]);
+
+    // REAL-TIME NEW MESSAGE
+    useEffect(() => {
+        if (!chatId) return;
+
+        const handleNewMessage = (data: any) => {
+            if (data.conversationId !== chatId) return;
+
+            setMessages((prev) => {
+                const exists = prev.find((m) => m.id === data.id);
+                if (exists) return prev;
+
+                return [...prev, data];
+            });
+
+            if (
+                data.senderId !== currentUid &&
+                (!data.seenBy || !data.seenBy.includes(currentUid))
+            ) {
+                setUnreadCount((prev) => prev + 1);
+            }
+        };
+
+        socket.on("newMessage", handleNewMessage);
+
+        return () => {
+            socket.off("newMessage", handleNewMessage);
+        };
     }, [chatId, currentUid]);
-
-
 
     const markAsSeen = async () => {
         if (!chatId || !currentUid) return;
 
-        const unseenIds = messages
-            .filter(msg => msg.senderId !== currentUid && (!msg.seenBy || !msg.seenBy.includes(currentUid)))
-            .map(msg => msg.id);
-
-        await chatService.markMessagesAsSeen(chatId, unseenIds, currentUid);
+        socket.emit("markAsRead", {
+            conversationId: chatId,
+            userId: currentUid,
+        });
     };
+
     return { messages, unreadCount, markAsSeen };
 };
 
