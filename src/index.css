@@ -1,0 +1,94 @@
+@import "tailwindcss";
+@import "flowbite";
+@tailwind utilities;
+
+input::placeholder {
+  opacity: 0.3;
+}
+:root {
+  color-scheme: light !important;
+}
+/* Force white background on the internal sidebar wrapper */
+.sidebar-bg-white > div:first-child {
+  background-color: white !important;
+}
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hidden {
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+
+[data-testid="flowbite-sidebar-items"] {
+  background-color: white !important;
+}
+
+[data-testid="flowbite-sidebar-items"] > div {
+  background-color: white !important;
+}
+[data-test] .h-full.overflow-y-auto.bg-gray-50 {
+  background-color: white !important;
+}
+
+input {
+  background-color: rgb(226 232 240);
+  border: none;
+  color: black;
+}
+.dark .h-full.overflow-y-auto.bg-gray-50 {
+  background-color: #f9fafb;
+}
+.dark .your-wrapper .h-full.overflow-y-auto {
+  background-color: white !important;
+}
+.overflow-y-auto.overflow-x-hidden {
+  background: white !important;
+}
+/* pagination */
+
+ul > li > button {
+  background-color: #dce1e6 !important;
+  color: #000 !important;
+  border-color: #dce1e6 !important;
+  cursor: pointer;
+}
+
+li[aria-current="page"] > button {
+  background-color: #ffd54f !important;
+  color: rgb(0, 0, 0) !important;
+  border-color: #fad355 !important;
+}
+/* drop */
+/* Force light mode on Flowbite Accordion */
+[data-testid="flowbite-accordion"] {
+  background-color: white !important;
+  color: black !important;
+  outline: none;
+  border: none;
+  focus: none;
+}
+
+[data-testid="flowbite-accordion"] button {
+  background-color: #f3f4f6 !important;
+  color: black !important;
+  outline: none !important;
+  border: none !important;
+}
+[data-testid="flowbite-accordion"] button:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: #f3f4f6 !important;
+}
+[data-testid="flowbite-accordion"] button:hover {
+  background-color: #f3f4f6 !important; /* light hover */
+  outline: none;
+  border: none;
+}
+
+[data-testid="flowbite-accordion-content"] {
+  background-color: white !important;
+  color: black !important;
+  outline: none;
+  border: none;
+}
