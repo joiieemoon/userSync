@@ -5,7 +5,7 @@ import type { RootState } from "../../../../../redux/store";
 import avtar from "../../../../../../public/avtar.png";
 import { MdOutlineEdit } from "react-icons/md";
 import type { ProfileHeaderprops } from "../../../../../types/interfaces";
-
+import * as Sentry from "@sentry/react";
 export default function ProfileHeader({ onEdit }: ProfileHeaderprops) {
   // Get user from Redux
   const user = useSelector((state: RootState) => state.auth.user);
@@ -13,13 +13,24 @@ export default function ProfileHeader({ onEdit }: ProfileHeaderprops) {
   if (!user) return null;
 
   const fullName = `${user.firstName} ${user.lastName}`;
-
+  Sentry.setUser({
+    id: user.uid,
+    user: fullName,
+    email: user?.email,
+  });
+  console.log(fullName);
   return (
     <>
       <h1 className="mt-1 ml-7 text-3xl font-semibold text-gray-900 ">
         My Profile:
       </h1>
-
+      <button
+        onClick={() => {
+          throw Error("this is error to user ");
+        }}
+      >
+        dont click!!!1
+      </button>
       <div
         className="p-6 rounded-2xl shadow-lg flex flex-col sm:flex-row items-center sm:justify-between gap-6
         bg-gradient-to-br from-gray-50 to-gray-100  

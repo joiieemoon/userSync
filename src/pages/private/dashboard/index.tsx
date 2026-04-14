@@ -7,11 +7,9 @@ import avatar from "../../../../public/avtar.png";
 import useTitle from "../../../hooks/use-title";
 import Spinnerring from "../../../components/common/spinner";
 
-
 import { usersService } from "../../../services/rest-api-services/user-services";
-
-
-  import ApexChart from "../../../components/charts";
+import * as Sentry from "@sentry/react";
+import ApexChart from "../../../components/charts";
 import WorkerApp from "../../../workers/worker-comp";
 
 const Dashboard = () => {
@@ -23,6 +21,7 @@ const Dashboard = () => {
     new URL("../../../workers/example-worker", import.meta.url),
   );
   worker.postMessage(10);
+  // Sentry.captureException(new Error("Something broke"));
   worker.onmessage = function (event) {
     console.log(event.data);
   };
@@ -34,15 +33,13 @@ const Dashboard = () => {
       } catch (err) {
         console.error(err);
       } finally {
-        // setLoading(false);
-        // return userData;
         console.log("fail to load");
       }
     };
 
     fetchUser();
   }, []);
-
+  Sentry.setTag("page", "dashboard");
   // console.log(user);
   useTitle("User Sync-Dashboard");
   // socket.on("connect", () => {
@@ -51,7 +48,10 @@ const Dashboard = () => {
   if (!user) {
     return <Spinnerring />;
   }
-
+  Sentry.setUser({
+    user: user?.firstName,
+    // email: user?.email,
+  });
   return (
     <>
       <div className="relative flex min-h-screen overflow-hidden !bg-white">
@@ -63,7 +63,7 @@ const Dashboard = () => {
             opacity: 0.15,
           }}
         />
-
+  
         {/* Sidebar */}
         <Sidebarmain isOpen={isSidebarOpen} />
         <Navbar toggleSidebar={toggleSidebar} />
@@ -95,7 +95,6 @@ const Dashboard = () => {
                     className="w-28 h-28 rounded-full object-cover border-4 border-white/30 shadow-lg"
                   />
                 </div>
-
                 <h2 className="text-4xl md:text-5xl font-bold text-black mb-3">
                   Welcome, {user?.firstName || "User"}
                 </h2>
@@ -109,10 +108,17 @@ const Dashboard = () => {
                   Manage your profile, explore users, and control your dashboard
                   from here.
                 </p>
-                <button onClick={()=>{
-                  throw Error("opppss dont click this its errpr");
-                }} className="bg-red-600">do not click this button</button>
-                <WorkerApp />
+                <button
+                  onClick={() => {
+                    throw Error(
+                      "opppss dont click this its errpr this stoped working ",
+                    );
+                  }}
+                  className="bg-red-600"
+                >
+                  do not click this button
+                </button>
+                {/* <WorkerApp /> */}
               </div>
             </main>
 
