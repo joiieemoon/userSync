@@ -1,6 +1,6 @@
 self.onmessage = function (e) {
     const { data, sortField, sortOrder } = e.data;
-    console.log("sorted as worker");
+   
     if (!sortField) {
         postMessage(data);
         return;

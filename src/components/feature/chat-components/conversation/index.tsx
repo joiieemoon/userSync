@@ -15,6 +15,7 @@ import useChats from "../../../../hooks/use-chat";
 import Spinnerring from "../../../common/spinner";
 import AddNewSpaceModal from "../../../../modals/add-newchat-modal";
 import { socket } from "../../../../services/socket";
+import { useChatSocket } from "../../../../hooks/use-chatsocket";
 const Conversation: React.FC<conversationProps> = ({
   selectedUser,
   onClose,
@@ -26,7 +27,7 @@ const Conversation: React.FC<conversationProps> = ({
 
   const { messages, markAsSeen } = useMessages(chatId, currentUid);
   const { chats, loading, getCreatedBy } = useChats();
-
+  const { isConnected } = useChatSocket(currentUid);
   useEffect(() => {
     if (!selectedUser) return;
 
@@ -75,10 +76,7 @@ const Conversation: React.FC<conversationProps> = ({
           seenBy: [],
         },
       });
-
     } else {
-   
-
       const result = await createConversation(
         currentUid,
         selectedUser.uid,
@@ -136,6 +134,7 @@ const Conversation: React.FC<conversationProps> = ({
                 {selectedUser?.email}
               </p>
             )}
+         
           </div>
 
           <div className="flex">

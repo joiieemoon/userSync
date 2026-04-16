@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Virtuoso } from "react-virtuoso";
 
-
 import avtar from "../../../../../public/avtar.png";
 import SearchBar from "../../../common/search-bar";
 import Spinnerring from "../../../common/spinner";
@@ -17,7 +16,8 @@ import {
   AccordionContent,
 } from "flowbite-react";
 
-import { socket } from "../../../../services/socket";
+import { chatsocket, socket } from "../../../../services/socket";
+
 const ChatSidebar: React.FC<ChatSidebarProps> = ({
   chats,
   users,
@@ -25,16 +25,14 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
   currentUid,
   setSelectedUser,
 }) => {
+  const [onlineUsers, setOnlineUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [unreadCounts, setUnreadCounts] = useState<Record<string, number>>({});
-
-
+ 
   useEffect(() => {
-
     chats.forEach((chat) => {
       socket.emit("joinConversation", chat.id);
     });
-
 
     socket.on("newMessage", (msg) => {
       if (msg.senderId !== currentUid) {
@@ -45,9 +43,10 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
       }
     });
 
-   
+    chatsocket.on("onlineUsers", (users) => {
+      setOnlineUsers(users);
+    });
     socket.on("messagesRead", (userId) => {
-      
       setUnreadCounts({});
     });
 
@@ -81,7 +80,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
         chat.participants?.includes(uid) &&
         chat.participants.includes(currentUid),
     );
-
+  
   return (
     <div className="w-72 bg-gray-100 rounded-2xl shadow flex flex-col ">
       {/* Top bar */}
@@ -108,7 +107,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
                   itemContent={(index, user) => {
                     const chat = getChatForUser(user.uid);
                     const unreadCount = chat ? unreadCounts[chat.id] || 0 : 0;
-
+                    const isUserOnline = onlineUsers.includes(user.uid);
                     return (
                       <div
                         key={user.uid}
@@ -124,10 +123,12 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
                           <span className="font-medium text-gray-900">
                             {user.firstName}
                           </span>
+
                           <span className="text-xs text-gray-500">
                             {user.email}
                           </span>
                         </div>
+
                         {unreadCount > 0 && (
                           <span className="text-xs text-white bg-red-500 px-2 rounded-full">
                             {unreadCount < 11 ? unreadCount : "10+"}
@@ -165,6 +166,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
                   data={groupChats}
                   itemContent={(index, chat) => {
                     const unreadCount = unreadCounts[chat.id] || 0;
+
                     return (
                       <div
                         key={chat.id}
@@ -188,6 +190,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
                             {chat.groupName || "Group"}
                           </span>
                         </div>
+
                         {unreadCount > 0 && (
                           <span className="text-xs text-white bg-red-500 px-2 rounded-full">
                             {unreadCount < 11 ? unreadCount : "10+"}

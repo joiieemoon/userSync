@@ -8,11 +8,11 @@ const useMessages = (
     const [messages, setMessages] = useState<Message[]>([]);
     const [unreadCount, setUnreadCount] = useState(0);
 
-    // JOIN + FETCH OLD MESSAGES
+
     useEffect(() => {
         if (!chatId) return;
 
-        setMessages([]); // reset on chat change
+        setMessages([]); 
 
         socket.emit("joinConversation", chatId);
 

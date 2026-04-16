@@ -1,6 +1,6 @@
 import { auth } from "../../../../services/firebase/firebase";
 import dashboardBg from "../../../../../public/dashboardbg.jpg";
-// import useUsers from "../../../../hooks/use-user";
+
 import useChats from "../../../../hooks/use-chat";
 
 import Conversation from "../../../../components/feature/chat-components/conversation";
@@ -16,14 +16,16 @@ import {
 import type { RootState } from "../../../../redux/store";
 import { usersService } from "../../../../services/rest-api-services/user-services";
 
-import { socket } from "../../../../services/socket";
 
+import { chatsocket } from "../../../../services/socket";
+import { useChatSocket } from "../../../../hooks/use-chatsocket";
 const ChatModule = () => {
   const currentUid = auth.currentUser?.uid || "";
-  // const { users, loading } = useUsers();
+
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setloading] = useState(true);
 
+  const { onlineuserCount } = useChatSocket(currentUid);
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -38,14 +40,13 @@ const ChatModule = () => {
   }, []);
 
   useEffect(() => {
-    socket.on("connect", () => {
-      console.log("Connected:", socket.id);
-    });
+    chatsocket.emit("chat-active", currentUid);
 
     return () => {
-      socket.off("connect");
+      chatsocket.emit("chat-inactive", currentUid);
     };
   }, []);
+
   const { chats, existingChatUserIds } = useChats();
 
   const dispatch = useDispatch();
@@ -56,7 +57,7 @@ const ChatModule = () => {
 
   const selectedUser = selectedUsers[0] || null;
   if (loading) return <Spinnerring />;
-
+  console.log(onlineuserCount);
   return (
     <div className="md:flex h-[calc(100vh-80px)]">
       <ChatSidebar
@@ -69,11 +70,16 @@ const ChatModule = () => {
         existingChatUserIds={existingChatUserIds}
       />
 
-      <main className="relative flex-1 p-6 overflow-auto bg-white rounded-2xl shadow ml-4">
+      <main className="relative flex-1 p-3 overflow-auto bg-white rounded-2xl shadow ml-4">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: `url(${dashboardBg})`, opacity: 0.15 }}
         />
+        <div className="bg-amber-400 flex justify-center">
+          {" "}
+          <div className="t">online user:{onlineuserCount}</div>
+        </div>
+
         {selectedUser ? (
           <Conversation
             currentUid={currentUid}

@@ -24,9 +24,7 @@ const Dashboard = () => {
     new URL("../../../workers/example-worker", import.meta.url),
   );
   worker.postMessage(10);
-  worker.onmessage = function (event) {
-    console.log(event.data);
-  };
+  worker.onmessage = function (event) {};
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -46,9 +44,20 @@ const Dashboard = () => {
 
   // console.log(user);
   useTitle("User Sync-Dashboard");
-  socket.on("connect", () => {
-    console.log("Connected:", socket.id);
-  });
+  useEffect(() => {
+    socket.connect();
+    socket.on("connect", () => {
+      console.log("Connected to dashboard", socket.id);
+    });
+
+    return () => {
+      socket.emit("leaveDashboard", {
+        socketid: socket.id,
+      });
+      socket.off("connect");
+    };
+  }, []);
+
   if (!user) {
     return <Spinnerring />;
   }

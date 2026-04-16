@@ -1,9 +1,11 @@
 import admin from "../../firebase/index.js";
 import { db } from "../../firebase/index.js";
+let onlineUsers = new Set();
 
+let activeChatUsers = new Map();
 export const registerSocketHandlers = (io) => {
     io.on("connection", (socket) => {
-        console.log(" User connected:", socket.id);
+
         socket.on("joinConversation", async (conversationId) => {
             socket.join(conversationId);
 
@@ -66,13 +68,13 @@ export const registerSocketHandlers = (io) => {
                         lastMessageAt: admin.firestore.FieldValue.serverTimestamp(),
                     });
 
-                console.log("Updated last message");
+
             } catch (err) {
                 console.error(" sendMessage error:", err);
             }
         });
 
-       
+
         socket.on("createConversation", async (data, callback) => {
             console.log("createConversation");
 
@@ -94,9 +96,9 @@ export const registerSocketHandlers = (io) => {
             }
         });
 
-        
+
         socket.on("markAsRead", async ({ conversationId, userId }) => {
-            console.log("markAsRead");
+
             try {
                 const ref = db
                     .collection("chats")
@@ -127,9 +129,9 @@ export const registerSocketHandlers = (io) => {
                     await batch.commit();
                 }
 
-                console.log(`${count} messages marked as read`);
 
-               
+
+
                 io.to(conversationId).emit("messagesRead", {
                     conversationId,
                     userId,
@@ -140,9 +142,50 @@ export const registerSocketHandlers = (io) => {
             }
         });
 
-
+        socket.on("leaveDashboard", (soceket) => {
+            console.log("leave dashboard ", soceket);
+        });
         socket.on("disconnect", () => {
             console.log(" User disconnected:", socket.id);
         });
     });
+    io.of("/chat").on("connection", (socket) => {
+        console.log("chat connected:", socket.id);
+        socket.on("chat-active", (data) => {
+            const userId = data.currentUid;
+
+            const count = activeChatUsers.get(userId) || 0;
+            activeChatUsers.set(userId, count + 1);
+
+            io.of("/chat").emit("activeCount", activeChatUsers.size);
+        });
+      
+
+        socket.on("chat-inactive", (data) => {
+            const userId = data.currentUid;
+
+            const count = activeChatUsers.get(userId);
+
+            if (count <= 1) {
+                activeChatUsers.delete(userId);
+            } else {
+                activeChatUsers.set(userId, count - 1);
+            }
+
+            io.of("/chat").emit("activeCount", activeChatUsers.size);
+        });
+        socket.on("disconnect", () => {
+            if (socket.userId) {
+                activeChatUsers.delete(socket.userId);
+
+                io.of("/chat").emit("activeCount", activeChatUsers.size);
+            }
+
+            console.log("chat disconnected:", socket.id);
+        });
+    });
+
+
+
+
 };
