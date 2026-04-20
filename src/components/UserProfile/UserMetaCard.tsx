@@ -1,7 +1,8 @@
 import { useModal } from "../../hooks/useModal";
 import { Modal } from "../ui/modal";
 import Button from "../ui/button/Button";
-import Input from "../common/input/input-fields/InputField.tsx";
+// import Input from "../ui/input/input-fields/InputField";
+import Input from "../ui/input/input-fields/InputField";
 import Label from "../form/Label";
 
 export default function UserMetaCard() {

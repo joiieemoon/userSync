@@ -1,17 +1,15 @@
-import { useState } from "react";
 import { Link } from "react-router";
-import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "../../../../icons";
-// import { CheckCircleIcon } from "../../../../icons";
-// import Label from "../form/Label";
-import Label from "../../../../components/form/Label";
-// import Input from "../form/input/InputField";
-import Input from "../../../../components/common/input/input-fields/InputField";
-// import Checkbox from "../form/input/Checkbox";
-import Checkbox from "../../../../components/form/input/Checkbox";
+import { ChevronLeftIcon } from "../../../../assets/icons";
+
+import { Form, Formik } from "formik";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
+import { signupvalidationSchema } from "../../../../components/ui/input/validation";
+import { signupFields } from "../../../../components/ui/input/input-config";
+import InputController from "../../../../components/ui/input/input-controller";
+import Button from "../../../../components/ui/button/Button";
 
 export default function SignUpForm() {
-  const [showPassword, setShowPassword] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
   return (
     <div className="flex flex-col flex-1 w-full overflow-y-auto lg:w-1/2 no-scrollbar">
       <div className="w-full max-w-md mx-auto mb-5 sm:pt-10">
@@ -39,78 +37,101 @@ export default function SignUpForm() {
                 <div className="w-full border-t border-gray-200 dark:border-gray-800"></div>
               </div>
             </div>
-            <form>
-              <div className="space-y-5">
-                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                  {/* <!-- First Name --> */}
-                  <div className="sm:col-span-1">
-                    <Label>
-                      First Name<span className="text-error-500">*</span>
-                    </Label>
-                    <Input
-                      type="text"
-                      id="fname"
-                      name="fname"
-                      placeholder="Enter your first name"
-                    />
-                  </div>
-                  {/* <!-- Last Name --> */}
-                  <div className="sm:col-span-1">
-                    <Label>
-                      Last Name<span className="text-error-500">*</span>
-                    </Label>
-                    <Input
-                      type="text"
-                      id="lname"
-                      name="lname"
-                      placeholder="Enter your last name"
-                    />
-                  </div>
-                </div>
-                {/* <!-- Email --> */}
-                <div>
-                  <Label>
-                    Email<span className="text-error-500">*</span>
-                  </Label>
-                  <Input
-                    type="email"
-                    id="email"
-                    name="email"
-                    placeholder="Enter your email"
-                  />
-                </div>
-                {/* <!-- Password --> */}
-                <div>
-                  <Label>
-                    Password<span className="text-error-500">*</span>
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      placeholder="Enter your password"
-                      type={showPassword ? "text" : "password"}
-                    />
-                    <span
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
-                    >
-                      {showPassword ? (
-                        <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-                      ) : (
-                        <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-                      )}
-                    </span>
-                  </div>
-                </div>
 
-                {/* <!-- Button --> */}
-                <div>
-                  <button className="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600">
-                    Sign Up
-                  </button>
-                </div>
-              </div>
-            </form>
+            <div className="abosulate">
+              <Formik
+                initialValues={{
+                  email: "",
+                  firstName: "",
+                  lastName: "",
+                  password: "",
+                  username: "",
+                  phone: "",
+                }}
+                validationSchema={signupvalidationSchema}
+                onSubmit={() => console.log("this is submit")}
+              >
+                {({
+                  values,
+                  touched,
+                  errors,
+                  isSubmitting,
+                  handleBlur,
+                  handleChange,
+                  setFieldValue,
+                  setFieldTouched,
+                }) => (
+                  <Form>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {signupFields.map((field) => {
+                        const isHalf =
+                          field.name === "firstName" ||
+                          field.name === "lastName" ||
+                          field.name === "username";
+                        // field.name === "phone";
 
+                        return (
+                          <div
+                            key={field.name}
+                            className={isHalf ? "" : "sm:col-span-2"}
+                          >
+                            <InputController
+                              control="input"
+                              label={field.label}
+                              name={field.name}
+                              value={values[field.name as keyof typeof values]}
+                              type={field.type}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              placeholder={field.placeholder}
+                              disabled={isSubmitting}
+                              error={
+                                !!(
+                                  errors[field.name as keyof typeof errors] &&
+                                  touched[field.name as keyof typeof touched]
+                                )
+                              }
+                              errorMessage={
+                                errors[
+                                  field.name as keyof typeof errors
+                                ] as string
+                              }
+                            />
+                          </div>
+                        );
+                      })}
+                      <div>
+                        <label htmlFor="" className="text-sm">Phone</label>
+                        <div
+                          className={`mt-4 w-full rounded-lg border ${
+                            touched.phone && errors.phone
+                              ? "border-red-500"
+                              : "border-gray-300"
+                          }`}
+                        >
+                          <PhoneInput
+                            country={"in"}
+                            value={values.phone}
+                            onChange={(phone) => setFieldValue("phone", phone)}
+                            onBlur={() => setFieldTouched("phone", true)}
+                            inputClass="!w-full !border-0 !text-sm"
+                          />
+                        </div>
+                        {touched.phone && errors.phone && (
+                          <p className="text-xs text-red-500 mt-1">
+                            {errors.phone}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    <Button className="w-full mt-5" size="sm" type="submit">
+                      Sign Up
+                    </Button>
+                  </Form>
+                )}
+              </Formik>
+            </div>
             <div className="mt-5">
               <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
                 Already have an account? {""}

@@ -19,4 +19,15 @@ export interface InputProps {
     hint?: string;
     rows?: number;
     as?: string;
+    label?: string;
+    onBlur?: React.FocusEventHandler<HTMLInputElement>;
+    errorMessage?:string;
 }
+export interface FormField {
+    email?: string,
+    name?: string,
+    label?: string,
+    type?: "text" | "area" | "password" | "" | string,
+    placeholder?: string,
+
+} 

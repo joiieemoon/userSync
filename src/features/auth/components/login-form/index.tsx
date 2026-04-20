@@ -1,19 +1,14 @@
 import { useState } from "react";
 import { Link } from "react-router";
-import {
-  ChevronLeftIcon,
-  EyeCloseIcon,
-  EyeIcon,
-} from "../../../../icons/index.ts";
-
-import Label from "../../../../components/form/Label.tsx";
-
-import Input from "../../../../components/common/input/input-fields/InputField.tsx";
+import { Formik, Form } from "formik";
+import { ChevronLeftIcon } from "../../../../assets/icons/index.ts";
 
 import Button from "../../../../components/ui/button/Button.tsx";
+import { loginFields } from "../../../../components/ui/input/input-config/index.ts";
+import InputController from "../../../../components/ui/input/input-controller/index.tsx";
+import { loginvalidationSchema } from "../../../../components/ui/input/validation/index.ts";
 export default function SignInForm() {
-  const [showPassword, setShowPassword] = useState(false);
-
+  const [isDisable, setisDisable] = useState(false);
   return (
     <div className="flex flex-col flex-1">
       <div className="w-full max-w-md pt-10 mx-auto">
@@ -22,7 +17,7 @@ export default function SignInForm() {
           className="inline-flex items-center text-sm text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
         >
           <ChevronLeftIcon className="size-5" />
-          Back to dashboard
+          Back to dashboard now
         </Link>
       </div>
       <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
@@ -42,50 +37,71 @@ export default function SignInForm() {
                 <div className="w-full border-t border-gray-200 dark:border-gray-800"></div>
               </div>
             </div>
-            <form>
-              <div className="space-y-6">
-                <div>
-                  <Label>
-                    Email <span className="text-error-500">*</span>{" "}
-                  </Label>
-                  <Input placeholder="info@gmail.com" />
-                </div>
-                <div>
-                  <Label>
-                    Password <span className="text-error-500">*</span>{" "}
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Enter your password"
-                    />
-                    <span
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
-                    >
-                      {showPassword ? (
-                        <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-                      ) : (
-                        <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-                      )}
-                    </span>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <Link
-                    to="/reset-password"
-                    className="text-sm text-brand-500 hover:text-brand-600 dark:text-brand-400"
-                  >
-                    Forgot password?
-                  </Link>
-                </div>
-                <div>
-                  <Button className="w-full" size="sm">
-                    Sign in
-                  </Button>
-                </div>
-              </div>
-            </form>
+            {/* <form> */}
+
+            <div className="space-y-6 mt-3">
+              <Formik
+                initialValues={{
+                  email: "",
+                  password: "",
+                }}
+                validationSchema={loginvalidationSchema}
+                onSubmit={() => {
+                  console.log("hello");
+                }}
+              >
+                {({
+                  values,
+                  touched,
+                  errors,
+                  isSubmitting,
+                  handleBlur,
+                  handleChange,
+                }) => (
+                  <Form>
+                    {loginFields.map((field) => (
+                      <div key={field.name} className="relative">
+                        <InputController
+                          control="input"
+                          label={field.label}
+                          id={field.name}
+                          name={field.name}
+                          type={field.type}
+                          value={values[field.name as keyof typeof values]}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          placeholder={field.placeholder}
+                          disabled={isSubmitting || isDisable}
+                          error={
+                            !!(
+                              errors[field.name as keyof typeof errors] &&
+                              touched[field.name as keyof typeof touched]
+                            )
+                          }
+                          errorMessage={
+                            errors[field.name as keyof typeof errors] as string
+                          }
+                        />
+                      </div>
+                    ))}
+                    <div className="flex items-center justify-between mt-2">
+                      <Link
+                        to="/reset-password"
+                        className="text-sm text-brand-500 hover:text-brand-600 dark:text-brand-400 mb-2"
+                      >
+                        Forgot password?
+                      </Link>
+                    </div>
+                    <div>
+                      <Button className="w-full" size="sm" type="submit">
+                        Sign in
+                      </Button>
+                    </div>
+                  </Form>
+                )}
+              </Formik>
+            </div>
+            {/* </form> */}
 
             <div className="mt-5">
               <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">

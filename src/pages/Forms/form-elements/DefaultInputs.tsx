@@ -1,14 +1,9 @@
 import { useState } from "react";
 import ComponentCard from "../../common/ComponentCard";
 import Label from "../Label";
-
-import Input from "../../ui/input/input-fields/InputField.tsx";
+import ../input-element/InputField from "../input/InputField";
 import Select from "../Select";
-import {
-  EyeCloseIcon,
-  EyeIcon,
-  TimeIcon,
-} from "../../../assets/icons/index.ts";
+import { EyeCloseIcon, EyeIcon, TimeIcon } from "../../../icons";
 import DatePicker from "../date-picker.tsx";
 
 export default function DefaultInputs() {

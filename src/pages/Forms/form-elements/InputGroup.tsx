@@ -1,11 +1,9 @@
 import ComponentCard from "../../common/ComponentCard";
 import Label from "../Label";
-// import ../../ui/input-element/input-element-fields/InputField.tsx from "../../ui/input/input-fields/InputField.tsx";
-import Input from "../../ui/input/input-fields/InputField.tsx";
-import { EnvelopeIcon } from "../../../assets/icons/index.ts";
-// import ../group-input-element/PhoneInput from "../group-input/PhoneInput";
-// import InputGroup from "../../../pages/Forms/form-elements/InputGroup.tsx";
-import PhoneInput from "../group-input/PhoneInput.tsx";
+import ../input-element/InputField from "../input/InputField";
+import { EnvelopeIcon } from "../../../icons";
+import ../group-input-element/PhoneInput from "../group-input/PhoneInput";
+
 export default function InputGroup() {
   const countries = [
     { code: "US", label: "+1" },
@@ -40,7 +38,6 @@ export default function InputGroup() {
             placeholder="+1 (555) 000-0000"
             onChange={handlePhoneNumberChange}
           />
-          
         </div>{" "}
         <div>
           <Label>Phone</Label>

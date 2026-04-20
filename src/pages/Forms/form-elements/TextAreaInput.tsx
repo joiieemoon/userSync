@@ -1,9 +1,7 @@
 import { useState } from "react";
 import ComponentCard from "../../common/ComponentCard";
-// import TextArea from "../../ui/input/TextArea";
+import ../input-element/TextArea from "../input/TextArea";
 import Label from "../Label";
-// import ../../ui/input-element/input-element-fields/InputField from "../../ui/input/input-fields/InputField";
-import Input from "../../ui/input/input-fields/InputField";
 
 export default function TextAreaInput() {
   const [message, setMessage] = useState("");
@@ -14,8 +12,7 @@ export default function TextAreaInput() {
         {/* Default TextArea */}
         <div>
           <Label>Description</Label>
-          <Input
-            as="textarea"
+          <TextArea
             value={message}
             onChange={(value) => setMessage(value)}
             rows={6}
@@ -25,14 +22,13 @@ export default function TextAreaInput() {
         {/* Disabled TextArea */}
         <div>
           <Label>Description</Label>
-          <Input as="textarea" rows={6} disabled />
+          <TextArea rows={6} disabled />
         </div>
 
         {/* Error TextArea */}
         <div>
           <Label>Description</Label>
-          <Input
-            as="textarea"
+          <TextArea
             rows={6}
             value={messageTwo}
             error

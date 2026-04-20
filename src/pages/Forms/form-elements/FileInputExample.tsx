@@ -1,7 +1,5 @@
 import ComponentCard from "../../common/ComponentCard";
-// import ../../ui/input-element/input-element-fields/InputField from "../../ui/input/input-fields/InputField";
-import Input from "../../ui/input/input-fields/InputField";
-// import FileInput from "../../ui/input/FileInput";
+import ../input-element/FileInput from "../input/FileInput";
 import Label from "../Label";
 
 export default function FileInputExample() {
@@ -16,7 +14,7 @@ export default function FileInputExample() {
     <ComponentCard title="File Input">
       <div>
         <Label>Upload file</Label>
-        <Input as="file" onChange={handleFileChange} className="custom-class" />
+        <FileInput onChange={handleFileChange} className="custom-class" />
       </div>
     </ComponentCard>
   );

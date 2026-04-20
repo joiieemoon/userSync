@@ -1,8 +1,10 @@
 import { useState } from "react";
-import ComponentCard from "../../common/ComponentCard";
-// import ../../ui/input-element/input-element-fields/InputField.tsx from "../../ui/input/input-fields/InputField.tsx";
-import Input from "../../ui/input/input-fields/InputField";
-import Label from "../Label";
+
+import ComponentCard from "../../../components/common/ComponentCard";
+
+import Input from "../../../components/ui/input/input-fields/InputField";
+
+import Label from "../../../components/form/Label";
 export default function InputStates() {
   const [email, setEmail] = useState("");
   const [emailTwo, setEmailTwo] = useState("");

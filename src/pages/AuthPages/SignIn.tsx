@@ -1,8 +1,5 @@
 import PageMeta from "../../components/common/PageMeta";
 import AuthLayout from "../../features/auth/AuthPageLayout.tsx";
-
-// import ../../features/auth/components/signin-form from "../../features/auth/components/signup-form";
-// import SignInForm from "../../features/auth/components/signup-form/index.tsx";
 import SignInForm from "../../features/auth/components/login-form/index.tsx";
 export default function SignIn() {
   return (
