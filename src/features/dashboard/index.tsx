@@ -1,7 +1,5 @@
-
-import MonthlySalesChart from "../../components/ecommerce/MonthlySalesChart";
-
-import MonthlyTarget from "../../components/ecommerce/MonthlyTarget";
+import MonthlySalesChart from "./components/monthly-sales-chart";
+import MonthlyTarget from "./components/monthly-target";
 
 import PageMeta from "../../components/common/PageMeta";
 
@@ -22,8 +20,6 @@ export default function Home() {
         <div className="col-span-12 xl:col-span-5">
           <MonthlyTarget />
         </div>
-
-      
       </div>
     </>
   );

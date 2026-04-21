@@ -27,7 +27,7 @@ const navItems: NavItem[] = [
   {
     icon: <GridIcon />,
     name: "Dashboard",
-    subItems: [{ name: "Ecommerce", path: "/", pro: false }],
+    subItems: [{ name: "userdesk", path: "/", pro: false }],
   },
 
   {
@@ -36,7 +36,7 @@ const navItems: NavItem[] = [
     path: "/profile",
   },
   {
-    name: "Forms",
+    name: "Testing form",
     icon: <ListIcon />,
     subItems: [{ name: "Form Elements", path: "/form-elements", pro: false }],
   },
@@ -44,8 +44,8 @@ const navItems: NavItem[] = [
     name: "Table",
     icon: <TableIcon />,
     subItems: [
-      { name: "User Tabel ", path: "/basic-tables", pro: false },
-      { name: "Role tabel", path: "/basic-tables", pro: false },
+      { name: "User Tabel ", path: "/user-tables", pro: false },
+      { name: "Role Tabel", path: "/basic-tables", pro: false },
     ],
   },
   {

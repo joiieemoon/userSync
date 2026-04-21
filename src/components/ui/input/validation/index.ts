@@ -8,7 +8,7 @@ export const loginvalidationSchema = yup.object().shape({
     password: yup
         .string()
         .required(errorMessage.required)
-        .min(4, errorMessage.passwordMin)
+        .min(8, errorMessage.passwordMin)
         .matches(/[A-Z]/, errorMessage.passwordUpper)
         .matches(/[a-z]/, errorMessage.passwordLower)
         .matches(/[0-9]/, errorMessage.passwordNumber)
@@ -22,7 +22,7 @@ export const signupvalidationSchema = yup.object().shape({
     password: yup
         .string()
         .required(errorMessage.required)
-        .min(4, errorMessage.passwordMin)
+        .min(8, errorMessage.passwordMin)
         .matches(/[A-Z]/, errorMessage.passwordUpper)
         .matches(/[a-z]/, errorMessage.passwordLower)
         .matches(/[0-9]/, errorMessage.passwordNumber)

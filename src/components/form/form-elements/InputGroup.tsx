@@ -2,7 +2,7 @@ import ComponentCard from "../../common/ComponentCard";
 import Label from "../Label";
 // import ../../ui/input-element/input-element-fields/InputField.tsx from "../../ui/input/input-fields/InputField.tsx";
 import Input from "../../ui/input/input-fields/InputField.tsx";
-import { EnvelopeIcon } from "../../../assets/icons/index.ts";
+import { EnvelopeIcon } from "../../../features/user/index.tsx";
 // import ../group-input-element/PhoneInput from "../group-input/PhoneInput";
 // import InputGroup from "../../../pages/Forms/form-elements/InputGroup.tsx";
 import PhoneInput from "../group-input/PhoneInput.tsx";
@@ -40,7 +40,6 @@ export default function InputGroup() {
             placeholder="+1 (555) 000-0000"
             onChange={handlePhoneNumberChange}
           />
-          
         </div>{" "}
         <div>
           <Label>Phone</Label>

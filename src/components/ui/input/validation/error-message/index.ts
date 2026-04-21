@@ -8,7 +8,7 @@ export const errorMessage = {
     password: "Please enter a  password.",
 
     passwordStrength: "Password must contain uppercase, lowercase, number, special character and be at least 8 characters",
-    passwordMin: "Password must be at least 4 characters long.",
+    passwordMin: "Password must be at least 8 characters long.",
     passwordUpper: "Password must contain at least one uppercase letter.",
     passwordLower: "Password must contain at least one lowercase letter.",
     passwordNumber: "Password must contain at least one number.",

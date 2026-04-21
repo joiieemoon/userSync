@@ -5,11 +5,10 @@ const AppLayout = lazy(() => import("./layout/AppLayout"));
 
 const AuthLayout = lazy(() => import("./features/auth/AuthPageLayout"));
 
-const Home = lazy(() => import("./pages/Dashboard/Home"));
-const UserProfiles = lazy(() => import("./pages/UserProfiles"));
+const Home = lazy(() => import("./features/dashboard"));
+const UserProfiles = lazy(() => import("./features/profile"));
 const Blank = lazy(() => import("./pages/Blank"));
 const FormElements = lazy(() => import("./pages/Forms/FormElements"));
-const BasicTables = lazy(() => import("./pages/Tables/BasicTables"));
 
 const NotFound = lazy(() => import("./pages/OtherPage/NotFound"));
 
@@ -24,7 +23,8 @@ export const router = createBrowserRouter([
       { path: "profile", element: <UserProfiles /> },
       { path: "blank", element: <Blank /> },
       { path: "form-elements", element: <FormElements /> },
-      { path: "basic-tables", element: <BasicTables /> },
+      //   { path: "user-tables", element: <UserTables /> },
+      //   { path: "role-tables", element: <UserTables /> },
     ],
   },
 

@@ -1,14 +1,42 @@
-import { useState } from "react";
 import { Link } from "react-router";
 import { Formik, Form } from "formik";
-import { ChevronLeftIcon } from "../../../../assets/icons/index.ts";
 
+import { ChevronLeftIcon } from "../../../../assets/icons/index.ts";
 import Button from "../../../../components/ui/button/Button.tsx";
+import { useState } from "react";
 import { loginFields } from "../../../../components/ui/input/input-config/index.ts";
+
 import InputController from "../../../../components/ui/input/input-controller/index.tsx";
 import { loginvalidationSchema } from "../../../../components/ui/input/validation/index.ts";
+import { useLogin } from "../../hooks/uselogin/index.tsx";
+import { toast } from "react-toastify";
+import { loginProps } from "../../types/index.tsx";
 export default function SignInForm() {
-  const [isDisable, setisDisable] = useState(false);
+  const { mutate, isPending } = useLogin();
+  const [lock, setLock] = useState(false);
+  const handleSubmit = (values: loginProps) => {
+    if (lock) return;
+
+    setLock(true);
+
+    mutate(values, {
+      onSuccess: () => {
+        toast.success("Login successful");
+
+        setTimeout(() => {
+          setLock(false);
+        }, 5000);
+      },
+
+      onError: () => {
+        toast.error("Invalid credentials");
+
+        setTimeout(() => {
+          setLock(false);
+        }, 5000);
+      },
+    });
+  };
   return (
     <div className="flex flex-col flex-1">
       <div className="w-full max-w-md pt-10 mx-auto">
@@ -46,15 +74,13 @@ export default function SignInForm() {
                   password: "",
                 }}
                 validationSchema={loginvalidationSchema}
-                onSubmit={() => {
-                  console.log("hello");
-                }}
+                onSubmit={handleSubmit}
               >
                 {({
                   values,
                   touched,
                   errors,
-                  isSubmitting,
+
                   handleBlur,
                   handleChange,
                 }) => (
@@ -71,7 +97,7 @@ export default function SignInForm() {
                           onChange={handleChange}
                           onBlur={handleBlur}
                           placeholder={field.placeholder}
-                          disabled={isSubmitting || isDisable}
+                          disabled={lock}
                           error={
                             !!(
                               errors[field.name as keyof typeof errors] &&
@@ -93,8 +119,13 @@ export default function SignInForm() {
                       </Link>
                     </div>
                     <div>
-                      <Button className="w-full" size="sm" type="submit">
-                        Sign in
+                      <Button
+                        className="w-full"
+                        size="sm"
+                        type="submit"
+                        disabled={isPending || lock}
+                      >
+                        {isPending ? "Signing in..." : "Sign in"}
                       </Button>
                     </div>
                   </Form>

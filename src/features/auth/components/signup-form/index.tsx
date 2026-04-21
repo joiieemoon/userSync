@@ -8,8 +8,36 @@ import { signupvalidationSchema } from "../../../../components/ui/input/validati
 import { signupFields } from "../../../../components/ui/input/input-config";
 import InputController from "../../../../components/ui/input/input-controller";
 import Button from "../../../../components/ui/button/Button";
-
+import { useSignUp } from "../../hooks/uselogin";
+import { useState } from "react";
+import { toast } from "react-toastify";
+import { SignupProps } from "../../types";
 export default function SignUpForm() {
+  const [lock, setLock] = useState(false);
+  const { mutate, isPending } = useSignUp();
+  const handleSubmit = (values: SignupProps) => {
+    if (lock) return;
+
+    setLock(true);
+
+    mutate(values, {
+      onSuccess: () => {
+        toast.success("Signup successful");
+
+        setTimeout(() => {
+          setLock(false);
+        }, 5000);
+      },
+
+      onError: () => {
+        toast.error("Fail to Create Account");
+
+        setTimeout(() => {
+          setLock(false);
+        }, 5000);
+      },
+    });
+  };
   return (
     <div className="flex flex-col flex-1 w-full overflow-y-auto lg:w-1/2 no-scrollbar">
       <div className="w-full max-w-md mx-auto mb-5 sm:pt-10">
@@ -49,13 +77,13 @@ export default function SignUpForm() {
                   phone: "",
                 }}
                 validationSchema={signupvalidationSchema}
-                onSubmit={() => console.log("this is submit")}
+                onSubmit={handleSubmit}
               >
                 {({
                   values,
                   touched,
                   errors,
-                  isSubmitting,
+
                   handleBlur,
                   handleChange,
                   setFieldValue,
@@ -84,7 +112,7 @@ export default function SignUpForm() {
                               onChange={handleChange}
                               onBlur={handleBlur}
                               placeholder={field.placeholder}
-                              disabled={isSubmitting}
+                              disabled={lock}
                               error={
                                 !!(
                                   errors[field.name as keyof typeof errors] &&
@@ -101,7 +129,9 @@ export default function SignUpForm() {
                         );
                       })}
                       <div>
-                        <label htmlFor="" className="text-sm">Phone</label>
+                        <label htmlFor="" className="text-sm">
+                          Phone
+                        </label>
                         <div
                           className={`mt-4 w-full rounded-lg border ${
                             touched.phone && errors.phone
@@ -125,8 +155,13 @@ export default function SignUpForm() {
                       </div>
                     </div>
 
-                    <Button className="w-full mt-5" size="sm" type="submit">
-                      Sign Up
+                    <Button
+                      className="w-full mt-5"
+                      size="sm"
+                      type="submit"
+                      disabled={lock}
+                    >
+                      {isPending ? "Sign Up..." : " Sign Up"}
                     </Button>
                   </Form>
                 )}
