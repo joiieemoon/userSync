@@ -8,7 +8,9 @@ import { loginFields } from "../../../../components/ui/input/input-config/index.
 
 import InputController from "../../../../components/ui/input/input-controller/index.tsx";
 import { loginvalidationSchema } from "../../../../components/ui/input/validation/index.ts";
-import { useLogin } from "../../hooks/uselogin/index.tsx";
+
+import { useLogin } from "../../hooks/uselogin-singup/index.tsx";
+
 import { toast } from "react-toastify";
 import { loginProps } from "../../types/index.tsx";
 export default function SignInForm() {
@@ -28,8 +30,11 @@ export default function SignInForm() {
         }, 5000);
       },
 
-      onError: () => {
-        toast.error("Invalid credentials");
+      onError: (error) => {
+        const message =
+          error?.response?.data?.message || "Something went wrong";
+
+        toast.error(message);
 
         setTimeout(() => {
           setLock(false);

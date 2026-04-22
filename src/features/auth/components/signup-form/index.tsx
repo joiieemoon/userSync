@@ -8,14 +8,15 @@ import { signupvalidationSchema } from "../../../../components/ui/input/validati
 import { signupFields } from "../../../../components/ui/input/input-config";
 import InputController from "../../../../components/ui/input/input-controller";
 import Button from "../../../../components/ui/button/Button";
-import { useSignUp } from "../../hooks/uselogin";
+
+import { useSignUp } from "../../hooks/uselogin-singup";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { SignupProps } from "../../types";
 export default function SignUpForm() {
   const [lock, setLock] = useState(false);
   const { mutate, isPending } = useSignUp();
-  const handleSubmit = (values: SignupProps) => {
+  const handleSubmit = (values: SignupProps, { setErrors }) => {
     if (lock) return;
 
     setLock(true);
@@ -29,8 +30,22 @@ export default function SignUpForm() {
         }, 5000);
       },
 
-      onError: () => {
-        toast.error("Fail to Create Account");
+      onError: (error) => {
+        const data = error?.response?.data;
+
+        if (data?.message) {
+          toast.error(data.message);
+        }
+
+        if (data?.errors && Array.isArray(data.errors)) {
+          const formErrors = {};
+
+          data.errors.forEach((err) => {
+            formErrors[err.field] = err.message;
+          });
+
+          setErrors(formErrors);
+        }
 
         setTimeout(() => {
           setLock(false);
@@ -38,6 +53,7 @@ export default function SignUpForm() {
       },
     });
   };
+
   return (
     <div className="flex flex-col flex-1 w-full overflow-y-auto lg:w-1/2 no-scrollbar">
       <div className="w-full max-w-md mx-auto mb-5 sm:pt-10">
@@ -88,6 +104,7 @@ export default function SignUpForm() {
                   handleChange,
                   setFieldValue,
                   setFieldTouched,
+                  setErrors,
                 }) => (
                   <Form>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

@@ -15,14 +15,19 @@ export default function UserInfoCard() {
       label: "Email address",
       value: user?.email,
     },
+
     {
       label: "Phone",
       value: user?.phone ? `+${user.phone}` : "",
     },
     {
-      label: "Role",
-      value: "Team Manager",
+      label: "User Name",
+      value: user?.username,
     },
+    // {
+    //   label: "Role Id ",
+    //   value: user?.roleId,
+    // },
   ];
   return (
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-7 2xl:gap-x-32 mx-10">

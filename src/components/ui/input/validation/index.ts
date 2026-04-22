@@ -33,3 +33,9 @@ export const signupvalidationSchema = yup.object().shape({
 
 })
 
+export const updateprofilevaldiation = yup.object().shape({
+    firstName: yup.string().matches(letterRegx, errorMessage.letter).required(errorMessage.required),
+    lastName: yup.string().matches(letterRegx, errorMessage.letter).required(errorMessage.required),
+    email: yup.string().email(errorMessage.email).required(errorMessage.email),
+    phone: yup.string().required(errorMessage.required),
+})

@@ -22,6 +22,8 @@ export type User = {
   phone?: string;
   firstName: string;
   lastName: string;
+  roleId?: string;
+  roleTitle?: string;
 };
 export type SignupResponse = {
   token: string;
@@ -33,5 +35,6 @@ export type AuthContextType = {
   login: (data: LoginResponse) => void;
   signUp: (data: SignupResponse) => void;
   logout: () => void;
+  updateUser: (user: User) => void;
   isAuthenticated: boolean;
 };

@@ -2,6 +2,7 @@ import PageBreadcrumb from "../../components/common/PageBreadCrumb.tsx";
 import ComponentCard from "../../components/common/ComponentCard.tsx";
 import PageMeta from "../../components/common/PageMeta.tsx";
 import BasicTableOne from "../../components/common/BasicTableOne.tsx";
+import { Modal } from "../../components/ui/modal/index.tsx";
 
 export default function UserTables() {
   return (
@@ -15,6 +16,8 @@ export default function UserTables() {
         <ComponentCard title="User ">
           <BasicTableOne />
         </ComponentCard>
+
+      
       </div>
     </>
   );

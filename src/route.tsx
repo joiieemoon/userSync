@@ -11,7 +11,7 @@ const Blank = lazy(() => import("./pages/Blank"));
 const FormElements = lazy(() => import("./pages/Forms/FormElements"));
 
 const NotFound = lazy(() => import("./pages/OtherPage/NotFound"));
-
+import UserTables from "./features/user";
 const SignUpForm = lazy(() => import("./features/auth/components/signup-form"));
 const SignInForm = lazy(() => import("./features/auth/components/login-form"));
 export const router = createBrowserRouter([
@@ -23,8 +23,8 @@ export const router = createBrowserRouter([
       { path: "profile", element: <UserProfiles /> },
       { path: "blank", element: <Blank /> },
       { path: "form-elements", element: <FormElements /> },
-      //   { path: "user-tables", element: <UserTables /> },
-      //   { path: "role-tables", element: <UserTables /> },
+      { path: "user-tables", element: <UserTables /> },
+      { path: "role-tables", element: <UserTables /> },
     ],
   },
 

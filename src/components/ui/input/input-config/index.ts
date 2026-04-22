@@ -57,3 +57,9 @@ export const editUserFields: FormField[] = [
     { name: "email", label: "Email", type: "email", placeholder: "joiie@yopmail.com" },
     { name: "role", label: "Role", type: "select", placeholder: "" },
 ];
+export  const updateFields = [
+    { name: "firstName", label: "First Name", type: "text" },
+    { name: "lastName", label: "Last Name", type: "text" },
+    { name: "email", label: "Email Address", type: "text" },
+    
+  ];

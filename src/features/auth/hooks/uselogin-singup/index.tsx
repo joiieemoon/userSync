@@ -33,11 +33,11 @@ export const useSignUp = () => {
     onSuccess: (response) => {
       console.log("SIGNUP RESPONSE:", response);
       navigation("/", { replace: true });
-      const { token, user } = response.data.data;
+    
 
       signUp({
-        token,
-        user,
+        token: response.token,
+        user: response.user,
       });
 
       toast.success("User Signup successfully");
