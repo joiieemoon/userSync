@@ -4,7 +4,7 @@ type Props = {
   onPageChange: (page: number) => void;
 };
 
-export default function Pagination({ page, totalPages, onPageChange }: Props) {
+export default function   Pagination({ page, totalPages, onPageChange }: Props) {
   const getPages = () => {
     const pages = [];
 

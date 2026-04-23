@@ -15,7 +15,7 @@ export type SignupProps = {
   phone: string;
 };
 export type User = {
-  id: string;
+  id: number;
   name?: string;
   email: string;
   username?: string;

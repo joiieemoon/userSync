@@ -45,7 +45,7 @@ const navItems: NavItem[] = [
     icon: <TableIcon />,
     subItems: [
       { name: "User Tabel ", path: "/user-tables", pro: false },
-      { name: "Role Tabel", path: "/basic-tables", pro: false },
+      { name: "Role Tabel", path: "/role-tables", pro: false },
     ],
   },
   {

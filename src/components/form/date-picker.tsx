@@ -7,7 +7,7 @@ import Hook = flatpickr.Options.Hook;
 import DateOption = flatpickr.Options.DateOption;
 
 type PropsType = {
-  id: string;
+  id: number;
   mode?: "single" | "multiple" | "range" | "time";
   onChange?: Hook | Hook[];
   defaultDate?: DateOption;

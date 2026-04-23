@@ -3,5 +3,6 @@ export const ENDPOINTS = {
     SIGNUp: "/auth/signup",
     PROFILE: "/profile",
     USERS: "/users",
+    ROLES: "/roles",
 
 };

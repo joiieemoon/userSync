@@ -2,7 +2,7 @@ import { useState } from "react";
 import ComponentCard from "../../common/ComponentCard";
 
 import Label from "../Label";
-
+import Input from "../../ui/input/input-fields/InputField";
 
 export default function TextAreaInput() {
   const [message, setMessage] = useState("");
