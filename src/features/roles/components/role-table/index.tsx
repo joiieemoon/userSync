@@ -24,6 +24,8 @@ import Button from "../../../../components/ui/button/Button";
 // import AddEditUserModal from "../../../user/components/add-edit-modal";
 import { usedeleteRoles, useListRoles } from "../../hooks";
 import AddEditRoleModal from "../add-edit-role";
+import SearchBar from "../../../../components/ui/search";
+import { useModal } from "../../../../hooks/usemodal/index.ts";
 const tableHeaders = [
   "id",
   "Role Name",
@@ -35,21 +37,34 @@ const tableHeaders = [
 
 export default function RoleTable() {
   const [page, setPage] = useState(1);
-
+  const { isOpen } = useModal();
   const [currentid, setcurrentid] = useState<number | undefined>(undefined);
-  const [isOpen, setIsOpen] = useState(false);
-  const [iseditOpen, setiseditOpen] = useState(false);
+  // const [isOpen, setIsOpen] = useState(false);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState<number | undefined>();
+  const [search, setSearch] = useState("");
   const { data, isLoading } = useListRoles({
     page,
     limit: 5,
   });
-  console.log("this is ultimate role", data);
-  console.log(iseditOpen);
 
   const { mutate: deleteuser, isPending } = usedeleteRoles();
 
   return (
     <>
+      <div className="flex justify-between mb-4">
+        <SearchBar value={search} onChange={setSearch} />
+        <Button
+          onClick={() => {
+            setSelectedId(undefined);
+            setIsModalOpen(true);
+          }}
+        >
+          Add Role
+        </Button>
+      </div>
+      <div className="flex justify-end "></div>
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
         <div className="max-w-full overflow-x-auto">
           <Table>
@@ -96,8 +111,12 @@ export default function RoleTable() {
 
                   {/* Status */}
                   <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    <Badge size="sm" color={roles.status ? "success" : "error"}>
-                      {roles.status ? "Active" : "Inactive"}
+                    <Badge
+                      size="sm"
+                      color={roles.status === "active" ? "success" : "error"}
+                    >
+                      {/* {roles.status ? "Active" : "Inactive"}  */}
+                      {roles.status}
                     </Badge>
                   </TableCell>
 
@@ -117,8 +136,8 @@ export default function RoleTable() {
                       <Button
                         type="button"
                         onClick={() => {
-                          setiseditOpen(true);
-                          setcurrentid(roles.id);
+                          setSelectedId(roles.id);
+                          setIsModalOpen(true);
                         }}
                         className="bg-transparent hover:bg-white shadow:none"
                       >
@@ -159,16 +178,14 @@ export default function RoleTable() {
         totalPages={data?.pagination?.totalPages}
         onPageChange={(newPage) => setPage(newPage)}
       />
-      {/* <AddEditUserModal
-        isOpen={iseditOpen}
-        onClose={() => setiseditOpen(false)}
-        id={currentid}
-      /> */}
- 
+
       <AddEditRoleModal
-        isOpen={iseditOpen}
-        onClose={() => setiseditOpen(false)}
-        id={currentid}
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedId(undefined);
+        }}
+        id={selectedId}
       />
       <DeleteModal
         isOpen={isOpen}

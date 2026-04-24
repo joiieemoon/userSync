@@ -5,6 +5,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import {
+  createroleApi,
   deleteroleApi,
   getrolebyidApi,
   listrolesApi,
@@ -53,6 +54,22 @@ export const useGetRoleById = (id: number) => {
     },
     onError: (err: any) => {
       console.log("error get by id", err.message);
+    },
+  });
+};
+
+export const useCreateRole = () => {
+  const queryClient = useQueryClient();
+
+  queryClient.invalidateQueries({ queryKey: ["roles"] });
+
+  return useMutation({
+    mutationFn: (data: any) => createroleApi(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["roles"] });
+    },
+    onError: (err: any) => {
+      console.log("Create role error", err.message);
     },
   });
 };

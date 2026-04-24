@@ -4,23 +4,22 @@ import {
   TableCell,
   TableHeader,
   TableRow,
-} from "../ui/table";
+} from "../../../../components/ui/table";
 
-import Badge from "../ui/badge/Badge";
-import { DeleteIcon, EditIcon } from "../../assets/icons";
+import Badge from "../../../../components/ui/badge/Badge";
+import { DeleteIcon, EditIcon } from "../../../../assets/icons";
 
-import Pagination from "./pagination";
-import {
-  useDeleteUser,
-  useListUsers,
-} from "../../features/user/hooks/uselistusers-api";
+import Pagination from "../../../../components/common/pagination";
+import { useDeleteUser, useListUsers } from "../../hooks/uselistusers-api";
 import { useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
-import { DeleteModal } from "./delete-modal";
-import Button from "../ui/button/Button";
-import AddEditUserModal from "../../features/user/components/add-edit-modal";
+import { DeleteModal } from "../../../../components/common/delete-modal";
+import Button from "../../../../components/ui/button/Button";
+import AddEditUserModal from "../add-edit-modal";
+import SearchBar from "../../../../components/ui/search";
+import { useDebounce } from "../../../../hooks/usedebounce";
 
 const tableHeaders = [
   "User Details",
@@ -32,7 +31,7 @@ const tableHeaders = [
   "Updated At",
   "Action",
 ];
-export default function BasicTableOne() {
+export default function UserTabel() {
   const [page, setPage] = useState(1);
   // const [currentid, setcurrentid] = useState();
   const [currentid, setcurrentid] = useState<number | undefined>(undefined);
@@ -42,13 +41,33 @@ export default function BasicTableOne() {
     page,
     limit: 5,
   });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState<number | undefined>();
 
-  console.log(iseditOpen);
+  const handleAdd = () => {
+    setSelectedId(undefined);
+    setIsModalOpen(true);
+  };
+
+  const handleEdit = (id: number) => {
+    setSelectedId(id);
+    setIsModalOpen(true);
+  };
+
   const { mutate: deleteuser, isPending } = useDeleteUser();
+  const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 1100);
+
   return (
     <>
+      <div className="flex justify-between mb-4">
+        <SearchBar value={search} onChange={setSearch} />
+        <Button onClick={handleAdd}> Add User</Button>
+      </div>
+
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
         <div className="max-w-full overflow-x-auto">
+          <div className="flex justify-end mb-4"></div>
           <Table>
             {/* Table Header */}
 
@@ -65,7 +84,7 @@ export default function BasicTableOne() {
                 ))}
               </TableRow>
             </TableHeader>
-                
+
             {/* Table Body */}
 
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
@@ -123,6 +142,7 @@ export default function BasicTableOne() {
                         onClick={() => {
                           setiseditOpen(true);
                           setcurrentid(user.id);
+                          handleEdit(user.id);
                         }}
                         className="bg-transparent hover:bg-white shadow:none"
                       >
@@ -163,10 +183,14 @@ export default function BasicTableOne() {
         totalPages={data?.pagination?.totalPages}
         onPageChange={(newPage) => setPage(newPage)}
       />
+
       <AddEditUserModal
-        isOpen={iseditOpen}
-        onClose={() => setiseditOpen(false)}
-        id={currentid}
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedId(undefined); // reset after close
+        }}
+        id={selectedId}
       />
       <DeleteModal
         isOpen={isOpen}

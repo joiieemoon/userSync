@@ -15,3 +15,14 @@ export interface User {
   createdAt: string;
   updatedAt: string;
 }
+export type SearchBarProps = {
+  value?: string;
+  onChange?: (value: string) => void;
+  onBlur?: () => void;
+  onFocus?: () => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  onSubmit?: () => void;
+  placeholder?: string;
+  className?: string;
+  disabled?: boolean;
+};

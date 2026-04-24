@@ -5,11 +5,13 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import {
+  createuserApi,
   deleteuserApi,
   getuserbyidApi,
   listusersApi,
   updateuserApi,
 } from "../../services/list-users-api";
+import { User } from "../../types";
 
 export const useGetUserById = (id: number) => {
   return useQuery({
@@ -35,7 +37,7 @@ export const useListUsers = (params) => {
 export const useDeleteUser = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) => deleteuserApi(id),
+    mutationFn: (id: number) => deleteuserApi(id),
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
@@ -56,6 +58,19 @@ export const useUpdateUser = () => {
 
     onError: (err: any) => {
       console.log("Update user error", err.message);
+    },
+  });
+};
+export const useCreateUser = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: User) => createuserApi(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      console.log("user created ");
+    },
+    onError: (err: any) => {
+      console.log("Create user error", err.message);
     },
   });
 };

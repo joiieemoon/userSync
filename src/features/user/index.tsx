@@ -1,8 +1,7 @@
 import PageBreadcrumb from "../../components/common/PageBreadCrumb.tsx";
-import ComponentCard from "../../components/common/ComponentCard.tsx";
-import PageMeta from "../../components/common/PageMeta.tsx";
-import BasicTableOne from "../../components/common/BasicTableOne.tsx";
 
+import PageMeta from "../../components/common/PageMeta.tsx";
+import UserTabel from "./components/user-tabel";
 
 export default function UserTables() {
   return (
@@ -13,11 +12,7 @@ export default function UserTables() {
       />
       <PageBreadcrumb pageTitle="Users" />
       <div className="space-y-6">
-        <ComponentCard title="Users Tabel ">
-          <BasicTableOne />
-        </ComponentCard>
-
-      
+        <UserTabel />
       </div>
     </>
   );

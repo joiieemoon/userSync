@@ -1,4 +1,4 @@
-import { useModal } from "../../../../hooks/useModal";
+import { useModal } from "../../../../hooks/usemodal/index.ts";
 import { Modal } from "../../../../components/ui/modal";
 import Button from "../../../../components/ui/button/Button";
 import "react-phone-input-2/lib/style.css";

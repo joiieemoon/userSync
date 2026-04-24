@@ -3,18 +3,18 @@ import { Link, useLocation } from "react-router";
 
 // Assume these icons are imported from an icon library
 import {
-
   ChevronDownIcon,
   GridIcon,
+  GroupIcon,
   HorizontaLDots,
   ListIcon,
   PageIcon,
-
   PlugInIcon,
   TableIcon,
   UserCircleIcon,
-} from "../assets/icons";
-import { useSidebar } from "../context/SidebarContext";
+  UserIcon,
+} from "../../assets/icons";
+import { useSidebar } from "../../context/SidebarContext";
 
 type NavItem = {
   name: string;
@@ -27,42 +27,35 @@ const navItems: NavItem[] = [
   {
     icon: <GridIcon />,
     name: "Dashboard",
-    subItems: [{ name: "userdesk", path: "/", pro: false }],
+    path: "/",
   },
 
   {
     icon: <UserCircleIcon />,
-    name: "User Profile",
-    path: "/profile",
+    name: "Users",
+    path: "/user-tables",
   },
   {
-    name: "Testing form",
-    icon: <ListIcon />,
-    subItems: [{ name: "Form Elements", path: "/form-elements", pro: false }],
+    icon: <GroupIcon />,
+    name: "Roles",
+    path: "/role-tables",
   },
-  {
-    name: "Table",
-    icon: <TableIcon />,
-    subItems: [
-      { name: "User Tabel ", path: "/user-tables", pro: false },
-      { name: "Role Tabel", path: "/role-tables", pro: false },
-    ],
-  },
-  {
-    name: "Pages",
-    icon: <PageIcon />,
-    subItems: [{ name: "Blank Page", path: "/blank", pro: false }],
-  },
+
+  // {
+  //   name: "Table",
+  //   icon: <TableIcon />,
+  //   subItems: [
+  //     { name: "User Tabel ", path: "/user-tables", pro: false },
+  //     { name: "Role Tabel", path: "/role-tables", pro: false },
+  //   ],
+  // },
 ];
 
 const othersItems: NavItem[] = [
   {
-    icon: <PlugInIcon />,
-    name: "Authentication",
-    subItems: [
-      { name: "Sign In", path: "/signin", pro: false },
-      { name: "Sign Up", path: "/signup", pro: false },
-    ],
+    icon: <UserCircleIcon />,
+    name: "User Profile",
+    path: "/profile",
   },
 ];
 
