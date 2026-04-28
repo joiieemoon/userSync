@@ -4,5 +4,5 @@ export const ENDPOINTS = {
     PROFILE: "/profile",
     USERS: "/users",
     ROLES: "/roles",
-
+    DASHBOARD_DATA: "dashboard",
 };

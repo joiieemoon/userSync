@@ -1,6 +1,6 @@
-import PageBreadcrumb from "../../components/common/PageBreadCrumb.tsx";
-import ComponentCard from "../../components/common/ComponentCard.tsx";
-import PageMeta from "../../components/common/PageMeta.tsx";
+import PageBreadcrumb from "../../components/common/page-bread-crumb/index.tsx";
+import ComponentCard from "../../components/common/component-card/index.tsx";
+import PageMeta from "../../components/common/page-meta/index.tsx";
 
 import RoleTable from "./components/role-table/index.tsx";
 

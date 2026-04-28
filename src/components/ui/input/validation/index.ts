@@ -39,7 +39,7 @@ export const updateprofilevaldiation = yup.object().shape({
     email: yup.string().email(errorMessage.email).required(errorMessage.email),
     phone: yup.string().required(errorMessage.required),
 })
-import * as yup from "yup";
+
 
 export const updateUserValidation = yup.object().shape({
     firstName: yup
@@ -64,7 +64,7 @@ export const updateUserValidation = yup.object().shape({
     roleId: yup
         .number()
         .required("Role is required"),
-
+    username: yup.string().required(errorMessage.required),
     password: yup.string().when([], {
         is: () => true,
         then: (schema) =>

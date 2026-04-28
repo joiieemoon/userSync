@@ -11,7 +11,8 @@ import {
   listrolesApi,
   updateroleApi,
 } from "../service";
-
+import { useDispatch } from "react-redux";
+import { setPermissions } from "../../../redux/slice";
 export const useListRoles = (params) => {
   return useQuery({
     queryKey: ["roles", params],
@@ -44,16 +45,32 @@ export const useupdateRoles = () => {
     },
   });
 };
+// export const useGetRoleById = (id: number) => {
+//   const dispatch = useDispatch();
+//   return useQuery({
+//     queryKey: ["roles", id],
+//     queryFn: () => getrolebyidApi(id),
+//     enabled: !!id,
+//     onSuccess: () => {
+//       console.log("get data successful by id");
+//       dispatch(setPermissions(data));
+//     },
+//     onError: (err: any) => {
+//       console.log("error get by id", err.message);
+//     },
+//   });
+// };
 export const useGetRoleById = (id: number) => {
+  const dispatch = useDispatch();
+
   return useQuery({
     queryKey: ["roles", id],
     queryFn: () => getrolebyidApi(id),
     enabled: !!id,
-    onSuccess: () => {
-      console.log("get data successful by id");
-    },
-    onError: (err: any) => {
-      console.log("error get by id", err.message);
+
+    onSuccess: (data) => {
+      console.log("API DATA →", data); // debug
+      dispatch(setPermissions(data)); // 🔥 THIS WAS MISSING
     },
   });
 };

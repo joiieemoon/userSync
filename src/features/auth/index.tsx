@@ -1,7 +1,7 @@
 // import React from "react";
-import GridShape from "../../components/common/GridShape";
+import GridShape from "../../components/common/grid-shap/index.tsx";
 import { Link, Outlet } from "react-router";
-import ThemeTogglerTwo from "../../components/common/ThemeTogglerTwo";
+import ThemeTogglerTwo from "../../components/common/theme-toggler-two/index.tsx";
 
 export default function AuthLayout() {
   return (
@@ -11,7 +11,6 @@ export default function AuthLayout() {
         <Outlet />
         <div className="items-center hidden w-full h-full lg:w-1/2 bg-brand-950 dark:bg-white/5 lg:grid">
           <div className="relative flex items-center justify-center z-1">
-    
             <GridShape />
             <div className="flex flex-col items-center max-w-xs">
               <Link to="/" className="block mb-4">

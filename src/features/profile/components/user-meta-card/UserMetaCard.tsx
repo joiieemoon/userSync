@@ -16,6 +16,7 @@ export default function UserMetaCard() {
   const { mutate, isPending } = useUpdateProfile();
 
   const { user, updateUser } = useAuth();
+
   return (
     <>
       <div className="p-10 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
@@ -33,6 +34,9 @@ export default function UserMetaCard() {
                   {user?.email}
                 </p>
                 <div className="hidden h-3.5 w-px bg-gray-300 dark:bg-gray-700 xl:block"></div>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  {user?.username}
+                </p>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
                   {user?.username}
                 </p>

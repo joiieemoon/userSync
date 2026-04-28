@@ -10,12 +10,9 @@ import {
   useUpdateUser,
   useCreateUser,
 } from "../../hooks/uselistusers-api";
-import {
-  updateprofilevaldiation,
-  updateUserValidation,
-} from "../../../../components/ui/input/validation";
+import { updateUserValidation } from "../../../../components/ui/input/validation";
 import { useListRoles } from "../../../roles/hooks";
-
+import { updateusersFields } from "../../../../components/ui/input/input-config";
 type Props = {
   isOpen: boolean;
   onClose: () => void;
@@ -33,7 +30,7 @@ const AddEditUserModal = ({ isOpen, onClose, id }: Props) => {
     page: 1,
     limit: 100,
   });
-
+  const updatefields = updateusersFields(id);
   return (
     <Modal
       isOpen={isOpen}
@@ -94,55 +91,27 @@ const AddEditUserModal = ({ isOpen, onClose, id }: Props) => {
       >
         {({ values, setFieldValue, touched, errors }) => (
           <Form className="flex flex-col mx-5">
-            {/* FORM GRID */}
             <div className="grid grid-cols-2 gap-5 mt-6">
-              {/* First Name */}
-              <InputController
-                control="input"
-                label="First Name"
-                name="firstName"
-                value={values.firstName}
-                onChange={(e: any) =>
-                  setFieldValue("firstName", e.target.value)
-                }
-              />
+              {updatefields.map((field) => (
+                <div key={field.name}>
+                  <InputController
+                    control={field.type}
+                    label={field.label}
+                    name={field.name}
+                    type={field.name === "password" ? "password" : "text"}
+                    value={values[field.name]}
+                    onChange={(e: any) =>
+                      setFieldValue(field.name, e.target.value)
+                    }
+                  />
 
-              {/* Last Name */}
-              <InputController
-                control="input"
-                label="Last Name"
-                name="lastName"
-                value={values.lastName}
-                onChange={(e: any) => setFieldValue("lastName", e.target.value)}
-              />
-
-              {/* Username */}
-              <InputController
-                control="input"
-                label="Username"
-                name="username"
-                value={values.username}
-                onChange={(e: any) => setFieldValue("username", e.target.value)}
-              />
-
-              {/* Email */}
-              <InputController
-                control="input"
-                label="Email"
-                name="email"
-                value={values.email}
-                onChange={(e: any) => setFieldValue("email", e.target.value)}
-              />
-
-              <InputController
-                control="input"
-                label={!id ? "Password" : "Reset Password"}
-                name="password"
-                type="password"
-                value={values.password}
-                onChange={(e: any) => setFieldValue("password", e.target.value)}
-              />
-
+                  {touched[field.name] && errors[field.name] && (
+                    <p className="text-xs text-red-500 mt-1">
+                      {errors[field.name]}
+                    </p>
+                  )}
+                </div>
+              ))}
               <div>
                 <label className="text-sm">Role</label>
 
@@ -164,12 +133,16 @@ const AddEditUserModal = ({ isOpen, onClose, id }: Props) => {
                       </option>
                     ))}
                 </InputController>
-              </div>
 
-              {/* Status */}
+                {touched.roleId && errors.roleId && (
+                  <p className="text-xs text-red-500 mt-1">{errors.roleId}</p>
+                )}
+              </div>
               <div>
                 <label className="text-sm">Status</label>
+
                 <InputController
+                  label="Status"
                   control="select"
                   className="w-full border rounded-lg p-2 mt-1"
                   value={values.isActive}
@@ -181,23 +154,14 @@ const AddEditUserModal = ({ isOpen, onClose, id }: Props) => {
                   <option value="false">Inactive</option>
                 </InputController>
               </div>
-              <div className="mt-5">
+              <div>
                 <label className="text-sm">Phone</label>
                 <PhoneInput
-                  country={"in"}
                   value={values.phone}
-                  onChange={(phone) => setFieldValue("phone", phone)}
-                  inputClass="!w-full !border !rounded-lg"
+                  onChange={(value) => setFieldValue("phone", value)}
                 />
-
-                {touched.phone && errors.phone && (
-                  <p className="text-xs text-red-500 mt-1">{errors.phone}</p>
-                )}
               </div>
             </div>
-
-            {/* PHONE */}
-
             {/* ACTIONS */}
             <div className="flex justify-end gap-3 mt-6">
               <Button type="button" variant="outline" onClick={onClose}>

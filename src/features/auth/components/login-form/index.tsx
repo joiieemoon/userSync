@@ -13,9 +13,18 @@ import { useLogin } from "../../hooks/uselogin-singup/index.tsx";
 
 import { toast } from "react-toastify";
 import { loginProps } from "../../types/index.tsx";
+import { useGetRoleById } from "../../../roles/hooks/index.tsx";
+import { useAuth } from "../../hooks/useAuth/index.tsx";
+import { useSelector } from "react-redux";
 export default function SignInForm() {
   const { mutate, isPending } = useLogin();
   const [lock, setLock] = useState(false);
+  const { user } = useAuth();
+  const { data } = useGetRoleById(user?.roleId || 0);
+  const permissions = useSelector((state: any) => state.permission.access);
+  console.log(permissions);
+  
+  console.log(permissions);
   const handleSubmit = (values: loginProps) => {
     if (lock) return;
 

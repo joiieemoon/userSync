@@ -21,24 +21,15 @@ type Props = {
 };
 
 const AddEditRoleModal = ({ isOpen, onClose, id }: Props) => {
-  // const { data } = useGetRoleById(id!, {
-  //   enabled: !!id,
-  // });
   const { data } = useGetRoleById(id!);
 
-  // console.log("this is get role by id ", data);
   const { mutate: updateRole, isPending } = useupdateRoles();
   const { mutate: createRole, isPending: isCreating } = useCreateRole();
-  console.log("this is ultimate role in add edit", data);
 
-  // const formattedPermissions = useMemo(() => {
-  //   return formatPermissionsForUI(data?.permissions || []);
-  // }, [data?.permissions]);
   const formattedPermissions = useMemo(() => {
     return formatPermissionsForUI(data?.permissions || []);
   }, [data?.permissions]);
-  console.log("ROLE DATA:", data?.role?.title);
-  console.log("PERMISSIONS:", data?.permissions);
+
   return (
     <Modal
       isOpen={isOpen}
@@ -89,6 +80,7 @@ const AddEditRoleModal = ({ isOpen, onClose, id }: Props) => {
       >
         {({ values, setFieldValue, touched, errors }) => (
           <Form className="flex flex-col mx-5">
+
             <div className="mt-6 space-y-5">
               <InputController
                 control="input"
@@ -101,6 +93,7 @@ const AddEditRoleModal = ({ isOpen, onClose, id }: Props) => {
               {touched.title && errors.title && (
                 <p className="text-xs text-red-500 mt-1">{errors.title}</p>
               )}
+
               <div>
                 <label className="text-sm">Status</label>
                 <InputController
@@ -115,12 +108,15 @@ const AddEditRoleModal = ({ isOpen, onClose, id }: Props) => {
               </div>
             </div>
 
+            {/* PERMISSIONS */}
             <div className="mt-6">
               <label className="text-sm mb-2 block">Permissions</label>
+
               <ToggleSwitch
                 value={values.permissions}
                 onChange={(val) => setFieldValue("permissions", val)}
               />
+
               {touched.permissions && errors.permissions && (
                 <p className="text-xs text-red-500 mt-1">
                   {errors.permissions}
@@ -128,6 +124,7 @@ const AddEditRoleModal = ({ isOpen, onClose, id }: Props) => {
               )}
             </div>
 
+          
             <div className="flex justify-end gap-3 mt-6">
               <Button type="button" variant="outline" onClick={onClose}>
                 Close

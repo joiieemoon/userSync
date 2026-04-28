@@ -11,7 +11,7 @@ import { DeleteIcon, EditIcon } from "../../../../assets/icons";
 
 import Pagination from "../../../../components/common/pagination";
 import { useDeleteUser, useListUsers } from "../../hooks/uselistusers-api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
@@ -20,6 +20,9 @@ import Button from "../../../../components/ui/button/Button";
 import AddEditUserModal from "../add-edit-modal";
 import SearchBar from "../../../../components/ui/search";
 import { useDebounce } from "../../../../hooks/usedebounce";
+import { useAuth } from "../../../auth/hooks/useAuth";
+import { User } from "../../types";
+import { useSelector } from "react-redux";
 
 const tableHeaders = [
   "User Details",
@@ -33,17 +36,47 @@ const tableHeaders = [
 ];
 export default function UserTabel() {
   const [page, setPage] = useState(1);
-  // const [currentid, setcurrentid] = useState();
+
+  const { user } = useAuth();
+  console.log("current user id:", user?.id);
   const [currentid, setcurrentid] = useState<number | undefined>(undefined);
   const [isOpen, setIsOpen] = useState(false);
   const [iseditOpen, setiseditOpen] = useState(false);
+
+  const currentUserId = user?.id;
+  const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 700);
+  const isSearching = debouncedSearch.length > 0;
+
+  const searchText = debouncedSearch.toLowerCase();
   const { data, isLoading } = useListUsers({
-    page,
-    limit: 5,
+    page: isSearching ? 1 : page,
+    limit: isSearching ? 100 : 5,
   });
+  const pageSize = 5;
+
+  const users = data?.users || [];
+
+  const filteredUsers = users.filter((user) => {
+    const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
+
+    return (
+      user.id !== currentUserId &&
+      user.roleId !== 1 &&
+      (fullName.includes(searchText) ||
+        user.username.toLowerCase().includes(searchText) ||
+        user.email.toLowerCase().includes(searchText))
+    );
+  });
+
+  const paginatedUsers = isSearching
+    ? filteredUsers?.slice((page - 1) * pageSize, page * pageSize)
+    : filteredUsers;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<number | undefined>();
-
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch]);
   const handleAdd = () => {
     setSelectedId(undefined);
     setIsModalOpen(true);
@@ -55,14 +88,22 @@ export default function UserTabel() {
   };
 
   const { mutate: deleteuser, isPending } = useDeleteUser();
-  const [search, setSearch] = useState("");
-  const debouncedSearch = useDebounce(search, 1100);
+  const canAddUser = useSelector(
+    (state: any) => state.permission.access?.users?.add,
+  );
+  const canEditUser = useSelector(
+    (state: any) => state.permission.access?.users?.edit,
+  );
+  const candeleteUser = useSelector(
+    (state: any) => state.permission.access?.users?.delete,
+  );
 
   return (
     <>
       <div className="flex justify-between mb-4">
         <SearchBar value={search} onChange={setSearch} />
-        <Button onClick={handleAdd}> Add User</Button>
+
+        {canAddUser && <Button onClick={handleAdd}> Add User</Button>}
       </div>
 
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
@@ -88,7 +129,7 @@ export default function UserTabel() {
             {/* Table Body */}
 
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-              {data?.users?.map((user: any) => (
+              {paginatedUsers?.map((user: User) => (
                 <TableRow key={user.id}>
                   {/* User Details */}
                   <TableCell className="px-5 py-4 sm:px-6 text-start">
@@ -137,30 +178,33 @@ export default function UserTabel() {
                   {/* Action */}
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                     <div className="flex justify-evenly">
-                      <Button
-                        type="button"
-                        onClick={() => {
-                          setiseditOpen(true);
-                          setcurrentid(user.id);
-                          handleEdit(user.id);
-                        }}
-                        className="bg-transparent hover:bg-white shadow:none"
-                      >
-                        {" "}
-                        <EditIcon className="text-xl cursor-pointer text-blue-600" />
-                      </Button>
-
-                      <Button
-                        type="button"
-                        onClick={() => {
-                          setIsOpen(true);
-                          setcurrentid(user.id);
-                          console.log("thsi is delete");
-                        }}
-                        className="bg-transparent hover:bg-white shadow:none"
-                      >
-                        <DeleteIcon className="text-xl cursor-pointer text-red-600" />
-                      </Button>
+                      {canEditUser && (
+                        <Button
+                          type="button"
+                          onClick={() => {
+                            setiseditOpen(true);
+                            setcurrentid(user.id);
+                            handleEdit(user.id);
+                          }}
+                          className="bg-transparent hover:bg-white shadow:none"
+                        >
+                          {" "}
+                          <EditIcon className="text-xl cursor-pointer text-blue-600" />
+                        </Button>
+                      )}
+                      {candeleteUser && (
+                        <Button
+                          type="button"
+                          onClick={() => {
+                            setIsOpen(true);
+                            setcurrentid(user.id);
+                            console.log("thsi is delete");
+                          }}
+                          className="bg-transparent hover:bg-white shadow:none"
+                        >
+                          <DeleteIcon className="text-xl cursor-pointer text-red-600" />
+                        </Button>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>
@@ -179,16 +223,20 @@ export default function UserTabel() {
       </div>
 
       <Pagination
-        page={data?.pagination?.page}
-        totalPages={data?.pagination?.totalPages}
-        onPageChange={(newPage) => setPage(newPage)}
+        page={page}
+        totalPages={
+          isSearching
+            ? Math.ceil((filteredUsers?.length || 0) / pageSize)
+            : data?.pagination?.totalPages
+        }
+        onPageChange={setPage}
       />
 
       <AddEditUserModal
         isOpen={isModalOpen}
         onClose={() => {
           setIsModalOpen(false);
-          setSelectedId(undefined); // reset after close
+          setSelectedId(undefined);
         }}
         id={selectedId}
       />

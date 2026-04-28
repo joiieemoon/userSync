@@ -1,16 +1,38 @@
-export const moduleMap: Record<string, number> = {
-  role: 1,
-  users: 2,
+export const moduleIdMap: Record<number, string> = {
+  1: "role",
+  2: "users",
+};
+
+export const formatPermissionsForUI = (permissions: any[] = []) => {
+  const result: any = {};
+
+  permissions.forEach((perm) => {
+    const key = perm.moduleSlug?.trim()?.toLowerCase(); 
+
+    if (!key) return;
+
+    result[key] = {
+      view: perm.view === 1,
+      add: perm.add === 1,
+      edit: perm.edit === 1,
+      delete: perm.delete === 1,
+      list: perm.list === 1,
+    };
+  });
+
+  return result;
 };
 export const formatPermissionsForAPI = (permissions: any = {}) => {
   return Object.keys(permissions)
     .map((key) => {
-      const moduleId = moduleMap[key];
+      const moduleId = Object.entries(moduleIdMap).find(
+        ([, v]) => v === key,
+      )?.[0];
 
-      if (!moduleId) return null; // safety check
+      if (!moduleId) return null;
 
       return {
-        moduleId,
+        moduleId: Number(moduleId),
         list: !!permissions[key]?.list,
         view: !!permissions[key]?.view,
         add: !!permissions[key]?.add,
@@ -20,57 +42,3 @@ export const formatPermissionsForAPI = (permissions: any = {}) => {
     })
     .filter(Boolean);
 };
-export const formatPermissionsForUI = (permissions: any[] = []) => {
-  const moduleMap: Record<number, string> = {
-    1: "role",
-    2: "users",
-  };
-
-  const result: Record<string, any> = {};
-
-  permissions.forEach((item) => {
-    const key = moduleMap[item.moduleId]; // 👈 SAFE & RELIABLE
-
-    if (!key) return;
-
-    result[key] = {
-      list: !!item.list,
-      view: !!item.view,
-      add: !!item.add,
-      edit: !!item.edit,
-      delete: !!item.delete,
-    };
-  });
-
-  return result;
-};
-// export const formatPermissionsForAPI = (permissions: any = {}) => {
-//   return Object.keys(permissions).map((key) => ({
-//     moduleId: key === "role" ? 1 : 2, // or dynamic map better
-//     list: !!permissions[key]?.list,
-//     view: !!permissions[key]?.view,
-//     add: !!permissions[key]?.add,
-//     edit: !!permissions[key]?.edit,
-//     delete: !!permissions[key]?.delete,
-//   }));
-// };
-// export const formatPermissionsForUI = (permissions: any[] = []) => {
-//   const result: Record<string, any> = {};
-
-//   permissions.forEach((item) => {
-//     // const key = item.moduleName?.toLowerCase();
-//     // const key = item.moduleName?.trim().toLowerCase();
-//     const key = moduleMap[item.moduleId];
-//     if (!key) return;
-
-//     result[key] = {
-//       list: !!item.list,
-//       view: !!item.view,
-//       add: !!item.add,
-//       edit: !!item.edit,
-//       delete: !!item.delete,
-//     };
-//   });
-
-//   return result;
-// };

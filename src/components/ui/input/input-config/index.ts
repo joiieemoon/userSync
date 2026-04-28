@@ -76,3 +76,30 @@ export const updateRoleFields = [
     { name: "title", label: "Role Name", type: "text" },
     { name: "status", label: "Status", type: "select" },
 ];
+export  const updateusersFields =(id)=> [
+    {
+        name: "firstName",
+        label: "First Name",
+        type: "input",
+    },
+    {
+        name: "lastName",
+        label: "Last Name",
+        type: "input",
+    },
+    {
+        name: "username",
+        label: "Username",
+        type: "input",
+    },
+    {
+        name: "email",
+        label: "Email",
+        type: "input",
+    },
+    {
+        name: "password",
+        label: !id ? "Password" : "Reset Password",
+        type: "input",
+    },
+];

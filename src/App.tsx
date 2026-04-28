@@ -7,7 +7,7 @@ import UserTables from "./pages/Tables/UserTables";
 import FormElements from "./pages/Forms/FormElements";
 import Blank from "./pages/Blank";
 import AppLayout from "./layout/applayout/index.tsx";
-import { ScrollToTop } from "./components/common/ScrollToTop";
+import { ScrollToTop } from "./components/common/scroll-top/index.tsx";
 import Home from "./features/dashboard";
 
 export default function App() {

@@ -1,4 +1,7 @@
-import { SidebarProvider, useSidebar } from "../../context/SidebarContext.tsx";
+import {
+  SidebarProvider,
+  useSidebar,
+} from "../../context/sidebar-context/index.tsx";
 import { Outlet } from "react-router";
 import AppHeader from "../appheader/index.tsx";
 import Backdrop from "../backdrop/index.tsx";

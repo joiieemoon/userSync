@@ -1,6 +1,6 @@
-import PageBreadcrumb from "../../components/common/PageBreadCrumb.tsx";
+import PageBreadcrumb from "../../components/common/page-bread-crumb/index.tsx";
 
-import PageMeta from "../../components/common/PageMeta.tsx";
+import PageMeta from "../../components/common/page-meta/index.tsx";
 import UserTabel from "./components/user-tabel";
 
 export default function UserTables() {

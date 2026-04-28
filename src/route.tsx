@@ -12,6 +12,7 @@ const NotFound = lazy(() => import("./pages/OtherPage/NotFound"));
 import UserTables from "./features/user";
 import RoleTables from "./features/roles";
 import ProtectedRoute from "./routes/protected-rotes";
+import PublicRoute from "./routes/public-route/index.tsx";
 const SignUpForm = lazy(() => import("./features/auth/components/signup-form"));
 const SignInForm = lazy(() => import("./features/auth/components/login-form"));
 export const router = createBrowserRouter([
@@ -20,13 +21,13 @@ export const router = createBrowserRouter([
     element: <AppLayout />,
     children: [
       {
-        // element: <ProtectedRoute />,
+        element: <ProtectedRoute />,
         children: [
           { index: true, element: <Home /> },
           { path: "profile", element: <UserProfiles /> },
 
-          { path: "user-tables", element: <UserTables /> },
-          { path: "role-tables", element: <RoleTables /> },
+          { path: "users", element: <UserTables /> },
+          { path: "roles", element: <RoleTables /> },
         ],
       },
     ],
@@ -35,8 +36,13 @@ export const router = createBrowserRouter([
     path: "/",
     element: <AuthLayout />,
     children: [
-      { path: "signin", element: <SignInForm /> },
-      { path: "signup", element: <SignUpForm /> },
+      {
+        element: <PublicRoute />,
+        children: [
+          { path: "signin", element: <SignInForm /> },
+          { path: "signup", element: <SignUpForm /> },
+        ],
+      },
     ],
   },
 
