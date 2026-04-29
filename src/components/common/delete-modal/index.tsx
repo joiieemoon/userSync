@@ -20,7 +20,7 @@ export const DeleteModal: React.FC<DeleteModalProps> = ({
   loading = false,
   title = "Delete Confirmation",
   description = "Are you sure you want to delete this item? ",
-  id,
+  id, 
 }) => {
  
   return (

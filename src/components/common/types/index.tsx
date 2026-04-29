@@ -35,3 +35,11 @@ export interface ComponentCardProps {
 export interface BreadcrumbProps {
   pageTitle: string;
 }
+
+export type CommanPaginationProps = {
+  page: number;
+  totalPages: number;
+  limit: number;
+  onPageChange: (page: number) => void;
+  onLimitChange: (limit: number) => void;
+};

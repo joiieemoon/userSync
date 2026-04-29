@@ -13,6 +13,8 @@ import {
 import { updateUserValidation } from "../../../../components/ui/input/validation";
 import { useListRoles } from "../../../roles/hooks";
 import { updateusersFields } from "../../../../components/ui/input/input-config";
+import { ChevronDownIcon } from "../../../../assets/icons";
+
 type Props = {
   isOpen: boolean;
   onClose: () => void;
@@ -26,6 +28,7 @@ const AddEditUserModal = ({ isOpen, onClose, id }: Props) => {
 
   const { mutate: updateUser, isPending } = useUpdateUser();
   const { mutate: createUser, isPending: isCreating } = useCreateUser();
+
   const { data: rolesData } = useListRoles({
     page: 1,
     limit: 100,
@@ -138,13 +141,13 @@ const AddEditUserModal = ({ isOpen, onClose, id }: Props) => {
                   <p className="text-xs text-red-500 mt-1">{errors.roleId}</p>
                 )}
               </div>
-              <div>
+              <div className="relative">
                 <label className="text-sm">Status</label>
 
                 <InputController
                   label="Status"
                   control="select"
-                  className="w-full border rounded-lg p-2 mt-1"
+                  className="w-full border rounded-lg p-2 mt-1 appearance-none pr-8"
                   value={values.isActive}
                   onChange={(e) =>
                     setFieldValue("isActive", e.target.value === "true")
@@ -153,7 +156,12 @@ const AddEditUserModal = ({ isOpen, onClose, id }: Props) => {
                   <option value="true">Active</option>
                   <option value="false">Inactive</option>
                 </InputController>
+
+                <span className="pointer-events-none absolute right-3 top-[70%] -translate-y-1/2 text-gray-500">
+                  <ChevronDownIcon className="w-4 h-4" />
+                </span>
               </div>
+                  
               <div>
                 <label className="text-sm">Phone</label>
                 <PhoneInput

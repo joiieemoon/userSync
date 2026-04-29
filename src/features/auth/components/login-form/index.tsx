@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { Formik, Form } from "formik";
 
-import { ChevronLeftIcon } from "../../../../assets/icons/index.ts";
+
 import Button from "../../../../components/ui/button/Button.tsx";
 import { useState } from "react";
 import { loginFields } from "../../../../components/ui/input/input-config/index.ts";

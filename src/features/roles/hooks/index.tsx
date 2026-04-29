@@ -45,21 +45,7 @@ export const useupdateRoles = () => {
     },
   });
 };
-// export const useGetRoleById = (id: number) => {
-//   const dispatch = useDispatch();
-//   return useQuery({
-//     queryKey: ["roles", id],
-//     queryFn: () => getrolebyidApi(id),
-//     enabled: !!id,
-//     onSuccess: () => {
-//       console.log("get data successful by id");
-//       dispatch(setPermissions(data));
-//     },
-//     onError: (err: any) => {
-//       console.log("error get by id", err.message);
-//     },
-//   });
-// };
+
 export const useGetRoleById = (id: number) => {
   const dispatch = useDispatch();
 
@@ -69,8 +55,8 @@ export const useGetRoleById = (id: number) => {
     enabled: !!id,
 
     onSuccess: (data) => {
-      console.log("API DATA →", data); // debug
-      dispatch(setPermissions(data)); // 🔥 THIS WAS MISSING
+      console.log("API DATA ", data); 
+      dispatch(setPermissions(data));
     },
   });
 };

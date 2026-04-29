@@ -1,5 +1,8 @@
-import { useMutation } from "@tanstack/react-query";
-import { updateProfileApi } from "../../service/update-profile-api";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  getProfilebyidApi,
+  updateProfileApi,
+} from "../../service/update-profile-api";
 
 export const useUpdateProfile = () => {
   return useMutation({
@@ -12,14 +15,20 @@ export const useUpdateProfile = () => {
     },
   });
 };
-export const useGetProfilebyid = (id: number) => {
-  return useMutation({
-    mutationFn: () => updateProfileApi(id),
+export const useGetProfilebyid = () => {
+  const queryClient = useQueryClient();
+  return useQuery({
+    queryKey: ["profile"],
+    queryFn: () => getProfilebyidApi(),
+
     onSuccess: (data) => {
-      console.log("GET PROFILE RESPONSE:", data);
+      console.log("PROFILE DATA:", data);
+      queryClient.invalidateQueries(["profile"]);
     },
     onError: (err) => {
-      console.log("GET PROFILE ERROR:", err.message);
+      console.log("PROFILE ERROR:", err.message);
     },
   });
 };
+
+

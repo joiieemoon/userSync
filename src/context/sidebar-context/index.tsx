@@ -61,7 +61,7 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
   const toggleSubmenu = (item: string) => {
     setOpenSubmenu((prev) => (prev === item ? null : item));
   };
-
+  
   return (
     <SidebarContext.Provider
       value={{

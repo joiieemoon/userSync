@@ -1,7 +1,9 @@
-import { useAuth } from "../../../auth/hooks/useAuth";
+import { useGetProfilebyid } from "../../hooks/update-profile";
 
 export default function UserInfoCard() {
-  const { user } = useAuth();
+  const { data } = useGetProfilebyid();
+
+  const user = data?.user;
   const personalInfo = [
     {
       label: "First Name",
@@ -24,10 +26,10 @@ export default function UserInfoCard() {
       label: "User Name",
       value: user?.username,
     },
-    // {
-    //   label: "Role Id ",
-    //   value: user?.roleId,
-    // },
+    {
+      label: "Role Title",
+      value: user?.roleTitle,
+    },
   ];
   return (
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-7 2xl:gap-x-32 mx-10">

@@ -7,7 +7,12 @@ import {
 } from "../../../../components/ui/table";
 import Badge from "../../../../components/ui/badge/Badge";
 
-import { DeleteIcon, EditIcon } from "../../../../assets/icons";
+import {
+  DeleteIcon,
+  EditIcon,
+  PencilIcon,
+  PlusIcon,
+} from "../../../../assets/icons";
 import { toast } from "react-toastify";
 import Pagination from "../../../../components/common/pagination";
 
@@ -20,9 +25,12 @@ import Button from "../../../../components/ui/button/Button";
 import { usedeleteRoles, useListRoles } from "../../hooks";
 import AddEditRoleModal from "../add-edit-role";
 import SearchBar from "../../../../components/ui/search";
-import { useModal } from "../../../../hooks/usemodal/index.ts";
+
 import { useSelector } from "react-redux";
 import { useDebounce } from "../../../../hooks/usedebounce/index.tsx";
+import { usePermission } from "../../../auth/hooks/uselogin-singup/index.tsx";
+import { useAuth } from "../../../auth/hooks/useAuth/index.tsx";
+import { formatPermissions } from "../../../../lib/helper/flate-permission/index.tsx";
 const tableHeaders = [
   "id",
   "Role Name",
@@ -34,15 +42,15 @@ const tableHeaders = [
 
 export default function RoleTable() {
   const [page, setPage] = useState(1);
-  const { isOpen } = useModal();
+  const { user } = useAuth();
   const [currentid, setcurrentid] = useState<number | undefined>(undefined);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<number | undefined>();
-const [checkisOpen, setIsOpen] = useState(false);
+
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 700);
   const searchText = debouncedSearch.toLowerCase();
-
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const { data, isLoading } = useListRoles({
     page,
     limit: 5,
@@ -52,24 +60,26 @@ const [checkisOpen, setIsOpen] = useState(false);
   );
 
   const { mutate: deleteuser, isPending } = usedeleteRoles();
+  const currentUserRoleId = user?.roleId;
+  console.log(currentUserRoleId);
+  const { data: permission } = usePermission(currentUserRoleId);
 
-  const canAddRole = useSelector((state) => state.permission.access?.role?.add);
+  console.log(permission);
+  const access = formatPermissions(permission?.permissions || []);
+  console.log(access, "this is access");
 
-  const canEditRole = useSelector(
-    (state) => state.permission.access?.role?.edit,
-  );
+  const canAddRole = access?.role?.add;
 
-  const canDeleteRole = useSelector(
-    (state) => state.permission.access?.role?.delete,
-  );
-  const pageSize = 5;   
+  const canEditRole = access?.role?.edit;
+
+  const canDeleteRole = access?.role?.edit;
+
+  const pageSize = 5;
 
   const paginatedRoles = debouncedSearch
     ? filteredRoles.slice((page - 1) * pageSize, page * pageSize)
     : filteredRoles;
-  console.log("can add role", canAddRole);
-  console.log("can edit role", canEditRole);
-  console.log("can delete role", canDeleteRole);
+
   const filteredHeaders = tableHeaders.filter((header) => {
     if (header === "Action") {
       return canEditRole || canDeleteRole;
@@ -81,17 +91,22 @@ const [checkisOpen, setIsOpen] = useState(false);
   }, [debouncedSearch]);
   return (
     <>
-      <div className="flex justify-between mb-4">
+      <div className="flex justify-between mb-2 p-0">
         <SearchBar value={search} onChange={setSearch} />
+
         {canAddRole && (
-          <Button
-            onClick={() => {
-              setSelectedId(undefined);
-              setIsModalOpen(true);
-            }}
-          >
-            Add Role
-          </Button>
+          <div className="flex justify-center items-center mt-2">
+            <Button
+              size="sm"
+              onClick={() => {
+                setSelectedId(undefined);
+                setIsModalOpen(true);
+              }}
+            >
+              <PlusIcon />
+              Add Role
+            </Button>
+          </div>
         )}
       </div>
       <div className="flex justify-end "></div>
@@ -108,7 +123,7 @@ const [checkisOpen, setIsOpen] = useState(false);
                     isHeader
                     className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                   >
-                    {(canEditRole || canDeleteRole) === header.action && header}
+                    {header}
                   </TableCell>
                 ))}
               </TableRow>
@@ -124,11 +139,11 @@ const [checkisOpen, setIsOpen] = useState(false);
                   <TableCell className="px-5 py-4 sm:px-6 text-start">
                     <div className="flex items-center gap-3">
                       <div>
-                        <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
-                          {/* {user.firstName} {user.lastName} */} {roles.title}
-                        </span>
-                        <span className="block text-gray-500 text-theme-xs dark:text-gray-400">
-                          role id:{roles.id}
+                        {/* <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
+                          {roles.title}
+                        </span> */}
+                        <span className="block font-bold text-gray-500 text-theme-xs dark:text-gray-400">
+                          {roles.id}
                         </span>
                       </div>
                     </div>
@@ -162,36 +177,38 @@ const [checkisOpen, setIsOpen] = useState(false);
                   </TableCell>
 
                   {/* Action */}
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                    <div className="flex justify-evenly">
-                      {canEditRole && (
-                        <Button
-                          type="button"
-                          onClick={() => {
-                            setSelectedId(roles.id);
-                            setIsModalOpen(true);
-                          }}
-                          className="bg-transparent hover:bg-white shadow:none"
-                        >
-                          {" "}
-                          <EditIcon className="text-xl cursor-pointer text-blue-600" />
-                        </Button>
-                      )}
-                      {canDeleteRole && (
-                        <Button
-                          type="button"
-                          onClick={() => {
-                            setIsOpen(true);
-                            setcurrentid(roles.id);
-                            console.log("this is delete");
-                          }}
-                          className="bg-transparent hover:bg-white shadow:none"
-                        >
-                          <DeleteIcon className="text-xl cursor-pointer text-red-600" />
-                        </Button>
-                      )}
-                    </div>
-                  </TableCell>
+
+                  {(canEditRole || canDeleteRole) && (
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400 ">
+                      <div className="flex justify-evenly">
+                        {canEditRole && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSelectedId(roles.id);
+                              setIsModalOpen(true);
+                            }}
+                            className="bg-transparent hover:bg-white shadow:none"
+                          >
+                            {" "}
+                            <PencilIcon className="text-xl cursor-pointer text-gray-500 font-2xl" />
+                          </button>
+                        )}
+                        {canDeleteRole && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setIsDeleteOpen(true);
+                              setcurrentid(roles.id);
+                            }}
+                            className="bg-transparent hover:bg-white shadow:none"
+                          >
+                            <DeleteIcon className="text-xl cursor-pointer text-gray-500" />
+                          </button>
+                        )}
+                      </div>
+                    </TableCell>
+                  )}
                 </TableRow>
               ))}
             </TableBody>
@@ -221,21 +238,21 @@ const [checkisOpen, setIsOpen] = useState(false);
         }}
         id={selectedId}
       />
+
       <DeleteModal
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
+        isOpen={isDeleteOpen}
+        onClose={() => setIsDeleteOpen(false)}
         loading={isPending}
         onConfirm={() => {
           if (!currentid) return;
 
           deleteuser(currentid, {
             onSuccess: () => {
-              setIsOpen(false);
+              setIsDeleteOpen(false);
               setcurrentid(undefined);
             },
             onError: (error: any) => {
               const message = error?.response?.data?.message || "Delete failed";
-
               toast.error(message);
             },
           });

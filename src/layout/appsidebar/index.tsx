@@ -16,6 +16,10 @@ import {
 
 import { useSidebar } from "../../context/sidebar-context";
 import { useSelector } from "react-redux";
+import Button from "../../components/ui/button/Button";
+import { useAuth } from "../../features/auth/hooks/useAuth";
+import { usePermission } from "../../features/auth/hooks/uselogin-singup";
+import { formatPermissions } from "../../lib/helper/flate-permission";
 
 type NavItem = {
   name: string;
@@ -27,29 +31,34 @@ type NavItem = {
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const location = useLocation();
+  const { user } = useAuth();
+  const currentUserRoleId = user?.roleId;
+  const { data: permission } = usePermission(currentUserRoleId);
+  const access = formatPermissions(permission?.permissions || []);
 
-  const permissions = useSelector((state: any) => state.permission.access);
+  console.log(currentUserRoleId, "try side");
 
-  const canviewUser = permissions?.users?.view;
-  const canviewRole = permissions?.role?.view;
+  // const permissions = useSelector((state: any) => state.permission.access);
 
-  console.log(canviewUser);
-  console.log(canviewRole);
+  const canviewUser = access?.users?.view;
+  const canviewRole = access?.role?.view;
+  console.log(canviewRole, "this is siddebar");
+
 
   const navItems: NavItem[] = [
-    permissions?.users?.view && {
+    {
       icon: <GridIcon />,
       name: "Dashboard",
       path: "/",
     },
 
-    permissions?.users?.view && {
+    canviewUser && {
       icon: <UserIcon />,
       name: "Users",
       path: "/users",
     },
 
-    permissions?.role?.view && {
+    canviewRole && {
       icon: <GroupIcon />,
       name: "Roles",
       path: "/roles",
@@ -136,7 +145,7 @@ const AppSidebar: React.FC = () => {
       {items.map((nav, index) => (
         <li key={nav.name}>
           {nav.subItems ? (
-            <button
+            <Button
               onClick={() => handleSubmenuToggle(index, menuType)}
               className={`menu-item group ${
                 openSubmenu?.type === menuType && openSubmenu?.index === index
@@ -172,7 +181,7 @@ const AppSidebar: React.FC = () => {
                   }`}
                 />
               )}
-            </button>
+            </Button>
           ) : (
             nav.path && (
               <Link

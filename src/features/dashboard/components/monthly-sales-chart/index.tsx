@@ -7,7 +7,7 @@ export default function RoleWiseUserChart() {
 
   const users = data?.recentUsers || [];
 
-  // 1. Count users by role
+
   const roleCount: Record<string, number> = {};
 
   users.forEach((user: any) => {

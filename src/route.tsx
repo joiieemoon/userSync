@@ -21,7 +21,7 @@ export const router = createBrowserRouter([
     element: <AppLayout />,
     children: [
       {
-        element: <ProtectedRoute />,
+        // element: <ProtectedRoute />,
         children: [
           { index: true, element: <Home /> },
           { path: "profile", element: <UserProfiles /> },
@@ -37,7 +37,7 @@ export const router = createBrowserRouter([
     element: <AuthLayout />,
     children: [
       {
-        element: <PublicRoute />,
+        // element: <PublicRoute />,
         children: [
           { path: "signin", element: <SignInForm /> },
           { path: "signup", element: <SignUpForm /> },

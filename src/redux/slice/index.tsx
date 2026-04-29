@@ -1,40 +1,30 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-const initialState = {
-  role: null,
-  access: {},
+type PermissionState = {
+  role: string;
+  permissions: Record<string, any>;
 };
 
-const permissionSlice = createSlice({
-  name: "permission",
+const initialState: PermissionState = {
+  role: "",
+  permissions: {},
+};
+
+const permissionsSlice = createSlice({
+  name: "permissions",
   initialState,
   reducers: {
-    setPermissions: (state, action) => {
-      const { role, permissions } = action.payload;
-
-      state.role = role;
-
-      const formatted = {};
-
-      permissions.forEach((perm) => {
-        formatted[perm.moduleSlug] = {
-          list: !!perm.list,
-          view: !!perm.view,
-          add: !!perm.add,
-          edit: !!perm.edit,
-          delete: !!perm.delete,
-        };
-      });
-
-      state.access = formatted;
+    setPermissions: (state, action: PayloadAction<PermissionState>) => {
+      state.role = action.payload.role;
+      state.permissions = action.payload.permissions;
     },
-
     clearPermissions: (state) => {
-      state.role = null;
-      state.access = {};
+      state.role = "";
+      state.permissions = {};
     },
   },
 });
 
-export const { setPermissions, clearPermissions } = permissionSlice.actions;
-export default permissionSlice.reducer;
+export const { setPermissions, clearPermissions } = permissionsSlice.actions;
+
+export default permissionsSlice.reducer;

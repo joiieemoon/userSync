@@ -7,10 +7,16 @@ import {
 } from "../../../../components/ui/table";
 
 import Badge from "../../../../components/ui/badge/Badge";
-import { DeleteIcon, EditIcon } from "../../../../assets/icons";
+import {
+  DeleteIcon,
+  EditIcon,
+  PencilIcon,
+  PlugInIcon,
+  PlusIcon,
+} from "../../../../assets/icons";
 
 import Pagination from "../../../../components/common/pagination";
-import { useDeleteUser, useListUsers } from "../../hooks/uselistusers-api";
+import { useDeleteUser } from "../../hooks/uselistusers-api";
 import { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -22,7 +28,9 @@ import SearchBar from "../../../../components/ui/search";
 import { useDebounce } from "../../../../hooks/usedebounce";
 import { useAuth } from "../../../auth/hooks/useAuth";
 import { User } from "../../types";
-import { useSelector } from "react-redux";
+
+// import { formatPermissions } from "../../../../lib/helper/flate-permission";
+import { useUserTable } from "../../hooks/useuser-tabel";
 
 const tableHeaders = [
   "User Details",
@@ -36,38 +44,24 @@ const tableHeaders = [
 ];
 export default function UserTabel() {
   const [page, setPage] = useState(1);
-
+  const [search, setSearch] = useState("");
   const { user } = useAuth();
-  console.log("current user id:", user?.id);
+  const [limit, setLimit] = useState(10);
+  // const users = data?.users || [];
+  const { data, isLoading, filteredUsers, access, isSearching } = useUserTable(
+    user,
+    search,
+    page,
+    limit,
+  );
+
   const [currentid, setcurrentid] = useState<number | undefined>(undefined);
   const [isOpen, setIsOpen] = useState(false);
   const [iseditOpen, setiseditOpen] = useState(false);
 
-  const currentUserId = user?.id;
-  const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 700);
-  const isSearching = debouncedSearch.length > 0;
 
-  const searchText = debouncedSearch.toLowerCase();
-  const { data, isLoading } = useListUsers({
-    page: isSearching ? 1 : page,
-    limit: isSearching ? 100 : 5,
-  });
   const pageSize = 5;
-
-  const users = data?.users || [];
-
-  const filteredUsers = users.filter((user) => {
-    const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
-
-    return (
-      user.id !== currentUserId &&
-      user.roleId !== 1 &&
-      (fullName.includes(searchText) ||
-        user.username.toLowerCase().includes(searchText) ||
-        user.email.toLowerCase().includes(searchText))
-    );
-  });
 
   const paginatedUsers = isSearching
     ? filteredUsers?.slice((page - 1) * pageSize, page * pageSize)
@@ -88,22 +82,32 @@ export default function UserTabel() {
   };
 
   const { mutate: deleteuser, isPending } = useDeleteUser();
-  const canAddUser = useSelector(
-    (state: any) => state.permission.access?.users?.add,
-  );
-  const canEditUser = useSelector(
-    (state: any) => state.permission.access?.users?.edit,
-  );
-  const candeleteUser = useSelector(
-    (state: any) => state.permission.access?.users?.delete,
-  );
+
+  const {
+    delete: canDeleteUser,
+    edit: canEditUser,
+    add: canAddUser,
+  } = access?.users || {};
+  const filteredHeaders = tableHeaders.filter((header) => {
+    if (header === "Action") {
+      return canEditUser || canDeleteUser;
+    }
+    return true;
+  });
 
   return (
     <>
-      <div className="flex justify-between mb-4">
+      <div className="flex justify-between ">
         <SearchBar value={search} onChange={setSearch} />
 
-        {canAddUser && <Button onClick={handleAdd}> Add User</Button>}
+        {canAddUser && (
+          <div className="flex justify-center items-center mt-2">
+            <Button size="sm" onClick={handleAdd} className="h-8 ">
+              {" "}
+              <PlusIcon /> Add User
+            </Button>
+          </div>
+        )}
       </div>
 
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
@@ -114,7 +118,7 @@ export default function UserTabel() {
 
             <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
               <TableRow>
-                {tableHeaders.map((header, index) => (
+                {filteredHeaders.map((header, index) => (
                   <TableCell
                     key={index}
                     isHeader
@@ -176,37 +180,38 @@ export default function UserTabel() {
                   </TableCell>
 
                   {/* Action */}
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                    <div className="flex justify-evenly">
-                      {canEditUser && (
-                        <Button
-                          type="button"
-                          onClick={() => {
-                            setiseditOpen(true);
-                            setcurrentid(user.id);
-                            handleEdit(user.id);
-                          }}
-                          className="bg-transparent hover:bg-white shadow:none"
-                        >
-                          {" "}
-                          <EditIcon className="text-xl cursor-pointer text-blue-600" />
-                        </Button>
-                      )}
-                      {candeleteUser && (
-                        <Button
-                          type="button"
-                          onClick={() => {
-                            setIsOpen(true);
-                            setcurrentid(user.id);
-                            console.log("thsi is delete");
-                          }}
-                          className="bg-transparent hover:bg-white shadow:none"
-                        >
-                          <DeleteIcon className="text-xl cursor-pointer text-red-600" />
-                        </Button>
-                      )}
-                    </div>
-                  </TableCell>
+                  {(canEditUser || canDeleteUser) && (
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+                      <div className="flex justify-evenly">
+                        {canEditUser && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setiseditOpen(true);
+                              setcurrentid(user.id);
+                              handleEdit(user.id);
+                            }}
+                            className="bg-transparent hover:bg-white shadow:none"
+                          >
+                            <PencilIcon className="text-xl cursor-pointer " />
+                          </button>
+                        )}
+
+                        {canDeleteUser && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setIsOpen(true);
+                              setcurrentid(user.id);
+                            }}
+                            className="bg-transparent hover:bg-white shadow:none"
+                          >
+                            <DeleteIcon className="text-xl cursor-pointer " />
+                          </button>
+                        )}
+                      </div>
+                    </TableCell>
+                  )}
                 </TableRow>
               ))}
             </TableBody>
@@ -222,7 +227,7 @@ export default function UserTabel() {
         </div>
       </div>
 
-      <Pagination
+      {/* <Pagination
         page={page}
         totalPages={
           isSearching
@@ -230,8 +235,21 @@ export default function UserTabel() {
             : data?.pagination?.totalPages
         }
         onPageChange={setPage}
+      /> */}
+      <Pagination
+        page={page}
+        totalPages={
+          isSearching
+            ? Math.ceil((filteredUsers?.length || 0) / pageSize)
+            : data?.pagination?.totalPages
+        }
+        limit={pageSize}
+        onPageChange={setPage}
+        onLimitChange={(newLimit) => {
+          setPageSize(newLimit);
+          setPage(1); // important
+        }}
       />
-
       <AddEditUserModal
         isOpen={isModalOpen}
         onClose={() => {

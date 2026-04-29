@@ -3,7 +3,7 @@ import { Formik, Form } from "formik";
 import Button from "../../../../components/ui/button/Button";
 import InputController from "../../../../components/ui/input/input-controller";
 import { toast } from "react-toastify";
-
+import { useQueryClient } from "@tanstack/react-query";
 import ToggleSwitch from "../../../../pages/Forms/form-elements/ToggleSwitch";
 
 import { useGetRoleById, useupdateRoles, useCreateRole } from "../../hooks";
@@ -13,7 +13,8 @@ import {
 } from "../../../../lib/helper/flate-permission";
 import { roleValidationSchema } from "../../../../components/ui/input/validation";
 import { useMemo } from "react";
-
+import { setPermissions } from "../../../../redux/slice";
+import { useDispatch } from "react-redux";
 type Props = {
   isOpen: boolean;
   onClose: () => void;
@@ -22,10 +23,10 @@ type Props = {
 
 const AddEditRoleModal = ({ isOpen, onClose, id }: Props) => {
   const { data } = useGetRoleById(id!);
-
+  const dispatch = useDispatch();
   const { mutate: updateRole, isPending } = useupdateRoles();
   const { mutate: createRole, isPending: isCreating } = useCreateRole();
-
+  const queryClient = useQueryClient();
   const formattedPermissions = useMemo(() => {
     return formatPermissionsForUI(data?.permissions || []);
   }, [data?.permissions]);
@@ -46,6 +47,44 @@ const AddEditRoleModal = ({ isOpen, onClose, id }: Props) => {
           permissions: formattedPermissions,
         }}
         validationSchema={roleValidationSchema}
+        // onSubmit={(values) => {
+        //   const payload = {
+        //     ...values,
+        //     permissions: formatPermissionsForAPI(values.permissions),
+        //   };
+
+        //   if (id) {
+        //     updateRole(
+        //       { id, data: payload },
+        //       {
+        //         onSuccess: () => {
+        //           toast.success("Role updated successfully");
+        //           onClose();
+        //         },
+        //         onError: (err: any) => {
+        //           toast.error(err?.response?.data?.message || "Update failed");
+        //         },
+        //       },
+        //     );
+        //   } else {
+        //     createRole(payload, {
+        //       onSuccess: () => {
+        //         toast.success("Role created successfully");
+        //         onClose();
+        //       },
+        //       onError: (err: any) => {
+        //         toast.error(err?.response?.data?.message || "Create failed");
+        //       },
+        //     });
+        //   }
+        //   dispatch(
+        //     setPermissions({
+        //       role: values.title,
+        //       permissions: values.permissions,
+        //     }),
+        //   );
+        // }}
+
         onSubmit={(values) => {
           const payload = {
             ...values,
@@ -58,10 +97,25 @@ const AddEditRoleModal = ({ isOpen, onClose, id }: Props) => {
               {
                 onSuccess: () => {
                   toast.success("Role updated successfully");
+                  queryClient.invalidateQueries({ queryKey: ["profile"] });
                   onClose();
-                },
-                onError: (err: any) => {
-                  toast.error(err?.response?.data?.message || "Update failed");
+
+                  const formattedAccess = formatPermissionsForUI(
+                    payload.permissions,
+                  );
+
+                  dispatch(
+                    setPermissions({
+                      role: values.title,
+                      access: formattedAccess,
+                    }),
+                  );
+                  console.log(
+                    setPermissions({
+                      role: values.title,
+                      access: formattedAccess,
+                    }),
+                  );
                 },
               },
             );
@@ -70,31 +124,35 @@ const AddEditRoleModal = ({ isOpen, onClose, id }: Props) => {
               onSuccess: () => {
                 toast.success("Role created successfully");
                 onClose();
-              },
-              onError: (err: any) => {
-                toast.error(err?.response?.data?.message || "Create failed");
+
+                dispatch(
+                  setPermissions({
+                    role: payload.title,
+                    permissions: payload.permissions,
+                  }),
+                );
               },
             });
           }
         }}
       >
         {({ values, setFieldValue, touched, errors }) => (
-          <Form className="flex flex-col mx-5">
-
-            <div className="mt-6 space-y-5">
+          <Form className="flex flex-col mx-5 ">
+            <div className=" ">
               <InputController
                 control="input"
                 label="Role Name"
+                placeholder="Enter Role"
                 name="title"
                 value={values.title}
                 onChange={(e: any) => setFieldValue("title", e.target.value)}
               />
 
               {touched.title && errors.title && (
-                <p className="text-xs text-red-500 mt-1">{errors.title}</p>
+                <p className="text-xs text-red-500 border">{errors.title}</p>
               )}
 
-              <div>
+              <div className="mb-3">
                 <label className="text-sm">Status</label>
                 <InputController
                   control="select"
@@ -118,13 +176,12 @@ const AddEditRoleModal = ({ isOpen, onClose, id }: Props) => {
               />
 
               {touched.permissions && errors.permissions && (
-                <p className="text-xs text-red-500 mt-1">
+                <p className="text-xs text-red-500 ">
                   {errors.permissions}
                 </p>
               )}
             </div>
 
-          
             <div className="flex justify-end gap-3 mt-6">
               <Button type="button" variant="outline" onClick={onClose}>
                 Close
@@ -144,5 +201,5 @@ const AddEditRoleModal = ({ isOpen, onClose, id }: Props) => {
     </Modal>
   );
 };
-
+        
 export default AddEditRoleModal;

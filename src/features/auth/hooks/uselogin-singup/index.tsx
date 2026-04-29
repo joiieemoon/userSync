@@ -6,6 +6,7 @@ import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { getrolebyidApi } from "../../../roles/service";
 import { setPermissions } from "../../../../redux/slice";
+import { formatPermissionsForUI } from "../../../../lib/helper/flate-permission";
 
 export const useLogin = () => {
   const { login } = useAuth();
@@ -55,7 +56,13 @@ export const usePermission = (id: number) => {
 
     onSuccess: (data) => {
       console.log("use permisson fetch", data);
-      dispatch(setPermissions(data));
+      // dispatch(setPermissions(data));
+      dispatch(
+        setPermissions({
+          role: data.role,
+          permissions: formatPermissionsForUI(data.permissions),
+        }),
+      );
     },
   });
 };

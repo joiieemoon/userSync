@@ -9,14 +9,24 @@ import InputController from "../../../../components/ui/input/input-controller";
 import { updateprofilevaldiation } from "../../../../components/ui/input/validation";
 import { updateFields } from "../../../../components/ui/input/input-config";
 
-import { useUpdateProfile } from "../../hooks/update-profile";
+import {
+  useGetProfilebyid,
+  useUpdateProfile,
+} from "../../hooks/update-profile";
 import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
 export default function UserMetaCard() {
   const { isOpen, openModal, closeModal } = useModal();
   const { mutate, isPending } = useUpdateProfile();
 
   const { user, updateUser } = useAuth();
 
+  const { data: profile, isLoading } = useGetProfilebyid();
+  const queryClient = useQueryClient();
+
+  const profileUser = profile?.user;
+  console.log(profileUser);
+  console.log(isLoading);
   return (
     <>
       <div className="p-10 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
@@ -27,18 +37,16 @@ export default function UserMetaCard() {
             </div>
             <div className="order-3 xl:order-2">
               <h4 className="mb-2 text-lg font-semibold text-center text-gray-800 dark:text-white/90 xl:text-left">
-                {user?.firstName || "Guest"} {user?.lastName}
+                {profileUser?.firstName || "Guest"} {profileUser?.lastName}
               </h4>
               <div className="flex flex-col items-center gap-1 text-center xl:flex-row xl:gap-3 xl:text-left">
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {user?.email}
+                  {profileUser?.email}
                 </p>
                 <div className="hidden h-3.5 w-px bg-gray-300 dark:bg-gray-700 xl:block"></div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {user?.username}
-                </p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {user?.username}
+
+                <p className="text-sm text-gray-500 dark:text-gray-400 font-extrabold">
+                  {profileUser?.roleTitle}
                 </p>
               </div>
             </div>
@@ -67,14 +75,14 @@ export default function UserMetaCard() {
         </div>
       </div>
 
-      <Modal isOpen={isOpen} onClose={closeModal} className="max-w-[700px] m-4">
+      <Modal isOpen={isOpen} title="Update Profile" onClose={closeModal} className="max-w-[700px] m-4">
         <Formik
           enableReinitialize
           initialValues={{
-            firstName: user?.firstName || "",
-            lastName: user?.lastName || "",
-            email: user?.email || "",
-            phone: user?.phone || "",
+            firstName: profileUser?.firstName || "",
+            lastName: profileUser?.lastName || "",
+            email: profileUser?.email || "",
+            phone: profileUser?.phone || "",
           }}
           onSubmit={(values) => {
             mutate(values, {
@@ -83,6 +91,7 @@ export default function UserMetaCard() {
                 closeModal();
 
                 updateUser(values);
+                queryClient.invalidateQueries({ queryKey: ["profile"] });
               },
               onError: (error) => {
                 toast.error(error?.response?.data?.message || "Update failed");
@@ -101,9 +110,9 @@ export default function UserMetaCard() {
             setFieldTouched,
           }) => (
             <Form className="flex flex-col mx-5">
-              <div className="custom-scrollbar h-[450px] overflow-y-auto px-2 pb-1">
-                <div className="mt-7">
-                  <h5 className="mb-5 text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
+              <div className="custom-scrollbar h-[400px] overflow-y-auto px-2 ">
+                <div className="mt-2">
+                  <h5 className=" text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
                     Personal Information
                   </h5>
 
@@ -157,7 +166,7 @@ export default function UserMetaCard() {
                       </div>
 
                       {touched.phone && errors.phone && (
-                        <p className="text-xs text-red-500 mt-1">
+                        <p className="text-xs text-red-500 ">
                           {errors.phone}
                         </p>
                       )}
@@ -166,7 +175,7 @@ export default function UserMetaCard() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 px-2 mt-6 lg:justify-end mb-8">
+              <div className="flex items-center gap-3 px-2  lg:justify-end mb-2 ">
                 <Button
                   size="sm"
                   variant="outline"

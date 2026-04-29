@@ -7,7 +7,7 @@ export const formatPermissionsForUI = (permissions: any[] = []) => {
   const result: any = {};
 
   permissions.forEach((perm) => {
-    const key = perm.moduleSlug?.trim()?.toLowerCase(); 
+    const key = perm.moduleSlug?.trim()?.toLowerCase();
 
     if (!key) return;
 
@@ -41,4 +41,20 @@ export const formatPermissionsForAPI = (permissions: any = {}) => {
       };
     })
     .filter(Boolean);
+};
+export const formatPermissions = (permissions) => {
+  if (!Array.isArray(permissions)) return {};
+  const result = {};
+
+  permissions.forEach((perm) => {
+    result[perm.moduleSlug] = {
+      list: !!perm.list,
+      view: !!perm.view,
+      add: !!perm.add,
+      edit: !!perm.edit,
+      delete: !!perm.delete,
+    };
+  });
+
+  return result;
 };
