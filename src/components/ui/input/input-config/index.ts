@@ -1,0 +1,105 @@
+import { FormField } from "../types";
+export const signupFields: FormField[] = [
+    {
+        name: "firstName",
+        label: "First Name",
+        type: "text",
+        placeholder: "Jainil",
+    },
+    {
+        name: "lastName",
+        label: "Last Name",
+        type: "text",
+        placeholder: "kukrolia",
+    },
+    {
+        name: "email",
+        label: "Email",
+        type: "text",
+        placeholder: "joiie@yopmail.com",
+    },
+
+    {
+        name: "password",
+        label: "Password",
+        type: "password",
+        placeholder: "Enter password",
+    },
+    {
+        name: "username",
+        label: "User Name",
+        type: "text",
+        placeholder: "Enter User Name",
+    },
+
+
+
+];
+
+export const loginFields: FormField[] = [
+    {
+        name: "email",
+        label: "Email",
+        type: "text",
+        placeholder: "name@yopmail.com",
+    },
+    {
+        name: "password",
+        label: "Password",
+        type: "password",
+        placeholder: "Enter password",
+    },
+
+];
+export const editUserFields: FormField[] = [
+    { name: "firstName", label: "First Name", type: "text", placeholder: "Jainil" },
+    { name: "lastName", label: "Last Name", type: "text", placeholder: "Kukrolia" },
+    { name: "email", label: "Email", type: "email", placeholder: "joiie@yopmail.com" },
+    { name: "role", label: "Role", type: "select", placeholder: "" },
+];
+export const updateFields = [
+    { name: "firstName", label: "First Name", type: "text" },
+    { name: "lastName", label: "Last Name", type: "text" },
+    { name: "email", label: "Email Address", type: "text" },
+
+];
+
+export const updateuserFiels = [
+    { name: "firstName", label: "First Name", type: "text" },
+    { name: "lastName", label: "Last Name", type: "text" },
+    // { name: "email", label: "Email Address", type: "text" },
+    { name: "username", label: "user Name", type: "text" },
+
+
+];
+export const updateRoleFields = [
+    { name: "title", label: "Role Name", type: "text" },
+    { name: "status", label: "Status", type: "select" },
+];
+export  const updateusersFields =(id)=> [
+    {
+        name: "firstName",
+        label: "First Name",
+        type: "input",
+    },
+    {
+        name: "lastName",
+        label: "Last Name",
+        type: "input",
+    },
+    {
+        name: "username",
+        label: "Username",
+        type: "input",
+    },
+    {
+        name: "email",
+        label: "Email",
+        type: "input",
+    },
+    {
+        name: "password",
+        label: !id ? "Password" : "Reset Password",
+        type: "input",
+    },
+];
