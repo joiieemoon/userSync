@@ -22,7 +22,7 @@ export type User = {
   phone?: string;
   firstName: string;
   lastName: string;
-  roleId?: string;
+  roleId?: number;
   roleTitle?: string;
 };
 export type SignupResponse = {

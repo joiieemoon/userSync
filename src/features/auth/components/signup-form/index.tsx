@@ -23,7 +23,7 @@ export default function SignUpForm() {
 
     mutate(values, {
       onSuccess: () => {
-        toast.success("Signup successful");
+        
 
         setTimeout(() => {
           setLock(false);

@@ -1,12 +1,9 @@
 
 import { apiClient } from "../../../../lib/api/api-client";
 import { ENDPOINTS } from "../../../../lib/api/end-points";
-import { SignupResponse } from "../../types";
+import { LoginResponse, SignupResponse } from "../../types";
 
-export const loginApi = async (data: {
-    email: string;
-    password: string;
-}) => {
+export const loginApi = async (data: LoginResponse) => {
     const res = await apiClient.post(ENDPOINTS.LOGIN, data);
     return res.data.data;
 };

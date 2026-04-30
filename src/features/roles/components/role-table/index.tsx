@@ -16,7 +16,7 @@ import {
 import { toast } from "react-toastify";
 import Pagination from "../../../../components/common/pagination";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { DeleteModal } from "../../../../components/common/delete-modal";
@@ -28,9 +28,9 @@ import SearchBar from "../../../../components/ui/search";
 
 import { useSelector } from "react-redux";
 import { useDebounce } from "../../../../hooks/usedebounce/index.tsx";
-import { usePermission } from "../../../auth/hooks/uselogin-singup/index.tsx";
+
 import { useAuth } from "../../../auth/hooks/useAuth/index.tsx";
-import { formatPermissions } from "../../../../lib/helper/flate-permission/index.tsx";
+import { getAccess } from "../../../../lib/helper/flate-permission/index.tsx";
 const tableHeaders = [
   "id",
   "Role Name",
@@ -42,39 +42,39 @@ const tableHeaders = [
 
 export default function RoleTable() {
   const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(5);
   const { user } = useAuth();
+
   const [currentid, setcurrentid] = useState<number | undefined>(undefined);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<number | undefined>();
 
   const [search, setSearch] = useState("");
-  const debouncedSearch = useDebounce(search, 700);
-  const searchText = debouncedSearch.toLowerCase();
+  const debouncedSearch = useDebounce(search, 1000);
+
+  const searchText = useMemo(
+    () => debouncedSearch.toLowerCase(),
+    [debouncedSearch],
+  );
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const { data, isLoading } = useListRoles({
     page,
-    limit: 5,
+    limit: limit,
+    search: debouncedSearch,
   });
   const filteredRoles = data?.roles?.filter((role: any) =>
     role.title.toLowerCase().includes(searchText),
   );
 
   const { mutate: deleteuser, isPending } = usedeleteRoles();
-  const currentUserRoleId = user?.roleId;
-  console.log(currentUserRoleId);
-  const { data: permission } = usePermission(currentUserRoleId);
-
-  console.log(permission);
-  const access = formatPermissions(permission?.permissions || []);
-  console.log(access, "this is access");
-
-  const canAddRole = access?.role?.add;
-
-  const canEditRole = access?.role?.edit;
-
-  const canDeleteRole = access?.role?.edit;
 
   const pageSize = 5;
+  const { permissions } = useSelector((state: RootState) => state.permissions);
+  const access = getAccess(permissions || []);
+
+  const canAddRole = access?.role?.add;
+  const canEditRole = access?.role?.edit;
+  const canDeleteRole = access?.role?.delete;
 
   const paginatedRoles = debouncedSearch
     ? filteredRoles.slice((page - 1) * pageSize, page * pageSize)
@@ -178,7 +178,7 @@ export default function RoleTable() {
 
                   {/* Action */}
 
-                  {(canEditRole || canDeleteRole) && (
+                  {roles.id !== 1 && (canEditRole || canDeleteRole) && (
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400 ">
                       <div className="flex justify-evenly">
                         {canEditRole && (
@@ -224,10 +224,16 @@ export default function RoleTable() {
         </div>
       </div>
 
+    
       <Pagination
         page={data?.pagination?.page}
         totalPages={data?.pagination?.totalPages}
+        limit={limit}
         onPageChange={(newPage) => setPage(newPage)}
+        onLimitChange={(newLimit) => {
+          setLimit(newLimit);
+          setPage(1);
+        }}
       />
 
       <AddEditRoleModal

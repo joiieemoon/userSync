@@ -58,9 +58,9 @@ export const editUserFields: FormField[] = [
     { name: "role", label: "Role", type: "select", placeholder: "" },
 ];
 export const updateFields = [
-    { name: "firstName", label: "First Name", type: "text" },
-    { name: "lastName", label: "Last Name", type: "text" },
-    { name: "email", label: "Email Address", type: "text" },
+    { name: "firstName", label: "First Name", type: "text", placeholder: "Jainil" },
+    { name: "lastName", label: "Last Name", type: "text", placeholder: "kukrolia" },
+    { name: "email", label: "Email Address", type: "text", placeholder: "joiie@yopmail.com" },
 
 ];
 
@@ -76,7 +76,7 @@ export const updateRoleFields = [
     { name: "title", label: "Role Name", type: "text" },
     { name: "status", label: "Status", type: "select" },
 ];
-export  const updateusersFields =(id)=> [
+export const updateusersFields = (id:number) => [
     {
         name: "firstName",
         label: "First Name",

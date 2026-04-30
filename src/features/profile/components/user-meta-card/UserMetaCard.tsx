@@ -75,7 +75,12 @@ export default function UserMetaCard() {
         </div>
       </div>
 
-      <Modal isOpen={isOpen} title="Update Profile" onClose={closeModal} className="max-w-[700px] m-4">
+      <Modal
+        isOpen={isOpen}
+        title="Update Profile"
+        onClose={closeModal}
+        className="max-w-[700px] m-4"
+      >
         <Formik
           enableReinitialize
           initialValues={{
@@ -135,6 +140,7 @@ export default function UserMetaCard() {
                             label={field.label}
                             name={field.name}
                             type={field.type}
+                            placeholder={field.placeholder}
                             value={values[field.name]}
                             onChange={handleChange}
                             onBlur={handleBlur}
@@ -166,9 +172,7 @@ export default function UserMetaCard() {
                       </div>
 
                       {touched.phone && errors.phone && (
-                        <p className="text-xs text-red-500 ">
-                          {errors.phone}
-                        </p>
+                        <p className="text-xs text-red-500 ">{errors.phone}</p>
                       )}
                     </div>
                   </div>

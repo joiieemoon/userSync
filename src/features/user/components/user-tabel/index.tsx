@@ -46,7 +46,7 @@ export default function UserTabel() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const { user } = useAuth();
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(5);
   // const users = data?.users || [];
   const { data, isLoading, filteredUsers, access, isSearching } = useUserTable(
     user,
@@ -54,17 +54,19 @@ export default function UserTabel() {
     page,
     limit,
   );
-
+  console.log(access, "accesss from props");
   const [currentid, setcurrentid] = useState<number | undefined>(undefined);
   const [isOpen, setIsOpen] = useState(false);
   const [iseditOpen, setiseditOpen] = useState(false);
 
   const debouncedSearch = useDebounce(search, 700);
 
-  const pageSize = 5;
+  const pageSize = limit;
+
+  // const filteredUserssuper = data?.users?.filter((u) => u.roleId !== 1);
 
   const paginatedUsers = isSearching
-    ? filteredUsers?.slice((page - 1) * pageSize, page * pageSize)
+    ? filteredUsers?.slice((page - 1) * limit, page * limit)
     : filteredUsers;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<number | undefined>();
@@ -82,7 +84,7 @@ export default function UserTabel() {
   };
 
   const { mutate: deleteuser, isPending } = useDeleteUser();
-
+  const loginuser = user?.id;
   const {
     delete: canDeleteUser,
     edit: canEditUser,
@@ -95,9 +97,12 @@ export default function UserTabel() {
     return true;
   });
 
+  console.log(canAddUser, "access add pro");
+  console.log(canDeleteUser, "access delete pro");
+  console.log(canEditUser, "access edit pro");
   return (
     <>
-      <div className="flex justify-between ">
+      <div className="flex justify-between  ">
         <SearchBar value={search} onChange={setSearch} />
 
         {canAddUser && (
@@ -110,19 +115,22 @@ export default function UserTabel() {
         )}
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
+      <div className=" rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03] max-h-[500px] overflow-y-auto">
         <div className="max-w-full overflow-x-auto">
-          <div className="flex justify-end mb-4"></div>
+          <div className="flex justify-end mb-4 "></div>
           <Table>
             {/* Table Header */}
 
-            <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
+            {/* <TableHeader className="border-b border-gray-100 dark:border-white/[0.05] sticky top-0 border"> */}
+            <TableHeader className="sticky top-0 z-20 bg-white dark:bg-white/[0.03] border-b border-gray-100 dark:border-white/[0.05]">
+              {/* <TableHeader className="sticky fixed top-0 z-20 bg-white dark:bg-white/[0.03] border-b border-gray-100 dark:border-white/[0.05]"> */}
+              {/* <TableHeader className="border-b border-gray-100 dark:border-white/[0.05] sticky top-0 border"> */}
               <TableRow>
                 {filteredHeaders.map((header, index) => (
                   <TableCell
                     key={index}
                     isHeader
-                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 "
                   >
                     {header}
                   </TableCell>
@@ -131,8 +139,8 @@ export default function UserTabel() {
             </TableHeader>
 
             {/* Table Body */}
-
-            <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
+            {/* <div className="max-h-[500px] overflow-y-auto"></div> */}
+            <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05] ">
               {paginatedUsers?.map((user: User) => (
                 <TableRow key={user.id}>
                   {/* User Details */}
@@ -180,38 +188,40 @@ export default function UserTabel() {
                   </TableCell>
 
                   {/* Action */}
-                  {(canEditUser || canDeleteUser) && (
-                    <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                      <div className="flex justify-evenly">
-                        {canEditUser && (
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setiseditOpen(true);
-                              setcurrentid(user.id);
-                              handleEdit(user.id);
-                            }}
-                            className="bg-transparent hover:bg-white shadow:none"
-                          >
-                            <PencilIcon className="text-xl cursor-pointer " />
-                          </button>
-                        )}
+                  {user.id !== loginuser &&
+                    user.roleId !== 1 &&
+                    (canEditUser || canDeleteUser) && (
+                      <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+                        <div className="flex justify-evenly">
+                          {canEditUser && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setiseditOpen(true);
+                                setcurrentid(user.id);
+                                handleEdit(user.id);
+                              }}
+                              className="bg-transparent hover:bg-white shadow:none"
+                            >
+                              <PencilIcon className="text-xl cursor-pointer " />
+                            </button>
+                          )}
 
-                        {canDeleteUser && (
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setIsOpen(true);
-                              setcurrentid(user.id);
-                            }}
-                            className="bg-transparent hover:bg-white shadow:none"
-                          >
-                            <DeleteIcon className="text-xl cursor-pointer " />
-                          </button>
-                        )}
-                      </div>
-                    </TableCell>
-                  )}
+                          {canDeleteUser && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setIsOpen(true);
+                                setcurrentid(user.id);
+                              }}
+                              className="bg-transparent hover:bg-white shadow:none"
+                            >
+                              <DeleteIcon className="text-xl cursor-pointer " />
+                            </button>
+                          )}
+                        </div>
+                      </TableCell>
+                    )}
                 </TableRow>
               ))}
             </TableBody>
@@ -227,27 +237,18 @@ export default function UserTabel() {
         </div>
       </div>
 
-      {/* <Pagination
-        page={page}
-        totalPages={
-          isSearching
-            ? Math.ceil((filteredUsers?.length || 0) / pageSize)
-            : data?.pagination?.totalPages
-        }
-        onPageChange={setPage}
-      /> */}
       <Pagination
         page={page}
         totalPages={
           isSearching
-            ? Math.ceil((filteredUsers?.length || 0) / pageSize)
+            ? Math.ceil((filteredUsers?.length || 0) / limit)
             : data?.pagination?.totalPages
         }
-        limit={pageSize}
+        limit={limit}
         onPageChange={setPage}
         onLimitChange={(newLimit) => {
-          setPageSize(newLimit);
-          setPage(1); // important
+          setLimit(newLimit);
+          setPage(1);
         }}
       />
       <AddEditUserModal

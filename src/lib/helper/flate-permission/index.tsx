@@ -58,3 +58,16 @@ export const formatPermissions = (permissions) => {
 
   return result;
 };
+export const getAccess = (permissions = []) => {
+  if (!Array.isArray(permissions)) return {};
+  return permissions.reduce((acc, item) => {
+    acc[item.moduleSlug] = {
+      add: !!item.add,
+      edit: !!item.edit,
+      delete: !!item.delete,
+      view: !!item.view,
+      list: !!item.list,
+    };
+    return acc;
+  }, {});
+};

@@ -1,6 +1,7 @@
 export type PaginationParams = {
   page: number;
   limit: number;
+  search?: string;
 };
 export interface User {
   id: number;
@@ -29,8 +30,8 @@ export type SearchBarProps = {
 export interface ComponentCardProps {
   title: string;
   children: React.ReactNode;
-  className?: string; // Additional custom classes for styling
-  desc?: string; // Description text
+  className?: string; 
+  desc?: string; 
 }
 export interface BreadcrumbProps {
   pageTitle: string;

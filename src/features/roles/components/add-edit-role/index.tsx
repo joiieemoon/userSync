@@ -15,6 +15,8 @@ import { roleValidationSchema } from "../../../../components/ui/input/validation
 import { useMemo } from "react";
 import { setPermissions } from "../../../../redux/slice";
 import { useDispatch } from "react-redux";
+import { ChevronDownIcon } from "../../../../assets/icons";
+import { usePermission } from "../../../auth/hooks/uselogin-singup";
 type Props = {
   isOpen: boolean;
   onClose: () => void;
@@ -47,44 +49,6 @@ const AddEditRoleModal = ({ isOpen, onClose, id }: Props) => {
           permissions: formattedPermissions,
         }}
         validationSchema={roleValidationSchema}
-        // onSubmit={(values) => {
-        //   const payload = {
-        //     ...values,
-        //     permissions: formatPermissionsForAPI(values.permissions),
-        //   };
-
-        //   if (id) {
-        //     updateRole(
-        //       { id, data: payload },
-        //       {
-        //         onSuccess: () => {
-        //           toast.success("Role updated successfully");
-        //           onClose();
-        //         },
-        //         onError: (err: any) => {
-        //           toast.error(err?.response?.data?.message || "Update failed");
-        //         },
-        //       },
-        //     );
-        //   } else {
-        //     createRole(payload, {
-        //       onSuccess: () => {
-        //         toast.success("Role created successfully");
-        //         onClose();
-        //       },
-        //       onError: (err: any) => {
-        //         toast.error(err?.response?.data?.message || "Create failed");
-        //       },
-        //     });
-        //   }
-        //   dispatch(
-        //     setPermissions({
-        //       role: values.title,
-        //       permissions: values.permissions,
-        //     }),
-        //   );
-        // }}
-
         onSubmit={(values) => {
           const payload = {
             ...values,
@@ -104,12 +68,14 @@ const AddEditRoleModal = ({ isOpen, onClose, id }: Props) => {
                     payload.permissions,
                   );
 
-                  dispatch(
-                    setPermissions({
-                      role: values.title,
-                      access: formattedAccess,
-                    }),
-                  );
+                  // dispatch(
+                  //   setPermissions({
+                  //     role: values.title,
+                  //     access: formattedAccess,
+                  //   }),
+                  // );
+                  const userRoleId = user?.roleId;
+                  usePermission(userRoleId);
                   console.log(
                     setPermissions({
                       role: values.title,
@@ -149,11 +115,12 @@ const AddEditRoleModal = ({ isOpen, onClose, id }: Props) => {
               />
 
               {touched.title && errors.title && (
-                <p className="text-xs text-red-500 border">{errors.title}</p>
+                <p className="text-xs text-red-500">{errors.title}</p>
               )}
 
-              <div className="mb-3">
+              <div className="mb-3 relative">
                 <label className="text-sm">Status</label>
+                <span></span>
                 <InputController
                   control="select"
                   className="w-full border rounded-lg p-2 mt-1"
@@ -163,6 +130,9 @@ const AddEditRoleModal = ({ isOpen, onClose, id }: Props) => {
                   <option value="active">Active</option>
                   <option value="inactive">Inactive</option>
                 </InputController>
+                <span className="pointer-events-none absolute right-3 top-[70%] -translate-y-1/2 text-gray-500">
+                  <ChevronDownIcon className="w-4 h-4" />
+                </span>
               </div>
             </div>
 
@@ -176,9 +146,7 @@ const AddEditRoleModal = ({ isOpen, onClose, id }: Props) => {
               />
 
               {touched.permissions && errors.permissions && (
-                <p className="text-xs text-red-500 ">
-                  {errors.permissions}
-                </p>
+                <p className="text-xs text-red-500 ">{errors.permissions}</p>
               )}
             </div>
 
@@ -201,5 +169,5 @@ const AddEditRoleModal = ({ isOpen, onClose, id }: Props) => {
     </Modal>
   );
 };
-        
+
 export default AddEditRoleModal;

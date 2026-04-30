@@ -1,4 +1,9 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import { usePermission } from "../../features/auth/hooks/uselogin-singup";
+import { useAuth } from "../../features/auth/hooks/useAuth";
+import { useDispatch } from "react-redux";
+import { useGetRoleById } from "../../features/roles/hooks";
+import { setPermissions } from "../../redux/slice";
 
 type SidebarContextType = {
   isExpanded: boolean;
@@ -17,15 +22,28 @@ const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
 
 export const useSidebar = () => {
   const context = useContext(SidebarContext);
+
   if (!context) {
     throw new Error("useSidebar must be used within a SidebarProvider");
   }
+
   return context;
 };
 
 export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+ 
+
+  const dispatch = useDispatch();
+  const { user } = useAuth();
+  const { data } = useGetRoleById(user?.roleId || 0);
+  useEffect(() => {
+    if (data) {
+    
+      dispatch(setPermissions(data));
+    }
+  }, [data, dispatch]);
   const [isExpanded, setIsExpanded] = useState(true);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -37,6 +55,7 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
     const handleResize = () => {
       const mobile = window.innerWidth < 768;
       setIsMobile(mobile);
+
       if (!mobile) {
         setIsMobileOpen(false);
       }
@@ -61,7 +80,7 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
   const toggleSubmenu = (item: string) => {
     setOpenSubmenu((prev) => (prev === item ? null : item));
   };
-  
+
   return (
     <SidebarContext.Provider
       value={{

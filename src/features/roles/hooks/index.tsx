@@ -13,6 +13,7 @@ import {
 } from "../service";
 import { useDispatch } from "react-redux";
 import { setPermissions } from "../../../redux/slice";
+// import { PaginationParams } from "../../user/types";
 export const useListRoles = (params) => {
   return useQuery({
     queryKey: ["roles", params],
@@ -55,7 +56,7 @@ export const useGetRoleById = (id: number) => {
     enabled: !!id,
 
     onSuccess: (data) => {
-      console.log("API DATA ", data); 
+      console.log("API DATA ", data);
       dispatch(setPermissions(data));
     },
   });

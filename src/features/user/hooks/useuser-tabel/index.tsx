@@ -1,12 +1,17 @@
 import { useDebounce } from "../../../../hooks/usedebounce";
 import { useListUsers } from "../uselistusers-api";
 
-import { formatPermissions } from "../../../../lib/helper/flate-permission";
-import { usePermission } from "../../../auth/hooks/uselogin-singup";
+import { getAccess } from "../../../../lib/helper/flate-permission";
+
 import { User } from "../../../auth/types";
-export const useUserTable = (user: User, search: string, page: number,limit:number) => {
-  const currentUserId = user?.id;
-  const currentUserRoleId = user?.roleId;
+import { useSelector } from "react-redux";
+export const useUserTable = (
+  user: User,
+  search: string,
+  page: number,
+  limit: number,
+) => {
+ 
 
   const debouncedSearch = useDebounce(search, 700);
   const isSearching = debouncedSearch.length > 0;
@@ -14,11 +19,15 @@ export const useUserTable = (user: User, search: string, page: number,limit:numb
 
   const { data, isLoading } = useListUsers({
     page: isSearching ? 1 : page,
-    limit: isSearching ? 100 : limit,
+
+    limit: limit,
+    // limit: isSearching ? 100 : isSuperAdmin ? limit + 1 : limit,
+    search: debouncedSearch,
   });
 
-  const { data: permission } = usePermission(currentUserRoleId);
-  const access = formatPermissions(permission?.permissions || []);
+  const { permissions } = useSelector((state) => state.permissions);
+
+  const access = getAccess(permissions || []);
 
   const users = data?.users || [];
 
@@ -26,11 +35,10 @@ export const useUserTable = (user: User, search: string, page: number,limit:numb
     const fullName = `${u.firstName} ${u.lastName}`.toLowerCase();
 
     return (
-      u.id !== currentUserId &&
-      u.roleId !== 1 &&
-      (fullName.includes(searchText) ||
-        u.username.toLowerCase().includes(searchText) ||
-        u.email.toLowerCase().includes(searchText))
+      
+      fullName.includes(searchText) ||
+      u.username.toLowerCase().includes(searchText) ||
+      u.email.toLowerCase().includes(searchText)
     );
   });
 
