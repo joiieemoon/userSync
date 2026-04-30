@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
-// import type { RootState } from "../../store";
+
 import type { RootState } from "../../redux/store";
 import {
   ChevronDownIcon,
@@ -13,8 +13,7 @@ import {
 import { useSidebar } from "../../context/sidebar-context";
 import { useSelector } from "react-redux";
 import Button from "../../components/ui/button/Button";
-// import { useAuth } from "../../features/auth/hooks/useAuth";
-// import { usePermission } from "../../features/auth/hooks/uselogin-singup";
+
 import { getAccess } from "../../lib/helper/flate-permission";
 
 type NavItem = {
@@ -27,15 +26,7 @@ type NavItem = {
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const location = useLocation();
-  // const { user } = useAuth();
-  // const currentUserRoleId = user?.roleId;
-
-  // const { data: permission } = usePermission(currentUserRoleId);
-  // const access = formatPermissions(permission?.permissions || []);
-
-  // console.log(currentUserRoleId, "try side");
-
-  // const permissions = useSelector((state: any) => state.permission.access);
+ 
   const { permissions } = useSelector((state: RootState) => state.permissions);
 
   const access = getAccess(permissions);

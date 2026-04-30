@@ -18,7 +18,7 @@ export const useLogin = () => {
         token: data.token,
         user: data.user,
       });
-      console.log("user login succesfull");
+    
 
       navigation("/", { replace: true });
     },

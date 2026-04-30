@@ -21,8 +21,7 @@ export default function SignInForm() {
   const [lock, setLock] = useState(false);
   const { user } = useAuth();
   const { data } = useGetRoleById(user?.roleId || 0);
-  // const permissions = useSelector((state: any) => state.permission.access);
-  // console.log(permissions);
+ 
   
   
   const handleSubmit = (values: loginProps) => {

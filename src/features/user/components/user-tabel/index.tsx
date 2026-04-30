@@ -29,7 +29,7 @@ import { useDebounce } from "../../../../hooks/usedebounce";
 import { useAuth } from "../../../auth/hooks/useAuth";
 import { User } from "../../types";
 
-// import { formatPermissions } from "../../../../lib/helper/flate-permission";
+
 import { useUserTable } from "../../hooks/useuser-tabel";
 
 const tableHeaders = [
@@ -47,14 +47,14 @@ export default function UserTabel() {
   const [search, setSearch] = useState("");
   const { user } = useAuth();
   const [limit, setLimit] = useState(5);
-  // const users = data?.users || [];
+
   const { data, isLoading, filteredUsers, access, isSearching } = useUserTable(
     user,
     search,
     page,
     limit,
   );
-  console.log(access, "accesss from props");
+
   const [currentid, setcurrentid] = useState<number | undefined>(undefined);
   const [isOpen, setIsOpen] = useState(false);
   const [iseditOpen, setiseditOpen] = useState(false);
@@ -97,9 +97,7 @@ export default function UserTabel() {
     return true;
   });
 
-  console.log(canAddUser, "access add pro");
-  console.log(canDeleteUser, "access delete pro");
-  console.log(canEditUser, "access edit pro");
+ 
   return (
     <>
       <div className="flex justify-between  ">

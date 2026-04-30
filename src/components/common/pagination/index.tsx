@@ -1,4 +1,4 @@
-// import { ChevronDownIcon } from "../../../assets/icons";
+
 import type { CommanPaginationProps } from "../types";
 
 export default function Pagination({

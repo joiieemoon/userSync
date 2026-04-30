@@ -25,8 +25,7 @@ export default function UserMetaCard() {
   const queryClient = useQueryClient();
 
   const profileUser = profile?.user;
-  console.log(profileUser);
-  console.log(isLoading);
+
   return (
     <>
       <div className="p-10 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">

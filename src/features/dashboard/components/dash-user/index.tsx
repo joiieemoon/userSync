@@ -10,7 +10,7 @@ import { useDashboardData } from "../../hooks/usedashboard";
 export default function UserStates() {
   const { data } = useDashboardData();
 
-  // console.log("Dashboard state:", data.stats);
+
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6">
@@ -29,10 +29,7 @@ export default function UserStates() {
               {data?.stats?.totalUsers}
             </h4>
           </div>
-          {/* <Badge color="success">
-            <ArrowUpIcon />
-            11.01%
-          </Badge> */}
+          
         </div>
       </div>
       {/* <!-- Metric Item End --> */}
@@ -52,10 +49,7 @@ export default function UserStates() {
             </h4>
           </div>
 
-          {/* <Badge color="error">
-            <ArrowDownIcon />
-            9.05%
-          </Badge> */}
+        
         </div>
       </div>
       {/* <!-- Metric Item End --> */}
