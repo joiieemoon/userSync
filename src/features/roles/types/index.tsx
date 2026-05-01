@@ -19,3 +19,13 @@ export type Role = {
   updatedAt: string;
   permissions: RolePermission[];
 };
+export interface ListParams {
+    page: number;
+    limit: number;
+    search?: string; 
+  }
+ export type AddEditRoleProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  id?: number;
+};

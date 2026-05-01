@@ -17,13 +17,9 @@ import { setPermissions } from "../../../../redux/slice";
 import { useDispatch } from "react-redux";
 import { ChevronDownIcon } from "../../../../assets/icons";
 import { usePermission } from "../../../auth/hooks/uselogin-singup";
-type Props = {
-  isOpen: boolean;
-  onClose: () => void;
-  id?: number;
-};
+import type { AddEditRoleProps } from "../../types";
 
-const AddEditRoleModal = ({ isOpen, onClose, id }: Props) => {
+const AddEditRoleModal = ({ isOpen, onClose, id }: AddEditRoleProps) => {
   const { data } = useGetRoleById(id!);
   const dispatch = useDispatch();
   const { mutate: updateRole, isPending } = useupdateRoles();
@@ -68,12 +64,6 @@ const AddEditRoleModal = ({ isOpen, onClose, id }: Props) => {
                     payload.permissions,
                   );
 
-                  // dispatch(
-                  //   setPermissions({
-                  //     role: values.title,
-                  //     access: formattedAccess,
-                  //   }),
-                  // );
                   const userRoleId = user?.roleId;
                   usePermission(userRoleId);
                   console.log(

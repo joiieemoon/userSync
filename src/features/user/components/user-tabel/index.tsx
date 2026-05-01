@@ -17,7 +17,7 @@ import {
 
 import Pagination from "../../../../components/common/pagination";
 import { useDeleteUser } from "../../hooks/uselistusers-api";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
@@ -29,8 +29,9 @@ import { useDebounce } from "../../../../hooks/usedebounce";
 import { useAuth } from "../../../auth/hooks/useAuth";
 import { User } from "../../types";
 
-
 import { useUserTable } from "../../hooks/useuser-tabel";
+import PageMeta from "../../../../components/common/page-meta";
+import { useDashboardData } from "../../../dashboard/hooks/usedashboard";
 
 const tableHeaders = [
   "User Details",
@@ -60,10 +61,14 @@ export default function UserTabel() {
   const [iseditOpen, setiseditOpen] = useState(false);
 
   const debouncedSearch = useDebounce(search, 700);
+  const { data: dashdata } = useDashboardData();
 
+  const totalUser = useMemo(() => {
+    return dashdata?.stats?.totalUsers;
+  }, [dashdata]);
   const pageSize = limit;
 
-  // const filteredUserssuper = data?.users?.filter((u) => u.roleId !== 1);
+ 
 
   const paginatedUsers = isSearching
     ? filteredUsers?.slice((page - 1) * limit, page * limit)
@@ -97,9 +102,9 @@ export default function UserTabel() {
     return true;
   });
 
- 
   return (
     <>
+      <PageMeta title="UserDesk | Users" description="This is User tables " />
       <div className="flex justify-between  ">
         <SearchBar value={search} onChange={setSearch} />
 
@@ -114,124 +119,122 @@ export default function UserTabel() {
       </div>
 
       <div className=" rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03] max-h-[500px] overflow-y-auto">
-        <div className="max-w-full overflow-x-auto">
-          <div className="flex justify-end mb-4 "></div>
-          <Table>
-            {/* Table Header */}
+        <div className="max-w-full  ">
+          <div className="min-w-full">
+            <Table>
+              {/* Table Header */}
 
-            {/* <TableHeader className="border-b border-gray-100 dark:border-white/[0.05] sticky top-0 border"> */}
-            <TableHeader className="sticky top-0 z-20 bg-white dark:bg-white/[0.03] border-b border-gray-100 dark:border-white/[0.05]">
-              {/* <TableHeader className="sticky fixed top-0 z-20 bg-white dark:bg-white/[0.03] border-b border-gray-100 dark:border-white/[0.05]"> */}
-              {/* <TableHeader className="border-b border-gray-100 dark:border-white/[0.05] sticky top-0 border"> */}
-              <TableRow>
-                {filteredHeaders.map((header, index) => (
-                  <TableCell
-                    key={index}
-                    isHeader
-                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 "
-                  >
-                    {header}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHeader>
-
-            {/* Table Body */}
-            {/* <div className="max-h-[500px] overflow-y-auto"></div> */}
-            <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05] ">
-              {paginatedUsers?.map((user: User) => (
-                <TableRow key={user.id}>
-                  {/* User Details */}
-                  <TableCell className="px-5 py-4 sm:px-6 text-start">
-                    <div className="flex items-center gap-3">
-                      <div>
-                        <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
-                          {user.firstName} {user.lastName}
-                        </span>
-                        <span className="block text-gray-500 text-theme-xs dark:text-gray-400">
-                          {user.username}
-                        </span>
-                      </div>
-                    </div>
-                  </TableCell>
-
-                  {/* Email */}
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {user.email}
-                  </TableCell>
-
-                  {/* Role */}
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    <div className="flex -space-x-2">{user.roleTitle}</div>
-                  </TableCell>
-
-                  {/* Status */}
-                  <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    <Badge
-                      size="sm"
-                      color={user.isActive ? "success" : "error"}
+              <TableHeader className="sticky top-0 z-20 bg-white dark:bg-white/[0.03] border-b border-gray-100 dark:border-white/[0.05]">
+                <TableRow>
+                  {filteredHeaders.map((header, index) => (
+                    <TableCell
+                      key={index}
+                      isHeader
+                      className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 "
                     >
-                      {user.isActive ? "Active" : "Inactive"}
-                    </Badge>
-                  </TableCell>
-
-                  {/* Created At */}
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                    {new Date(user.createdAt).toLocaleString()}
-                  </TableCell>
-
-                  {/* Updated At */}
-                  <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                    {new Date(user.createdAt).toLocaleString()}
-                  </TableCell>
-
-                  {/* Action */}
-                  {user.id !== loginuser &&
-                    user.roleId !== 1 &&
-                    (canEditUser || canDeleteUser) && (
-                      <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                        <div className="flex justify-evenly">
-                          {canEditUser && (
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setiseditOpen(true);
-                                setcurrentid(user.id);
-                                handleEdit(user.id);
-                              }}
-                              className="bg-transparent hover:bg-white shadow:none"
-                            >
-                              <PencilIcon className="text-xl cursor-pointer " />
-                            </button>
-                          )}
-
-                          {canDeleteUser && (
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setIsOpen(true);
-                                setcurrentid(user.id);
-                              }}
-                              className="bg-transparent hover:bg-white shadow:none"
-                            >
-                              <DeleteIcon className="text-xl cursor-pointer " />
-                            </button>
-                          )}
-                        </div>
-                      </TableCell>
-                    )}
+                      {header}
+                    </TableCell>
+                  ))}
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          {isLoading ? (
-            <>
-              <Skeleton height={20} width={200} />
-              <Skeleton count={5} />
-            </>
-          ) : (
-            ""
-          )}
+              </TableHeader>
+
+              {/* Table Body */}
+              {/* <div className="max-h-[500px] overflow-y-auto"></div> */}
+              <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05] ">
+                {paginatedUsers?.map((user: User) => (
+                  <TableRow key={user.id}>
+                    {/* User Details */}
+                    <TableCell className="px-5 py-4 sm:px-6 text-start">
+                      <div className="flex items-center gap-3">
+                        <div>
+                          <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
+                            {user.firstName} {user.lastName}
+                          </span>
+                          <span className="block text-gray-500 text-theme-xs dark:text-gray-400">
+                            {user.username}
+                          </span>
+                        </div>
+                      </div>
+                    </TableCell>
+
+                    {/* Email */}
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      {user.email}
+                    </TableCell>
+
+                    {/* Role */}
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      <div className="flex -space-x-2">{user.roleTitle}</div>
+                    </TableCell>
+
+                    {/* Status */}
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      <Badge
+                        size="sm"
+                        color={user.isActive ? "success" : "error"}
+                      >
+                        {user.isActive ? "Active" : "Inactive"}
+                      </Badge>
+                    </TableCell>
+
+                    {/* Created At */}
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+                      {new Date(user.createdAt).toLocaleString()}
+                    </TableCell>
+
+                    {/* Updated At */}
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+                      {new Date(user.createdAt).toLocaleString()}
+                    </TableCell>
+
+                    {/* Action */}
+                    {user.id !== loginuser &&
+                      user.roleId !== 1 &&
+                      (canEditUser || canDeleteUser) && (
+                        <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+                          <div className="flex justify-evenly">
+                            {canEditUser && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setiseditOpen(true);
+                                  setcurrentid(user.id);
+                                  handleEdit(user.id);
+                                }}
+                                className="bg-transparent hover:bg-white shadow:none"
+                              >
+                                <PencilIcon className="text-xl cursor-pointer " />
+                              </button>
+                            )}
+
+                            {canDeleteUser && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setIsOpen(true);
+                                  setcurrentid(user.id);
+                                }}
+                                className="bg-transparent hover:bg-white shadow:none"
+                              >
+                                <DeleteIcon className="text-xl cursor-pointer " />
+                              </button>
+                            )}
+                          </div>
+                        </TableCell>
+                      )}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            {isLoading ? (
+              <>
+                <Skeleton height={20} width={200} />
+                <Skeleton count={5} />
+              </>
+            ) : (
+              ""
+            )}
+          </div>
         </div>
       </div>
 
@@ -248,7 +251,9 @@ export default function UserTabel() {
           setLimit(newLimit);
           setPage(1);
         }}
+        totalUser={totalUser}
       />
+
       <AddEditUserModal
         isOpen={isModalOpen}
         onClose={() => {

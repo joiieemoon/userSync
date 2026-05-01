@@ -13,18 +13,21 @@ import {
 } from "../service";
 import { useDispatch } from "react-redux";
 import { setPermissions } from "../../../redux/slice";
-// import { PaginationParams } from "../../user/types";
-export const useListRoles = (params) => {
+import { PaginationParams } from "../../user/types";
+
+export const useListRoles = (params:PaginationParams) => {
   return useQuery({
     queryKey: ["roles", params],
     queryFn: () => listrolesApi(params),
     placeholderData: keepPreviousData,
+    staleTime: 2 * 60 * 1000,
   });
 };
 export const usedeleteRoles = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id: number) => deleteroleApi(id),
+
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["roles"] });
     },

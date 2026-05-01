@@ -9,9 +9,12 @@ import { useDashboardData } from "../../hooks/usedashboard";
 
 export default function UserStates() {
   const { data } = useDashboardData();
+  console.log(data, "fdfsdfsdfsdf");
 
-
-
+  const recentUser = data?.recentUsers;
+  console.log(recentUser, "this is recent");
+  const totalrecent = recentUser?.length;
+  console.log(totalrecent, "sizeeeeeee");
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6">
       {/* <!-- Metric Item Start --> */}
@@ -29,7 +32,6 @@ export default function UserStates() {
               {data?.stats?.totalUsers}
             </h4>
           </div>
-          
         </div>
       </div>
       {/* <!-- Metric Item End --> */}
@@ -42,14 +44,12 @@ export default function UserStates() {
         <div className="flex items-end justify-between mt-5">
           <div>
             <span className="text-sm text-gray-500 dark:text-gray-400">
-              Orders
+            Total  Recent Users
             </span>
             <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-              {data?.stats?.totalEmployees}
+              {data?.recentUsers?.length|| " "}
             </h4>
           </div>
-
-        
         </div>
       </div>
       {/* <!-- Metric Item End --> */}

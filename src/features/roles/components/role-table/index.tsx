@@ -28,9 +28,10 @@ import SearchBar from "../../../../components/ui/search";
 
 import { useSelector } from "react-redux";
 import { useDebounce } from "../../../../hooks/usedebounce/index.tsx";
-
+import type { ListParams } from "../../types/index.tsx";
 import { useAuth } from "../../../auth/hooks/useAuth/index.tsx";
 import { getAccess } from "../../../../lib/helper/flate-permission/index.tsx";
+import PageMeta from "../../../../components/common/page-meta/index.tsx";
 const tableHeaders = [
   "id",
   "Role Name",
@@ -51,17 +52,23 @@ export default function RoleTable() {
 
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 1000);
-
+  const isSearching = debouncedSearch.trim().length > 0;
   const searchText = useMemo(
     () => debouncedSearch.toLowerCase(),
     [debouncedSearch],
   );
+
+  const params: ListParams = {
+    page: isSearching ? 1 : page,
+    limit,
+  };
+
+  if (isSearching) {
+    params.search = debouncedSearch;
+  }
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const { data, isLoading } = useListRoles({
-    page,
-    limit: limit,
-    search: debouncedSearch,
-  });
+
+  const { data, isLoading } = useListRoles(params);
   const filteredRoles = data?.roles?.filter((role: any) =>
     role.title.toLowerCase().includes(searchText),
   );
@@ -91,6 +98,7 @@ export default function RoleTable() {
   }, [debouncedSearch]);
   return (
     <>
+      <PageMeta title="Roles" description="This is User tables " />
       <div className="flex justify-between mb-2 p-0">
         <SearchBar value={search} onChange={setSearch} />
 
@@ -224,7 +232,6 @@ export default function RoleTable() {
         </div>
       </div>
 
-    
       <Pagination
         page={data?.pagination?.page}
         totalPages={data?.pagination?.totalPages}

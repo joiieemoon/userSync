@@ -26,11 +26,13 @@ export const useGetUserById = (id: number) => {
     },
   });
 };
-export const useListUsers = (params) => {
+export const useListUsers = (params, options = {}) => {
   return useQuery({
     queryKey: ["users", params],
     queryFn: () => listusersApi(params),
     placeholderData: keepPreviousData,
+    staleTime: 2 * 60 * 1000,
+    ...options,
   });
 };
 

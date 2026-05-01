@@ -11,31 +11,33 @@ export const useUserTable = (
   page: number,
   limit: number,
 ) => {
- 
-
   const debouncedSearch = useDebounce(search, 700);
-  const isSearching = debouncedSearch.length > 0;
+
   const searchText = debouncedSearch.toLowerCase();
 
-  const { data, isLoading } = useListUsers({
+  const isSearching = debouncedSearch.trim().length > 0;
+
+  const params: any = {
     page: isSearching ? 1 : page,
+    limit,
+  };
 
-    limit: limit,
-    // limit: isSearching ? 100 : isSuperAdmin ? limit + 1 : limit,
-    search: debouncedSearch,
-  });
+  if (isSearching) {
+    params.search = debouncedSearch;
+  }
 
+  const { data, isLoading } = useListUsers(params);
   const { permissions } = useSelector((state) => state.permissions);
 
   const access = getAccess(permissions || []);
 
   const users = data?.users || [];
+  // const totaluser=data?.
 
   const filteredUsers = users.filter((u) => {
     const fullName = `${u.firstName} ${u.lastName}`.toLowerCase();
 
     return (
-      
       fullName.includes(searchText) ||
       u.username.toLowerCase().includes(searchText) ||
       u.email.toLowerCase().includes(searchText)

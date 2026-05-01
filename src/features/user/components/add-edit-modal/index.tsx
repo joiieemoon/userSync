@@ -115,28 +115,31 @@ const AddEditUserModal = ({ isOpen, onClose, id }: Props) => {
                   )}
                 </div>
               ))}
-              <div>
+              <div className=" mt-3">
                 <label className="text-sm">Role</label>
+                <div className="relative">
+                  <InputController
+                    control="select"
+                    className="w-full border rounded-lg p-2 "
+                    value={values.roleId}
+                    onChange={(e: any) =>
+                      setFieldValue("roleId", Number(e.target.value))
+                    }
+                  >
+                    <option value="">Select Role</option>
 
-                <InputController
-                  control="select"
-                  className="w-full border rounded-lg p-2 mt-1"
-                  value={values.roleId}
-                  onChange={(e: any) =>
-                    setFieldValue("roleId", Number(e.target.value))
-                  }
-                >
-                  <option value="">Select Role</option>
-
-                  {rolesData?.roles
-                    ?.filter((role: any) => role.id !== 1)
-                    ?.map((role: any) => (
-                      <option key={role.id} value={role.id}>
-                        {role.title}
-                      </option>
-                    ))}
-                </InputController>
-
+                    {rolesData?.roles
+                      ?.filter((role: any) => role.id !== 1)
+                      ?.map((role: any) => (
+                        <option key={role.id} value={role.id}>
+                          {role.title}
+                        </option>
+                      ))}
+                  </InputController>
+                  <span className="pointer-events-none absolute right-3 top-[50%] -translate-y-1/2 text-gray-500">
+                    <ChevronDownIcon className="w-5 h-5" />
+                  </span>
+                </div>
                 {touched.roleId && errors.roleId && (
                   <p className="text-xs text-red-500 mt-1">{errors.roleId}</p>
                 )}
@@ -161,8 +164,8 @@ const AddEditUserModal = ({ isOpen, onClose, id }: Props) => {
                   <ChevronDownIcon className="w-4 h-4" />
                 </span>
               </div>
-                  
-              <div>
+
+              <div className=" mt-1">
                 <label className="text-sm">Phone</label>
                 <PhoneInput
                   value={values.phone}

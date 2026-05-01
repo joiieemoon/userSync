@@ -1,4 +1,3 @@
-
 import type { CommanPaginationProps } from "../types";
 
 export default function Pagination({
@@ -7,6 +6,7 @@ export default function Pagination({
   onPageChange,
   limit,
   onLimitChange,
+  totalUser,
 }: CommanPaginationProps) {
   const getPages = () => {
     const total = totalPages;
@@ -71,12 +71,12 @@ export default function Pagination({
             <option value="50">50</option>
           </select>
         </div>
-          
       </div>
 
       <p className="text-sm text-gray-500 dark:text-gray-400">
         Page <span className="font-medium">{page}</span> of{" "}
         <span className="font-medium">{totalPages}</span>
+        {totalUser ? <span> out of {totalUser} users</span> : ""}
       </p>
 
       <div className="flex items-center gap-1">
@@ -98,7 +98,6 @@ export default function Pagination({
             </span>
           ) : (
             <button
-              // key={p}
               key={`${p}-${index}`}
               onClick={() => onPageChange(Number(p))}
               className={`flex items-center justify-center w-10 h-10 text-sm font-medium rounded-lg border transition ${

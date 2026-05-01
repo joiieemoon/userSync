@@ -41,6 +41,8 @@ export type CommanPaginationProps = {
   page: number;
   totalPages: number;
   limit: number;
+   totaluser?:number;
   onPageChange: (page: number) => void;
   onLimitChange: (limit: number) => void;
+ 
 };
