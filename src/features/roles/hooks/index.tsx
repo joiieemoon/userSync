@@ -14,8 +14,10 @@ import {
 import { useDispatch } from "react-redux";
 import { setPermissions } from "../../../redux/slice";
 import { PaginationParams } from "../../user/types";
+import { UpdateRolePayload } from "../types";
 
-export const useListRoles = (params:PaginationParams) => {
+// Keeps previous page data to avoid UI flicker during pagination
+export const useListRoles = (params: PaginationParams) => {
   return useQuery({
     queryKey: ["roles", params],
     queryFn: () => listrolesApi(params),
@@ -23,6 +25,8 @@ export const useListRoles = (params:PaginationParams) => {
     staleTime: 2 * 60 * 1000,
   });
 };
+
+//delete roles and after that update ui by invalidate queries
 export const usedeleteRoles = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -33,19 +37,16 @@ export const usedeleteRoles = () => {
     },
   });
 };
-
+//
 export const useupdateRoles = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, data }: { id: number; data: any }) =>
+    mutationFn: ({ id, data }: { id: number; data: UpdateRolePayload }) =>
+      //i need to fix this
       updateroleApi(id, data),
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["roles"] });
-    },
-
-    onError: (err: any) => {
-      console.log("Update user error", err.message);
     },
   });
 };
@@ -59,7 +60,6 @@ export const useGetRoleById = (id: number) => {
     enabled: !!id,
 
     onSuccess: (data) => {
-      console.log("API DATA ", data);
       dispatch(setPermissions(data));
     },
   });
@@ -74,9 +74,6 @@ export const useCreateRole = () => {
     mutationFn: (data: any) => createroleApi(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["roles"] });
-    },
-    onError: (err: any) => {
-      console.log("Create role error", err.message);
     },
   });
 };

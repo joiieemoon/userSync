@@ -26,6 +26,12 @@ export const signupFields: FormField[] = [
         placeholder: "Enter password",
     },
     {
+        name: "cpassword",
+        label: "confirm Password",
+        type: "password",
+        placeholder: "Enter Confirm password",
+    },
+    {
         name: "username",
         label: "User Name",
         type: "text",
@@ -76,30 +82,35 @@ export const updateRoleFields = [
     { name: "title", label: "Role Name", type: "text" },
     { name: "status", label: "Status", type: "select" },
 ];
-export const updateusersFields = (id:number) => [
+export const updateusersFields = (id: number) => [
     {
         name: "firstName",
         label: "First Name",
         type: "input",
+        placeholder: "Jainil",
     },
     {
         name: "lastName",
         label: "Last Name",
         type: "input",
+        placeholder: "kukrolia",
     },
     {
         name: "username",
         label: "Username",
         type: "input",
+         placeholder: "joiiee",
     },
     {
         name: "email",
         label: "Email",
         type: "input",
+         placeholder: "jainilkukrolia@yopmail.com",
     },
     {
         name: "password",
         label: !id ? "Password" : "Reset Password",
         type: "input",
+          placeholder: "Enter valid Password",
     },
 ];

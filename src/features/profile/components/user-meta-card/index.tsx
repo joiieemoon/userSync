@@ -1,18 +1,18 @@
 import { useModal } from "../../../../hooks/usemodal/index.ts";
-import { Modal } from "../../../../components/ui/modal";
-import Button from "../../../../components/ui/button/Button";
+import { Modal } from "../../../../components/ui/modal/index.tsx";
+import Button from "../../../../components/ui/button/index.tsx";
 import "react-phone-input-2/lib/style.css";
 import PhoneInput from "react-phone-input-2";
-import { useAuth } from "../../../auth/hooks/useAuth";
+import { useAuth } from "../../../auth/hooks/useAuth/index.tsx";
 import { Form, Formik } from "formik";
-import InputController from "../../../../components/ui/input/input-controller";
-import { updateprofilevaldiation } from "../../../../components/ui/input/validation";
-import { updateFields } from "../../../../components/ui/input/input-config";
+import InputController from "../../../../components/ui/input/input-controller/index.tsx";
+import { updateprofilevaldiation } from "../../../../components/ui/input/validation/index.ts";
+import { updateFields } from "../../../../components/ui/input/input-config/index.ts";
 
 import {
   useGetProfilebyid,
   useUpdateProfile,
-} from "../../hooks/update-profile";
+} from "../../hooks/update-profile/index.tsx";
 import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
 export default function UserMetaCard() {

@@ -1,3 +1,9 @@
+import type {
+  RolePermission,
+  PermissionMap,
+  PermissionWithSlug,
+  AccessMap,
+} from "../../../features/roles/types";
 export const moduleIdMap: Record<number, string> = {
   1: "role",
   2: "users",
@@ -22,12 +28,17 @@ export const formatPermissionsForUI = (permissions: any[] = []) => {
 
   return result;
 };
-export const formatPermissionsForAPI = (permissions: any = {}) => {
+/**
+ * Formats permissions object into API-ready array structure using moduleId
+ */
+export const formatPermissionsForAPI = (
+  permissions: PermissionMap = {},
+): RolePermission[] => {
   return Object.keys(permissions)
     .map((key) => {
       const moduleId = Object.entries(moduleIdMap).find(
         ([, v]) => v === key,
-      )?.[0];
+      )?.[0]; 
 
       if (!moduleId) return null;
 
@@ -40,26 +51,17 @@ export const formatPermissionsForAPI = (permissions: any = {}) => {
         delete: !!permissions[key]?.delete,
       };
     })
-    .filter(Boolean);
+    .filter(Boolean) as RolePermission[];
 };
-export const formatPermissions = (permissions) => {
-  if (!Array.isArray(permissions)) return {};
-  const result = {};
+/**
+ * Maps permissions array into module-wise access object
+ */
 
-  permissions.forEach((perm) => {
-    result[perm.moduleSlug] = {
-      list: !!perm.list,
-      view: !!perm.view,
-      add: !!perm.add,
-      edit: !!perm.edit,
-      delete: !!perm.delete,
-    };
-  });
-
-  return result;
-};
-export const getAccess = (permissions = []) => {
+export const getAccess = (
+  permissions: PermissionWithSlug[] = [],
+): AccessMap => {
   if (!Array.isArray(permissions)) return {};
+
   return permissions.reduce((acc, item) => {
     acc[item.moduleSlug] = {
       add: !!item.add,
@@ -69,5 +71,5 @@ export const getAccess = (permissions = []) => {
       list: !!item.list,
     };
     return acc;
-  }, {});
+  }, {} as AccessMap);
 };

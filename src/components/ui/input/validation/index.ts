@@ -27,10 +27,14 @@ export const signupvalidationSchema = yup.object().shape({
         .matches(/[a-z]/, errorMessage.passwordLower)
         .matches(/[0-9]/, errorMessage.passwordNumber)
         .matches(/[@$!%*?&]/, errorMessage.passwordSpecial),
+    cpassword: yup
+        .string()
+        .required(errorMessage.required)
+        .oneOf([yup.ref("password")], errorMessage.passwordMatch),
     username: yup.string().required(errorMessage.required),
     phone: yup.string().required(errorMessage.required),
 
-
+    
 })
 
 export const updateprofilevaldiation = yup.object().shape({

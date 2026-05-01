@@ -1,20 +1,10 @@
-import {
-  ArrowDownIcon,
-  ArrowUpIcon,
-  BoxIconLine,
-  GroupIcon,
-} from "../../../../assets/icons";
-import Badge from "../../../../components/ui/badge/Badge";
+import { BoxIconLine, GroupIcon } from "../../../../assets/icons";
+
 import { useDashboardData } from "../../hooks/usedashboard";
 
 export default function UserStates() {
   const { data } = useDashboardData();
-  console.log(data, "fdfsdfsdfsdf");
 
-  const recentUser = data?.recentUsers;
-  console.log(recentUser, "this is recent");
-  const totalrecent = recentUser?.length;
-  console.log(totalrecent, "sizeeeeeee");
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6">
       {/* <!-- Metric Item Start --> */}
@@ -34,9 +24,7 @@ export default function UserStates() {
           </div>
         </div>
       </div>
-      {/* <!-- Metric Item End --> */}
 
-      {/* <!-- Metric Item Start --> */}
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
         <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
           <BoxIconLine className="text-gray-800 size-6 dark:text-white/90" />
@@ -44,15 +32,14 @@ export default function UserStates() {
         <div className="flex items-end justify-between mt-5">
           <div>
             <span className="text-sm text-gray-500 dark:text-gray-400">
-            Total  Recent Users
+              Total Recent Users
             </span>
             <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-              {data?.recentUsers?.length|| " "}
+              {data?.recentUsers?.length || " "}
             </h4>
           </div>
         </div>
       </div>
-      {/* <!-- Metric Item End --> */}
     </div>
   );
 }

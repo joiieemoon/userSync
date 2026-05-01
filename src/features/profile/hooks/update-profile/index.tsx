@@ -7,12 +7,8 @@ import {
 export const useUpdateProfile = () => {
   return useMutation({
     mutationFn: updateProfileApi,
-    onSuccess: (data) => {
-      console.log("UPDATE RESPONSE:", data);
-    },
-    onError: (err) => {
-      console.log("UPDATE ERROR:", err.message);
-    },
+   
+   
   });
 };
 export const useGetProfilebyid = () => {
@@ -22,12 +18,10 @@ export const useGetProfilebyid = () => {
     queryFn: () => getProfilebyidApi(),
 
     onSuccess: (data) => {
-      console.log("PROFILE DATA:", data);
+      
       queryClient.invalidateQueries(["profile"]);
     },
-    onError: (err) => {
-      console.log("PROFILE ERROR:", err.message);
-    },
+   
   });
 };
 

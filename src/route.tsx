@@ -9,32 +9,33 @@ const AuthLayout = lazy(() => import("./features/auth/index.tsx"));
 // pages
 const Home = lazy(() => import("./features/dashboard"));
 const UserProfiles = lazy(() => import("./features/profile"));
-const NotFound = lazy(() => import("./pages/OtherPage/NotFound"));
+const NotFound = lazy(() => import("./features/not-found/index.tsx"));
 const UserTables = lazy(() => import("./features/user"));
 const RoleTables = lazy(() => import("./features/roles"));
 const SignUpForm = lazy(() => import("./features/auth/components/signup-form"));
 const SignInForm = lazy(() => import("./features/auth/components/login-form"));
 
+
 const AuthCheck = ({ children }: { children: React.ReactNode }) => {
-  const { user, isLoading } = useAuth();
+  const { user } = useAuth();
 
-  if (isLoading) return null;
-
-  if (!user) return <Navigate to="/signin" replace />;
+  if (!user) {
+    return <Navigate to="/signin" replace />;
+  }
 
   return <>{children}</>;
 };
+
 
 const PublicCheck = ({ children }: { children: React.ReactNode }) => {
-  const { user, isLoading } = useAuth();
+  const { user } = useAuth();
 
-  if (isLoading) return null;
-
-  if (user) return <Navigate to="/" replace />;
+  if (user) {
+    return <Navigate to="/" replace />;
+  }
 
   return <>{children}</>;
 };
-
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -67,4 +68,3 @@ export const router = createBrowserRouter([
     element: <NotFound />,
   },
 ]);
-

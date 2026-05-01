@@ -1,3 +1,4 @@
+
 import type { CommanPaginationProps } from "../types";
 
 export default function Pagination({
@@ -6,7 +7,7 @@ export default function Pagination({
   onPageChange,
   limit,
   onLimitChange,
-  totalUser,
+  totalitems,
 }: CommanPaginationProps) {
   const getPages = () => {
     const total = totalPages;
@@ -62,7 +63,7 @@ export default function Pagination({
             title="select"
             value={limit}
             onChange={(e) => onLimitChange(Number(e.target.value))}
-            className="py-1 pl-3 pr-6  text-sm border rounded-lg bg-transparent dark:border-gray-700 border w-15"
+            className="py-1 pl-3 pr-6  text-sm border rounded-lg bg-transparent dark:border-gray-700  w-15"
           >
             <option value="2">2</option>
             <option value="5">5</option>
@@ -76,7 +77,7 @@ export default function Pagination({
       <p className="text-sm text-gray-500 dark:text-gray-400">
         Page <span className="font-medium">{page}</span> of{" "}
         <span className="font-medium">{totalPages}</span>
-        {totalUser ? <span> out of {totalUser} users</span> : ""}
+        {totalitems ? <span> out of {totalitems} </span> : ""}
       </p>
 
       <div className="flex items-center gap-1">

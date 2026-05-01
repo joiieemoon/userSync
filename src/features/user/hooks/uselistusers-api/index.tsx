@@ -18,12 +18,8 @@ export const useGetUserById = (id: number) => {
     queryKey: ["user", id],
     queryFn: () => getuserbyidApi(id),
     enabled: !!id,
-    onSuccess: () => {
-      console.log("get data successful by id");
-    },
-    onError: (err: any) => {
-      console.log("error get by id", err.message);
-    },
+  
+    
   });
 };
 export const useListUsers = (params, options = {}) => {
@@ -58,9 +54,7 @@ export const useUpdateUser = () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
     },
 
-    onError: (err: any) => {
-      console.log("Update user error", err.message);
-    },
+    
   });
 };
 export const useCreateUser = () => {
@@ -69,10 +63,8 @@ export const useCreateUser = () => {
     mutationFn: (data: User) => createuserApi(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
-      console.log("user created ");
+    
     },
-    onError: (err: any) => {
-      console.log("Create user error", err.message);
-    },
+   
   });
 };

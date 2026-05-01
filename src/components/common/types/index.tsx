@@ -30,8 +30,8 @@ export type SearchBarProps = {
 export interface ComponentCardProps {
   title: string;
   children: React.ReactNode;
-  className?: string; 
-  desc?: string; 
+  className?: string;
+  desc?: string;
 }
 export interface BreadcrumbProps {
   pageTitle: string;
@@ -41,8 +41,8 @@ export type CommanPaginationProps = {
   page: number;
   totalPages: number;
   limit: number;
-   totaluser?:number;
+  totaluser?: number;
   onPageChange: (page: number) => void;
   onLimitChange: (limit: number) => void;
- 
+  totalitems?: number;
 };

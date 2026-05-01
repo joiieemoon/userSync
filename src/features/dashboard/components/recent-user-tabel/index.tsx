@@ -6,19 +6,15 @@ import {
   TableHeader,
   TableRow,
 } from "../../../../components/ui/table";
-
-export default function RoleWiseUserChart() {
+import type { User } from "../../../auth/types";
+export default function RecentUser() {
   const { data } = useDashboardData();
-
-  console.log(data, "rect data");
-  const recentUser = data?.status;
 
   const tableHeaders = ["User Details", "Email", "Role", "Joined At"];
   const users = data?.recentUsers || [];
 
   return (
     <>
-
       <h1 className="mb-2 font-medium">Recent User</h1>
       <div className="max-h-[400px] rounded-xl border border-gray-200  dark:border-white/[0.05]   overflow-y-auto">
         <Table>

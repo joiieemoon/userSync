@@ -2,7 +2,7 @@ import type { InputControllerProps } from "../types";
 import React from "react";
 
 // import ../input-element-fields/InputField from "../input-fields/InputField";
-import Input from "../input-fields/InputField";
+import Input from "../input-fields";
 
 const InputController = ({ control, ...props }: InputControllerProps) => {
   switch (control) {

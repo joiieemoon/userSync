@@ -1,10 +1,10 @@
 import { Modal } from "../../../../components/ui/modal";
 import { Formik, Form } from "formik";
-import Button from "../../../../components/ui/button/Button";
+import Button from "../../../../components/ui/button";
 import InputController from "../../../../components/ui/input/input-controller";
 import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
-import ToggleSwitch from "../../../../pages/Forms/form-elements/ToggleSwitch";
+import ToggleSwitch from "../toggle-switch";
 
 import { useGetRoleById, useupdateRoles, useCreateRole } from "../../hooks";
 import {
@@ -66,12 +66,7 @@ const AddEditRoleModal = ({ isOpen, onClose, id }: AddEditRoleProps) => {
 
                   const userRoleId = user?.roleId;
                   usePermission(userRoleId);
-                  console.log(
-                    setPermissions({
-                      role: values.title,
-                      access: formattedAccess,
-                    }),
-                  );
+                
                 },
               },
             );

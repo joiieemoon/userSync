@@ -6,14 +6,8 @@ import {
   TableRow,
 } from "../../../../components/ui/table";
 
-import Badge from "../../../../components/ui/badge/Badge";
-import {
-  DeleteIcon,
-  EditIcon,
-  PencilIcon,
-  PlugInIcon,
-  PlusIcon,
-} from "../../../../assets/icons";
+import Badge from "../../../../components/ui/badge";
+import { PencilIcon, PlusIcon, TrashBinIcon } from "../../../../assets/icons";
 
 import Pagination from "../../../../components/common/pagination";
 import { useDeleteUser } from "../../hooks/uselistusers-api";
@@ -22,7 +16,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 import { DeleteModal } from "../../../../components/common/delete-modal";
-import Button from "../../../../components/ui/button/Button";
+import Button from "../../../../components/ui/button";
 import AddEditUserModal from "../add-edit-modal";
 import SearchBar from "../../../../components/ui/search";
 import { useDebounce } from "../../../../hooks/usedebounce";
@@ -31,7 +25,6 @@ import { User } from "../../types";
 
 import { useUserTable } from "../../hooks/useuser-tabel";
 import PageMeta from "../../../../components/common/page-meta";
-import { useDashboardData } from "../../../dashboard/hooks/usedashboard";
 
 const tableHeaders = [
   "User Details",
@@ -61,14 +54,8 @@ export default function UserTabel() {
   const [iseditOpen, setiseditOpen] = useState(false);
 
   const debouncedSearch = useDebounce(search, 700);
-  const { data: dashdata } = useDashboardData();
 
-  const totalUser = useMemo(() => {
-    return dashdata?.stats?.totalUsers;
-  }, [dashdata]);
-  const pageSize = limit;
-
- 
+  const totalusers = data?.pagination?.total;
 
   const paginatedUsers = isSearching
     ? filteredUsers?.slice((page - 1) * limit, page * limit)
@@ -203,7 +190,7 @@ export default function UserTabel() {
                                 }}
                                 className="bg-transparent hover:bg-white shadow:none"
                               >
-                                <PencilIcon className="text-xl cursor-pointer " />
+                                <PencilIcon className="text-2xl cursor-pointer " />
                               </button>
                             )}
 
@@ -216,7 +203,7 @@ export default function UserTabel() {
                                 }}
                                 className="bg-transparent hover:bg-white shadow:none"
                               >
-                                <DeleteIcon className="text-xl cursor-pointer " />
+                                <TrashBinIcon className="text-xl" />
                               </button>
                             )}
                           </div>
@@ -251,7 +238,7 @@ export default function UserTabel() {
           setLimit(newLimit);
           setPage(1);
         }}
-        totalUser={totalUser}
+        totalitems={totalusers}
       />
 
       <AddEditUserModal

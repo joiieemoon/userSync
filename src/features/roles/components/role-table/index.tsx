@@ -5,33 +5,24 @@ import {
   TableHeader,
   TableRow,
 } from "../../../../components/ui/table";
-import Badge from "../../../../components/ui/badge/Badge";
-
-import {
-  DeleteIcon,
-  EditIcon,
-  PencilIcon,
-  PlusIcon,
-} from "../../../../assets/icons";
+import Badge from "../../../../components/ui/badge/index.tsx";
+import { PencilIcon, PlusIcon, TrashBinIcon } from "../../../../assets/icons";
 import { toast } from "react-toastify";
 import Pagination from "../../../../components/common/pagination";
-
 import { useEffect, useMemo, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { DeleteModal } from "../../../../components/common/delete-modal";
-import Button from "../../../../components/ui/button/Button";
-
+import Button from "../../../../components/ui/button/index.tsx";
 import { usedeleteRoles, useListRoles } from "../../hooks";
 import AddEditRoleModal from "../add-edit-role";
 import SearchBar from "../../../../components/ui/search";
-
 import { useSelector } from "react-redux";
 import { useDebounce } from "../../../../hooks/usedebounce/index.tsx";
-import type { ListParams } from "../../types/index.tsx";
-import { useAuth } from "../../../auth/hooks/useAuth/index.tsx";
+import type { ListParams, RoleList } from "../../types/index.tsx";
 import { getAccess } from "../../../../lib/helper/flate-permission/index.tsx";
 import PageMeta from "../../../../components/common/page-meta/index.tsx";
+import { RootState } from "../../../../redux/store/index.tsx";
 const tableHeaders = [
   "id",
   "Role Name",
@@ -44,7 +35,6 @@ const tableHeaders = [
 export default function RoleTable() {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
-  const { user } = useAuth();
 
   const [currentid, setcurrentid] = useState<number | undefined>(undefined);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -69,7 +59,10 @@ export default function RoleTable() {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   const { data, isLoading } = useListRoles(params);
-  const filteredRoles = data?.roles?.filter((role: any) =>
+
+  const totalRole = data?.pagination?.total;
+
+  const filteredRoles = data?.roles?.filter((role: RoleList) =>
     role.title.toLowerCase().includes(searchText),
   );
 
@@ -77,6 +70,8 @@ export default function RoleTable() {
 
   const pageSize = 5;
   const { permissions } = useSelector((state: RootState) => state.permissions);
+
+  //get
   const access = getAccess(permissions || []);
 
   const canAddRole = access?.role?.add;
@@ -87,6 +82,7 @@ export default function RoleTable() {
     ? filteredRoles.slice((page - 1) * pageSize, page * pageSize)
     : filteredRoles;
 
+  //for hidding header action colum header
   const filteredHeaders = tableHeaders.filter((header) => {
     if (header === "Action") {
       return canEditRole || canDeleteRole;
@@ -122,7 +118,6 @@ export default function RoleTable() {
         <div className="max-w-full overflow-x-auto">
           <Table>
             {/* Table Header */}
-
             <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
               <TableRow>
                 {filteredHeaders.map((header, index) => (
@@ -138,18 +133,13 @@ export default function RoleTable() {
             </TableHeader>
 
             {/* Table Body */}
-
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-              {/* {data?.roles?.map((roles: any) => ( */}
-              {paginatedRoles?.map((roles: any) => (
+              {paginatedRoles?.map((roles: RoleList) => (
                 <TableRow key={roles.id}>
                   {/* User Details */}
                   <TableCell className="px-5 py-4 sm:px-6 text-start">
                     <div className="flex items-center gap-3">
                       <div>
-                        {/* <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
-                          {roles.title}
-                        </span> */}
                         <span className="block font-bold text-gray-500 text-theme-xs dark:text-gray-400">
                           {roles.id}
                         </span>
@@ -169,7 +159,6 @@ export default function RoleTable() {
                       size="sm"
                       color={roles.status === "active" ? "success" : "error"}
                     >
-                      {/* {roles.status ? "Active" : "Inactive"}  */}
                       {roles.status}
                     </Badge>
                   </TableCell>
@@ -211,7 +200,7 @@ export default function RoleTable() {
                             }}
                             className="bg-transparent hover:bg-white shadow:none"
                           >
-                            <DeleteIcon className="text-xl cursor-pointer text-gray-500" />
+                            <TrashBinIcon className="text-xl" />
                           </button>
                         )}
                       </div>
@@ -235,6 +224,7 @@ export default function RoleTable() {
       <Pagination
         page={data?.pagination?.page}
         totalPages={data?.pagination?.totalPages}
+        totalitems={totalRole}
         limit={limit}
         onPageChange={(newPage) => setPage(newPage)}
         onLimitChange={(newLimit) => {

@@ -8,7 +8,7 @@ import type {
 export const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider = ({ children }: any) => {
   const [token, setToken] = useState<string | null>(null);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<LoginResponse|null>(null);
 
   useEffect(() => {
     const t = localStorage.getItem("token");

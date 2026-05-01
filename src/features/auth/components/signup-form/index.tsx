@@ -6,7 +6,7 @@ import "react-phone-input-2/lib/style.css";
 import { signupvalidationSchema } from "../../../../components/ui/input/validation";
 import { signupFields } from "../../../../components/ui/input/input-config";
 import InputController from "../../../../components/ui/input/input-controller";
-import Button from "../../../../components/ui/button/Button";
+import Button from "../../../../components/ui/button";
 
 import { useSignUp } from "../../hooks/uselogin-singup";
 import { useState } from "react";
@@ -54,7 +54,10 @@ export default function SignUpForm() {
 
   return (
     <>
-      <PageMeta title="UserDesk | Signup" description="this is signup for register new user in userdes"></PageMeta>
+      <PageMeta
+        title="UserDesk | Signup"
+        description="this is signup for register new user in userdes"
+      ></PageMeta>
       <div className="flex flex-col flex-1 w-full overflow-y-auto lg:w-1/2 no-scrollbar">
         <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
           <div>
@@ -103,8 +106,9 @@ export default function SignUpForm() {
                           const isHalf =
                             field.name === "firstName" ||
                             field.name === "lastName" ||
-                            field.name === "username";
-                          // field.name === "phone";
+                            field.name == "password" ||
+                            field.name === "username" ||
+                            field.name === "cpassword";
 
                           return (
                             <div

@@ -1,6 +1,6 @@
 import { Modal } from "../../../../components/ui/modal";
 import { Formik, Form } from "formik";
-import Button from "../../../../components/ui/button/Button";
+import Button from "../../../../components/ui/button";
 import InputController from "../../../../components/ui/input/input-controller";
 import PhoneInput from "react-phone-input-2";
 import { toast } from "react-toastify";
@@ -99,6 +99,7 @@ const AddEditUserModal = ({ isOpen, onClose, id }: Props) => {
                 <div key={field.name}>
                   <InputController
                     control={field.type}
+                    placeholder={field.placeholder}
                     label={field.label}
                     name={field.name}
                     type={field.name === "password" ? "password" : "text"}

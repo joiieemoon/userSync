@@ -22,9 +22,7 @@ export const useLogin = () => {
 
       navigation("/", { replace: true });
     },
-    onError: (err) => {
-      console.log(err.message);
-    },
+   
   });
 };
 export const useSignUp = () => {
@@ -34,7 +32,7 @@ export const useSignUp = () => {
     mutationFn: signupApi,
 
     onSuccess: (response) => {
-      console.log("SIGNUP RESPONSE:", response);
+
       navigation("/", { replace: true });
 
       signUp({
@@ -55,8 +53,7 @@ export const usePermission = (id: number) => {
     enabled: !!id,
 
     onSuccess: (data) => {
-      console.log("use permisson fetch", data);
-      // dispatch(setPermissions(data));
+
       dispatch(
         setPermissions({
           role: data.role,

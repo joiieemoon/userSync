@@ -1,8 +1,8 @@
 import { Modal } from "../../ui/modal";
 
-import Button from "../../ui/button/Button";
+import Button from "../../ui/button";
 import { IoWarningOutline } from "react-icons/io5";
-import { useDeleteUser } from "../../../features/user/hooks/uselistusers-api";
+
 
 interface DeleteModalProps {
   isOpen: boolean;
@@ -20,9 +20,8 @@ export const DeleteModal: React.FC<DeleteModalProps> = ({
   loading = false,
   title = "Delete Confirmation",
   description = "Are you sure you want to delete this item? ",
-  id, 
+  id,
 }) => {
- 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title}>
       {/* BODY */}
@@ -44,7 +43,6 @@ export const DeleteModal: React.FC<DeleteModalProps> = ({
 
         <Button
           size="sm"
-      
           onClick={onConfirm}
           disabled={loading}
           className="bg-red-500 hover:bg-red-600 text-white"

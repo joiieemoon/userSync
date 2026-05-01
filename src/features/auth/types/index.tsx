@@ -24,6 +24,7 @@ export type User = {
   lastName: string;
   roleId?: number;
   roleTitle?: string;
+  joinedAt?: string;
 };
 export type SignupResponse = {
   token: string;

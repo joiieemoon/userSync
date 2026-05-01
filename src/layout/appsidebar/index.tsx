@@ -12,7 +12,7 @@ import {
 
 import { useSidebar } from "../../context/sidebar-context";
 import { useSelector } from "react-redux";
-import Button from "../../components/ui/button/Button";
+import Button from "../../components/ui/button";
 
 import { getAccess } from "../../lib/helper/flate-permission";
 
@@ -26,15 +26,13 @@ type NavItem = {
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const location = useLocation();
- 
+
   const { permissions } = useSelector((state: RootState) => state.permissions);
 
   const access = getAccess(permissions);
 
   const canviewUser = access?.users?.view;
   const canviewRole = access?.role?.view;
-  console.log(canviewUser,"this side bar can view");
-  console.log(canviewRole, "this is siddebar");
 
   const navItems: NavItem[] = [
     {
