@@ -1,8 +1,8 @@
 import { Modal } from "../../ui/modal";
 
 import Button from "../../ui/button";
-import { IoWarningOutline } from "react-icons/io5";
-
+import { ErrorHexaIcon } from "../../../assets/icons";
+// import { IoWarningOutline } from "react-icons/io5";
 
 interface DeleteModalProps {
   isOpen: boolean;
@@ -27,7 +27,7 @@ export const DeleteModal: React.FC<DeleteModalProps> = ({
       {/* BODY */}
 
       <div className="flex justify-center w-full">
-        <IoWarningOutline className="text-7xl text-red-500" />
+        <ErrorHexaIcon className="text-7xl" />
       </div>
       <div className="px-2 py-4 ">
         <p className="text-sm text-gray-600 dark:text-gray-300 ">

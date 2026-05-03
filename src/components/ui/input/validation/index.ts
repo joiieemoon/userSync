@@ -2,6 +2,7 @@
 import { errorMessage } from "./error-message";
 import * as yup from "yup";
 import 'yup-phone-lite';
+import { PermissionFlags, AccessMap } from "../../../../features/roles/types";
 const letterRegx = /^[A-Za-z]+$/;
 export const loginvalidationSchema = yup.object().shape({
     email: yup.string().email(errorMessage.email).required(errorMessage.email),
@@ -34,7 +35,7 @@ export const signupvalidationSchema = yup.object().shape({
     username: yup.string().required(errorMessage.required),
     phone: yup.string().required(errorMessage.required),
 
-    
+
 })
 
 export const updateprofilevaldiation = yup.object().shape({
@@ -76,7 +77,7 @@ export const updateUserValidation = yup.object().shape({
                 "password-check",
                 "Password must be at least 6 characters",
                 (value) => {
-                    if (!value) return true; // empty allowed (update case)
+                    if (!value) return true;
                     return value.length >= 6;
                 }
             ),
@@ -93,18 +94,19 @@ export const roleValidationSchema = yup.object().shape({
         .string()
         .oneOf(["active", "inactive"], "Invalid status")
         .required("Status is required"),
-
     permissions: yup
-        .object()
+        .object<AccessMap>()
+
         .test(
             "permissions-required",
             "At least one permission must be selected",
             (value) => {
                 if (!value) return false;
 
-                return Object.values(value).some((module: any) =>
-                    Object.values(module || {}).some(Boolean)
+                return (Object.values(value) as PermissionFlags[]).some((module) =>
+                    Object.values(module).some(Boolean)
                 );
             }
         ),
+
 });

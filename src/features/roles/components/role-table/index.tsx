@@ -97,7 +97,8 @@ export default function RoleTable() {
       <PageMeta title="Roles" description="This is User tables " />
       <div className="flex justify-between mb-2 p-0">
         <SearchBar value={search} onChange={setSearch} />
-
+        
+        
         {canAddRole && (
           <div className="flex justify-center items-center mt-2">
             <Button

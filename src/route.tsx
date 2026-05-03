@@ -40,9 +40,9 @@ export const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      <AuthCheck>
+      // <AuthCheck>
         <AppLayout />
-      </AuthCheck>
+      // </AuthCheck>
     ),
     children: [
       { index: true, element: <Home /> },

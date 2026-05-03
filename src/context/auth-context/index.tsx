@@ -4,12 +4,14 @@ import type {
   LoginResponse,
   SignupResponse,
 } from "../../features/auth/types";
+import { User } from "../../features/user/types";
+import { UpdateRolePayload } from "../../features/roles/types";
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider = ({ children }: any) => {
   const [token, setToken] = useState<string | null>(null);
-  const [user, setUser] = useState<LoginResponse|null>(null);
-
+  const [user, setUser] = useState<User | null>(null);
+  // const [user, setUser] = useState<LoginResponse | null>(null);
   useEffect(() => {
     const t = localStorage.getItem("token");
     const u = localStorage.getItem("user");
@@ -41,7 +43,7 @@ export const AuthProvider = ({ children }: any) => {
     localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify(user));
   };
-  const updateUser = (updatedUser: any) => {
+  const updateUser = (updatedUser: UpdateRolePayload) => {
     setUser(updatedUser);
     localStorage.setItem("user", JSON.stringify(updatedUser));
   };

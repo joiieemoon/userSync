@@ -1,9 +1,9 @@
 export type PermissionFlags = {
-  list: boolean;
-  view: boolean;
-  add: boolean;
-  edit: boolean;
-  delete: boolean;
+  list: boolean | number;
+  view: boolean | number;
+  add: boolean | number;
+  edit: boolean | number;
+  delete: boolean | number;
 };
 
 export interface RoleList {
@@ -23,7 +23,14 @@ export type RolePayload = {
   status: "active" | "inactive";
   permissions: RolePermission[];
 };
-
+export type GetRoleByIdResponse = {
+  id: number;
+  role: {
+    title?: string;
+    status: "active" | "inactive";
+  };
+  permissions: RolePermission[];
+};
 export type Role = {
   id: number;
   title: string;
@@ -32,7 +39,29 @@ export type Role = {
   updatedAt: string;
   permissions: RolePermission[];
 };
-
+// export type PermissionState = {
+//   role: {
+//     title: string;
+//     status: "active" | "inactive";
+//   };
+//   permissions: RolePermission[];
+// };
+// export type PermissionState = {
+//   role: {
+//     title: string;
+//     status: "active" | "inactive";
+//   };
+//   permissions: RolePermission[];
+// };
+// export type PermissionState = {
+//   role: string | { title: string; status: "active" | "inactive" };
+//   permissions: Record<string, any>;
+// };
+// redux/slice.ts
+export type PermissionState = {
+  role: string | { title: string; status: "active" | "inactive" };
+  permissions: Record<string, any>;
+};
 export type PermissionMap = Record<string, RolePermission>;
 
 export interface ListParams {

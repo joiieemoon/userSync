@@ -17,7 +17,7 @@ export const useUserTable = (
 
   const isSearching = debouncedSearch.trim().length > 0;
 
-  const params: any = {
+  const params = {
     page: isSearching ? 1 : page,
     limit,
   };

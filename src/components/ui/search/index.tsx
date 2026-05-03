@@ -1,7 +1,8 @@
 import React from "react";
 import InputController from "../input/input-controller";
-import { IoSearchOutline } from "react-icons/io5";
+
 import { SearchBarProps } from "../../common/types";
+import {  SearchIcon } from "../../../assets/icons";
 
 const SearchBar: React.FC<SearchBarProps> = ({
   value = "",
@@ -17,18 +18,17 @@ const SearchBar: React.FC<SearchBarProps> = ({
 }) => {
   return (
     <div className={`relative  ${className}`}>
-     
       <span className="absolute left-3 top-1/2 -translate-y-1/2 mt-1 text-gray-400 text-lg">
-        <IoSearchOutline className="text-xl" />
+    
+        <SearchIcon />
       </span>
-
 
       <InputController
         control="input"
         value={value}
         disabled={disabled}
         placeholder={placeholder}
-        onChange={(e: any) => onChange?.(e.target.value)}
+        onChange={(e) => onChange?.(e.target.value)}
         onBlur={onBlur}
         onFocus={onFocus}
         onsubmit={onSubmit}

@@ -14,6 +14,7 @@ import { updateUserValidation } from "../../../../components/ui/input/validation
 import { useListRoles } from "../../../roles/hooks";
 import { updateusersFields } from "../../../../components/ui/input/input-config";
 import { ChevronDownIcon } from "../../../../assets/icons";
+import { Role } from "../../../roles/types";
 
 type Props = {
   isOpen: boolean;
@@ -104,9 +105,7 @@ const AddEditUserModal = ({ isOpen, onClose, id }: Props) => {
                     name={field.name}
                     type={field.name === "password" ? "password" : "text"}
                     value={values[field.name]}
-                    onChange={(e: any) =>
-                      setFieldValue(field.name, e.target.value)
-                    }
+                    onChange={(e) => setFieldValue(field.name, e.target.value)}
                   />
 
                   {touched[field.name] && errors[field.name] && (
@@ -123,15 +122,15 @@ const AddEditUserModal = ({ isOpen, onClose, id }: Props) => {
                     control="select"
                     className="w-full border rounded-lg p-2 "
                     value={values.roleId}
-                    onChange={(e: any) =>
+                    onChange={(e) =>
                       setFieldValue("roleId", Number(e.target.value))
                     }
                   >
                     <option value="">Select Role</option>
 
                     {rolesData?.roles
-                      ?.filter((role: any) => role.id !== 1)
-                      ?.map((role: any) => (
+                      ?.filter((role: Role) => role.id !== 1)
+                      ?.map((role: Role) => (
                         <option key={role.id} value={role.id}>
                           {role.title}
                         </option>

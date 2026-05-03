@@ -14,8 +14,12 @@ import {
 import { useDispatch } from "react-redux";
 import { setPermissions } from "../../../redux/slice";
 import { PaginationParams } from "../../user/types";
-import { UpdateRolePayload } from "../types";
-
+import type {
+  
+  RolePayload,
+  UpdateRolePayload,
+} from "../types";
+import type { PermissionState } from "../../../redux/slice";
 // Keeps previous page data to avoid UI flicker during pagination
 export const useListRoles = (params: PaginationParams) => {
   return useQuery({
@@ -59,7 +63,7 @@ export const useGetRoleById = (id: number) => {
     queryFn: () => getrolebyidApi(id),
     enabled: !!id,
 
-    onSuccess: (data) => {
+    onSuccess: (data: PermissionState) => {
       dispatch(setPermissions(data));
     },
   });
@@ -71,7 +75,7 @@ export const useCreateRole = () => {
   queryClient.invalidateQueries({ queryKey: ["roles"] });
 
   return useMutation({
-    mutationFn: (data: any) => createroleApi(data),
+    mutationFn: (data: RolePayload) => createroleApi(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["roles"] });
     },

@@ -9,8 +9,8 @@ export const moduleIdMap: Record<number, string> = {
   2: "users",
 };
 
-export const formatPermissionsForUI = (permissions: any[] = []) => {
-  const result: any = {};
+export const formatPermissionsForUI = (permissions: PermissionWithSlug[] = []) => {
+  const result: AccessMap = {};
 
   permissions.forEach((perm) => {
     const key = perm.moduleSlug?.trim()?.toLowerCase();

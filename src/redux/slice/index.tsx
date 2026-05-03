@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-type PermissionState = {
+export type PermissionState = {
   role: string;
   permissions: Record<string, any>;
 };

@@ -11,7 +11,7 @@ import { PencilIcon, PlusIcon, TrashBinIcon } from "../../../../assets/icons";
 
 import Pagination from "../../../../components/common/pagination";
 import { useDeleteUser } from "../../hooks/uselistusers-api";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
@@ -94,11 +94,10 @@ export default function UserTabel() {
       <PageMeta title="UserDesk | Users" description="This is User tables " />
       <div className="flex justify-between  ">
         <SearchBar value={search} onChange={setSearch} />
-
+    
         {canAddUser && (
           <div className="flex justify-center items-center mt-2">
             <Button size="sm" onClick={handleAdd} className="h-8 ">
-              {" "}
               <PlusIcon /> Add User
             </Button>
           </div>

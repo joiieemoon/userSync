@@ -1,7 +1,9 @@
-export interface InputControllerProps {
+
+import Input from "../input-fields";
+export interface InputControllerProps
+    extends React.ComponentProps<typeof Input> {
     control: "input" | "textarea" | "select" | "checkbox";
-    [key: string]: any;
-}
+}   
 export interface InputProps {
     type?: "text" | "number" | "email" | "password" | "date" | "time" | string;
     id?: string;
@@ -21,7 +23,7 @@ export interface InputProps {
     as?: string;
     label?: string;
     onBlur?: React.FocusEventHandler<HTMLInputElement>;
-    errorMessage?:string;
+    errorMessage?: string;
 }
 export interface FormField {
     email?: string,

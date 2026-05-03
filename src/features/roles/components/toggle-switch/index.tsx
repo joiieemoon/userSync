@@ -1,7 +1,7 @@
 
 type Props = {
   value: Record<string, any>;
-  onChange: (val: any) => void;
+  onChange: (val:unknown) => void;
 };
 
 export default function ToggleSwitch({ value, onChange }: Props) {

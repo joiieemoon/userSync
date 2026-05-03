@@ -11,7 +11,7 @@ import {
   listusersApi,
   updateuserApi,
 } from "../../services/list-users-api";
-import { User } from "../../types";
+import {  User } from "../../types";
 
 export const useGetUserById = (id: number) => {
   return useQuery({
@@ -22,7 +22,7 @@ export const useGetUserById = (id: number) => {
     
   });
 };
-export const useListUsers = (params, options = {}) => {
+export const useListUsers = (params:PaginationParams, options = {}) => {
   return useQuery({
     queryKey: ["users", params],
     queryFn: () => listusersApi(params),
