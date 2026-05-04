@@ -5,7 +5,9 @@ import type { PaginationParams } from "../../../components/common/types";
 import { RolePayload } from "../types";
 
 export const listrolesApi = async (params: PaginationParams) => {
-  const query = new URLSearchParams(params as any).toString();
+  const query = new URLSearchParams(
+    Object.entries(params).map(([key, value]) => [key, String(value)]),
+  ).toString();
   const res = await apiClient.get(`${ENDPOINTS.ROLES}?${query}`);
   return res.data.data;
 };

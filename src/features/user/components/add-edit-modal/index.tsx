@@ -15,6 +15,7 @@ import { useListRoles } from "../../../roles/hooks";
 import { updateusersFields } from "../../../../components/ui/input/input-config";
 import { ChevronDownIcon } from "../../../../assets/icons";
 import { Role } from "../../../roles/types";
+import type { User } from "../../types";
 
 type Props = {
   isOpen: boolean;
@@ -56,7 +57,7 @@ const AddEditUserModal = ({ isOpen, onClose, id }: Props) => {
         }}
         validationSchema={updateUserValidation}
         onSubmit={(values, { resetForm }) => {
-          const payload = {
+          const payload: User = {
             ...values,
           };
           if (id) {
@@ -72,10 +73,11 @@ const AddEditUserModal = ({ isOpen, onClose, id }: Props) => {
                   toast.success("User updated successfully");
                   onClose();
                 },
-                onError: (error: any) => {
-                  toast.error(
-                    error?.response?.data?.message || "Update failed",
-                  );
+                onError: (error) => {
+                  const err = error as {
+                    response?: { data?: { message?: string } };
+                  };
+                  toast.error(err?.response?.data?.message || "Update failed");
                 },
               },
             );
@@ -86,8 +88,12 @@ const AddEditUserModal = ({ isOpen, onClose, id }: Props) => {
                 resetForm();
                 onClose();
               },
-              onError: (error: any) => {
-                toast.error(error?.response?.data?.message || "Create failed");
+
+              onError: (error) => {
+                const err = error as {
+                  response?: { data?: { message?: string } };
+                };
+                toast.error(err?.response?.data?.message || "Create failed");
               },
             });
           }

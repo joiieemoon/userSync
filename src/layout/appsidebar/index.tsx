@@ -1,5 +1,6 @@
-  import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
+import { useSelector } from "react-redux";
 
 import type { RootState } from "../../redux/store";
 import {
@@ -11,7 +12,7 @@ import {
 } from "../../assets/icons";
 
 import { useSidebar } from "../../context/sidebar-context";
-import { useSelector } from "react-redux";
+
 import Button from "../../components/ui/button";
 
 import { getAccess } from "../../lib/helper/flate-permission";
@@ -33,6 +34,7 @@ const AppSidebar: React.FC = () => {
 
   const canviewUser = access?.users?.view;
   const canviewRole = access?.role?.view;
+  // console.log(canviewRole);
 
   const navItems: NavItem[] = [
     {

@@ -17,6 +17,8 @@ export const signupFields: FormField[] = [
         label: "Email",
         type: "text",
         placeholder: "joiie@yopmail.com",
+        autoComplete: "username",
+
     },
 
     {
@@ -24,20 +26,24 @@ export const signupFields: FormField[] = [
         label: "Password",
         type: "password",
         placeholder: "Enter password",
+        autoComplete: "password"
+
     },
     {
         name: "cpassword",
         label: "confirm Password",
         type: "password",
         placeholder: "Enter Confirm password",
+        autoComplete: "password"
     },
     {
         name: "username",
         label: "User Name",
         type: "text",
         placeholder: "Enter User Name",
-    },
 
+    },
+    
 
 
 ];
@@ -48,12 +54,14 @@ export const loginFields: FormField[] = [
         label: "Email",
         type: "text",
         placeholder: "name@yopmail.com",
+        autoComplete: "email",
     },
     {
         name: "password",
         label: "Password",
         type: "password",
         placeholder: "Enter password",
+        autoComplete: "password",
     },
 
 ];
@@ -99,18 +107,18 @@ export const updateusersFields = (id: number) => [
         name: "username",
         label: "Username",
         type: "input",
-         placeholder: "joiiee",
+        placeholder: "joiiee",
     },
     {
         name: "email",
         label: "Email",
         type: "input",
-         placeholder: "jainilkukrolia@yopmail.com",
+        placeholder: "jainilkukrolia@yopmail.com",
     },
     {
         name: "password",
         label: !id ? "Password" : "Reset Password",
         type: "input",
-          placeholder: "Enter valid Password",
+        placeholder: "Enter valid Password",
     },
 ];

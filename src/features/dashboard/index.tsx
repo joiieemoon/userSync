@@ -1,22 +1,24 @@
-
-
-import PageMeta from "../../components/common/page-meta/index.tsx";
 import { useAuth } from "../auth/hooks/useAuth";
-import UserStates from "./components/dash-user";
+
 import { useDispatch } from "react-redux";
 
+
 import { useGetRoleById } from "../roles/hooks/index.tsx";
+
 import { setPermissions } from "../../redux/slice/index.tsx";
 import { useEffect } from "react";
-import RecentUser from "./components/recent-user-tabel/index.tsx";
+import PageMeta from "../../components/common/page-meta/index.tsx";
+import UserStates from "./components/dash-user/index.tsx";
 
+import type { PermissionState } from "../../redux/slice/index.tsx";
+import RecentUser from "./components/recent-user-tabel/index.tsx";
 export default function Home() {
   const dispatch = useDispatch();
   const { user } = useAuth();
   const { data } = useGetRoleById(user?.roleId || 0);
 
   useEffect(() => {
-    if (data) {
+    if (data as PermissionState) {
       dispatch(setPermissions(data));
     }
   }, [data, dispatch]);
@@ -35,6 +37,7 @@ export default function Home() {
       </div>
       <div className="m-3 mt-4">
         <RecentUser />
+        
       </div>
     </>
   );

@@ -24,7 +24,9 @@ const Input: FC<InputProps> = ({
   hint,
   onBlur,
   rows = 3,
+  autoComplete,
   errorMessage,
+
   ...rest
 }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -104,6 +106,7 @@ const Input: FC<InputProps> = ({
                 disabled={disabled}
                 className={inputClasses}
                 onBlur={onBlur}
+                autoComplete={autoComplete}
               />
 
               {isPassword && (

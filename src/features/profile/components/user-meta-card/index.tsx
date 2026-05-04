@@ -1,14 +1,16 @@
+
 import { useModal } from "../../../../hooks/usemodal/index.ts";
 import { Modal } from "../../../../components/ui/modal/index.tsx";
-import Button from "../../../../components/ui/button/index.tsx";
+import Button from "../../../../layout/index.tsx";
 import "react-phone-input-2/lib/style.css";
 import PhoneInput from "react-phone-input-2";
-import { useAuth } from "../../../auth/hooks/useAuth/index.tsx";
-import { Form, Formik } from "formik";
-import InputController from "../../../../components/ui/input/input-controller/index.tsx";
-import { updateprofilevaldiation } from "../../../../components/ui/input/validation/index.ts";
-import { updateFields } from "../../../../components/ui/input/input-config/index.ts";
 
+import { Form, Formik } from "formik";
+import InputController from "../../../../layout/index.tsx";
+
+import { updateprofilevaldiation } from "../../../../components/ui/input/validation/index.ts";
+import { useAuth } from "../../../auth/hooks/useAuth/index.tsx";
+import { updateFields } from "../../../../components/ui/input/input-config/index.ts";
 import {
   useGetProfilebyid,
   useUpdateProfile,
@@ -21,7 +23,7 @@ export default function UserMetaCard() {
 
   const { user, updateUser } = useAuth();
 
-  const { data: profile, isLoading } = useGetProfilebyid();
+  const { data: profile } = useGetProfilebyid();
   const queryClient = useQueryClient();
 
   const profileUser = profile?.user;
@@ -97,7 +99,9 @@ export default function UserMetaCard() {
                 updateUser(values);
                 queryClient.invalidateQueries({ queryKey: ["profile"] });
               },
-              onError: (error) => {
+              onError: (error: {
+                response?: { data?: { message?: string } };
+              }) => {
                 toast.error(error?.response?.data?.message || "Update failed");
               },
             });

@@ -94,7 +94,7 @@ const AddEditRoleModal = ({ isOpen, onClose, id }: AddEditRoleProps) => {
                 placeholder="Enter Role"
                 name="title"
                 value={values.title}
-                onChange={(e: any) => setFieldValue("title", e.target.value)}
+                onChange={(e) => setFieldValue("title", e.target.value)}
               />
 
               {touched.title && errors.title && (

@@ -1,8 +1,8 @@
-import PageBreadcrumb from "../../components/common/page-bread-crumb/index.tsx";
+import PageBreadcrumb from "../../layout/index.tsx";
 
-import PageMeta from "../../components/common/page-meta/index.tsx";
+import PageMeta from "../../layout/index.tsx";
 
-import RoleTable from "./components/role-table/index.tsx";
+import RoleTable from "../../layout/index.tsx";
 
 export default function RoleTables() {
   return (

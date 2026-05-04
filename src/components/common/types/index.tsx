@@ -55,3 +55,6 @@ export interface DeleteModalProps {
   description?: string;
   id?: number;
 }
+export type AuthProviderProps = {
+  children: React.ReactNode;
+};

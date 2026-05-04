@@ -7,8 +7,9 @@ export const getuserbyidApi = async (id: number) => {
   return res.data.data.user;
 };
 export const listusersApi = async (params: PaginationParams) => {
-  const query = new URLSearchParams(params as any).toString();
-
+  const query = new URLSearchParams(
+    Object.entries(params).map(([key, value]) => [key, String(value)]),
+  ).toString();
   const res = await apiClient.get(`${ENDPOINTS.USERS}?${query}`);
 
   return res.data.data;

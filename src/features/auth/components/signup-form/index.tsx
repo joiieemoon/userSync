@@ -28,7 +28,14 @@ export default function SignUpForm() {
         }, 5000);
       },
 
-      onError: (error) => {
+      onError: (error: {
+        response?: {
+          data?: {
+            message?: string;
+            errors?: { field: string; message: string }[];
+          };
+        };
+      }) => {
         const data = error?.response?.data;
 
         if (data?.message) {
@@ -119,12 +126,13 @@ export default function SignUpForm() {
                                 control="input"
                                 label={field.label}
                                 name={field.name}
+                                autoComplete={field?.autoComplete}
                                 value={
                                   values[field.name as keyof typeof values]
                                 }
                                 type={field.type}
                                 onChange={handleChange}
-                                onBlur={handleBlur}
+                                onBlur={handleBlur} 
                                 placeholder={field.placeholder}
                                 disabled={lock}
                                 error={

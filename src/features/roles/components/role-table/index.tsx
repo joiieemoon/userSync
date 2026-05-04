@@ -5,7 +5,7 @@ import {
   TableHeader,
   TableRow,
 } from "../../../../components/ui/table";
-import Badge from "../../../../components/ui/badge/index.tsx";
+import Badge from "../../../../layout/index.tsx";
 import { PencilIcon, PlusIcon, TrashBinIcon } from "../../../../assets/icons";
 import { toast } from "react-toastify";
 import Pagination from "../../../../components/common/pagination";
@@ -13,16 +13,16 @@ import { useEffect, useMemo, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { DeleteModal } from "../../../../components/common/delete-modal";
-import Button from "../../../../components/ui/button/index.tsx";
+import Button from "../../../../layout/index.tsx";
 import { usedeleteRoles, useListRoles } from "../../hooks";
 import AddEditRoleModal from "../add-edit-role";
 import SearchBar from "../../../../components/ui/search";
 import { useSelector } from "react-redux";
-import { useDebounce } from "../../../../hooks/usedebounce/index.tsx";
-import type { ListParams, RoleList } from "../../types/index.tsx";
-import { getAccess } from "../../../../lib/helper/flate-permission/index.tsx";
-import PageMeta from "../../../../components/common/page-meta/index.tsx";
-import { RootState } from "../../../../redux/store/index.tsx";
+import { useDebounce } from "../../../../layout/index.tsx";
+import type { ListParams, RoleList } from "../../../../layout/index.tsx";
+import { getAccess } from "../../../../layout/index.tsx";
+import PageMeta from "../../../../layout/index.tsx";
+import { RootState } from "../../../../layout/index.tsx";
 const tableHeaders = [
   "id",
   "Role Name",
@@ -97,8 +97,7 @@ export default function RoleTable() {
       <PageMeta title="Roles" description="This is User tables " />
       <div className="flex justify-between mb-2 p-0">
         <SearchBar value={search} onChange={setSearch} />
-        
-        
+
         {canAddRole && (
           <div className="flex justify-center items-center mt-2">
             <Button
@@ -255,8 +254,11 @@ export default function RoleTable() {
               setIsDeleteOpen(false);
               setcurrentid(undefined);
             },
-            onError: (error: any) => {
-              const message = error?.response?.data?.message || "Delete failed";
+            onError: (error) => {
+              const err = error as {
+                response?: { data?: { message?: string } };
+              };
+              const message = err?.response?.data?.message || "Delete failed";
               toast.error(message);
             },
           });

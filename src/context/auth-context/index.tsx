@@ -6,9 +6,10 @@ import type {
 } from "../../features/auth/types";
 import { User } from "../../features/user/types";
 import { UpdateRolePayload } from "../../features/roles/types";
+import type { AuthProviderProps } from "../../components/common/types";
 
 export const AuthContext = createContext<AuthContextType | null>(null);
-export const AuthProvider = ({ children }: any) => {
+export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
   // const [user, setUser] = useState<LoginResponse | null>(null);

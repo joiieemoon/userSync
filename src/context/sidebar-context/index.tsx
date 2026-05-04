@@ -4,7 +4,7 @@ import { useAuth } from "../../features/auth/hooks/useAuth";
 import { useDispatch } from "react-redux";
 import { useGetRoleById } from "../../features/roles/hooks";
 import { setPermissions } from "../../redux/slice";
-
+import type { PermissionState } from "../../features/roles/types";
 type SidebarContextType = {
   isExpanded: boolean;
   isMobileOpen: boolean;
@@ -36,8 +36,9 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
   const dispatch = useDispatch();
   const { user } = useAuth();
   const { data } = useGetRoleById(user?.roleId || 0);
+
   useEffect(() => {
-    if (data) {
+    if (data as PermissionState) {
       dispatch(setPermissions(data));
     }
   }, [data, dispatch]);

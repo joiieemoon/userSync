@@ -1,7 +1,6 @@
 import type { InputControllerProps } from "../types";
 import React from "react";
 
-
 import Input from "../input-fields";
 
 const InputController = ({ control, ...props }: InputControllerProps) => {
@@ -19,8 +18,9 @@ const InputController = ({ control, ...props }: InputControllerProps) => {
       return (
         <Input
           type="checkbox"
-          //   checked={props.checked}
-          onChange={(e) => props.onChange(e.target.checked)}
+        
+          onChange={(e) => props.onChange?.(e)}
+      
           className="w-4 h-4 cursor-pointer accent-amber-400"
         />
       );

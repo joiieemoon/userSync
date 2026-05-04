@@ -5,7 +5,12 @@ export type PermissionFlags = {
   edit: boolean | number;
   delete: boolean | number;
 };
-
+export type PermissionKey = "list" | "view" | "add" | "edit" | "delete";
+export type ModuleKey = "users" | "role";
+export type Propstoggleswitch = {
+  value: AccessMap;
+  onChange: (val: AccessMap) => void;
+};
 export interface RoleList {
   id: number;
   title: string;
@@ -44,14 +49,14 @@ export interface ModalProps {
   onClose: () => void;
   className?: string;
   children: React.ReactNode;
-  showCloseButton?: boolean; 
+  showCloseButton?: boolean;
   isFullscreen?: boolean;
   title?: string;
-  footer?: React.ReactNode; 
+  footer?: React.ReactNode;
 }
 export type PermissionState = {
   role: string | { title: string; status: "active" | "inactive" };
-  permissions: Record<string, any>;
+  permissions: Record<string, PermissionFlags>;
 };
 export type PermissionMap = Record<string, RolePermission>;
 

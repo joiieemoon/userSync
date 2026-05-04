@@ -1,4 +1,3 @@
-
 import type { CommanPaginationProps } from "../types";
 
 export default function Pagination({
@@ -53,17 +52,19 @@ export default function Pagination({
 
   return (
     <div className="flex items-center justify-between mt-6">
-      <div className="relative w-10 ">
-        <div className="flex items-center gap-2 ">
+     
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3  w-full p-3">
+        {/* Left side */}
+        <div className="flex items-center gap-2 w-full md:w-auto ">
           <label className="text-sm whitespace-nowrap text-gray-400">
-            items Per Page:
+            Items Per Page:
           </label>
 
           <select
             title="select"
             value={limit}
             onChange={(e) => onLimitChange(Number(e.target.value))}
-            className="py-1 pl-3 pr-6 dark:text-white text-sm border rounded-lg bg-transparent dark:border-gray-700  w-15"
+            className="py-1 px-2 text-sm border rounded-lg bg-transparent dark:text-white dark:border-gray-700 "
           >
             <option value="2">2</option>
             <option value="5">5</option>
@@ -72,14 +73,14 @@ export default function Pagination({
             <option value="50">50</option>
           </select>
         </div>
+
+        {/* Right side */}
+        <p className="text-sm text-gray-500 dark:text-gray-400 w-full md:w-auto text-left md:text-right ">
+          Page <span className="font-medium">{page}</span> of{" "}
+          <span className="font-medium">{totalPages}</span>
+          {totalitems ? <span> out of {totalitems}</span> : ""}
+        </p>
       </div>
-
-      <p className="text-sm text-gray-500 dark:text-gray-400">
-        Page <span className="font-medium">{page}</span> of{" "}
-        <span className="font-medium">{totalPages}</span>
-        {totalitems ? <span> out of {totalitems} </span> : ""}
-      </p>
-
       <div className="flex items-center gap-1">
         <button
           onClick={handlePrev}

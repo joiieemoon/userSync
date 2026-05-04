@@ -1,14 +1,15 @@
 import { Link } from "react-router";
 import { Formik, Form } from "formik";
-import Button from "../../../../components/ui/button/index.tsx";
+import Button from "../../../../layout/index.tsx";
 import { useState } from "react";
-import { loginFields } from "../../../../components/ui/input/input-config/index.ts";
-import InputController from "../../../../components/ui/input/input-controller/index.tsx";
-import { loginvalidationSchema } from "../../../../components/ui/input/validation/index.ts";
-import { useLogin } from "../../hooks/uselogin-singup/index.tsx";
+import { loginFields } from "../../../../layout/index.tsx";
+import InputController from "../../../../layout/index.tsx";
+import { loginvalidationSchema } from "../../../../layout/index.tsx";
+import { useLogin } from "../../../../layout/index.tsx";
 import { toast } from "react-toastify";
-import { loginProps } from "../../types/index.tsx";
-import PageMeta from "../../../../components/common/page-meta/index.tsx";
+import { loginProps } from "../../../../layout/index.tsx";
+import PageMeta from "../../../../layout/index.tsx";
+
 export default function SignInForm() {
   const { mutate, isPending } = useLogin();
   const [lock, setLock] = useState(false);
@@ -27,7 +28,7 @@ export default function SignInForm() {
         }, 5000);
       },
 
-      onError: (error) => {
+      onError: (error: { response?: { data?: { message: string } } }) => {
         const message =
           error?.response?.data?.message || "Something went wrong";
 
@@ -41,7 +42,6 @@ export default function SignInForm() {
   };
   return (
     <>
-   
       <PageMeta
         title="UserDesk | Signin"
         description="this is signup for register new user in userdes"
@@ -64,7 +64,6 @@ export default function SignInForm() {
                   <div className="w-full border-t border-gray-200 dark:border-gray-800"></div>
                 </div>
               </div>
-            
 
               <div className="space-y-6 mt-3">
                 <Formik
@@ -97,6 +96,7 @@ export default function SignInForm() {
                             onBlur={handleBlur}
                             placeholder={field.placeholder}
                             disabled={lock}
+                            autoComplete={field?.autoComplete}
                             error={
                               !!(
                                 errors[field.name as keyof typeof errors] &&
@@ -126,7 +126,6 @@ export default function SignInForm() {
                   )}
                 </Formik>
               </div>
-            
 
               <div className="mt-5">
                 <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
