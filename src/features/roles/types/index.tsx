@@ -39,25 +39,16 @@ export type Role = {
   updatedAt: string;
   permissions: RolePermission[];
 };
-// export type PermissionState = {
-//   role: {
-//     title: string;
-//     status: "active" | "inactive";
-//   };
-//   permissions: RolePermission[];
-// };
-// export type PermissionState = {
-//   role: {
-//     title: string;
-//     status: "active" | "inactive";
-//   };
-//   permissions: RolePermission[];
-// };
-// export type PermissionState = {
-//   role: string | { title: string; status: "active" | "inactive" };
-//   permissions: Record<string, any>;
-// };
-// redux/slice.ts
+export interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  className?: string;
+  children: React.ReactNode;
+  showCloseButton?: boolean; 
+  isFullscreen?: boolean;
+  title?: string;
+  footer?: React.ReactNode; 
+}
 export type PermissionState = {
   role: string | { title: string; status: "active" | "inactive" };
   permissions: Record<string, any>;

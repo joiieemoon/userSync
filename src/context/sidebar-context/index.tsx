@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { usePermission } from "../../features/auth/hooks/uselogin-singup";
+
 import { useAuth } from "../../features/auth/hooks/useAuth";
 import { useDispatch } from "react-redux";
 import { useGetRoleById } from "../../features/roles/hooks";
@@ -33,14 +33,11 @@ export const useSidebar = () => {
 export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
- 
-
   const dispatch = useDispatch();
   const { user } = useAuth();
   const { data } = useGetRoleById(user?.roleId || 0);
   useEffect(() => {
     if (data) {
-    
       dispatch(setPermissions(data));
     }
   }, [data, dispatch]);

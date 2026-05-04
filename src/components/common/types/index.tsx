@@ -46,3 +46,12 @@ export type CommanPaginationProps = {
   onLimitChange: (limit: number) => void;
   totalitems?: number;
 };
+export interface DeleteModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+  loading?: boolean;
+  title?: string;
+  description?: string;
+  id?: number;
+}

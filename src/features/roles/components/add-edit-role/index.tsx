@@ -60,9 +60,7 @@ const AddEditRoleModal = ({ isOpen, onClose, id }: AddEditRoleProps) => {
                   queryClient.invalidateQueries({ queryKey: ["profile"] });
                   onClose();
 
-                  const formattedAccess = formatPermissionsForUI(
-                    payload.permissions,
-                  );
+                
 
                   const userRoleId = user?.roleId;
                   usePermission(userRoleId);

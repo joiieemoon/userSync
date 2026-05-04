@@ -149,7 +149,7 @@ export default function RoleTable() {
                   </TableCell>
 
                   <TableCell className="px-4 py-3   text-start text-theme-sm dark:text-gray-400">
-                    <div className="flex -space-x-2  text-gray-800  ">
+                    <div className="flex -space-x-2  dark:text-white text-gray-800  ">
                       {roles.title}{" "}
                     </div>
                   </TableCell>

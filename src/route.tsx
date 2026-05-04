@@ -15,7 +15,6 @@ const RoleTables = lazy(() => import("./features/roles"));
 const SignUpForm = lazy(() => import("./features/auth/components/signup-form"));
 const SignInForm = lazy(() => import("./features/auth/components/login-form"));
 
-
 const AuthCheck = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuth();
 
@@ -25,7 +24,6 @@ const AuthCheck = ({ children }: { children: React.ReactNode }) => {
 
   return <>{children}</>;
 };
-
 
 const PublicCheck = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuth();
@@ -40,9 +38,9 @@ export const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      // <AuthCheck>
+      <AuthCheck>
         <AppLayout />
-      // </AuthCheck>
+      </AuthCheck>
     ),
     children: [
       { index: true, element: <Home /> },

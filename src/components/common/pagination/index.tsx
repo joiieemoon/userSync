@@ -63,7 +63,7 @@ export default function Pagination({
             title="select"
             value={limit}
             onChange={(e) => onLimitChange(Number(e.target.value))}
-            className="py-1 pl-3 pr-6  text-sm border rounded-lg bg-transparent dark:border-gray-700  w-15"
+            className="py-1 pl-3 pr-6 dark:text-white text-sm border rounded-lg bg-transparent dark:border-gray-700  w-15"
           >
             <option value="2">2</option>
             <option value="5">5</option>

@@ -2,16 +2,7 @@ import { Modal } from "../../ui/modal";
 
 import Button from "../../ui/button";
 import { ErrorHexaIcon } from "../../../assets/icons";
-// import { IoWarningOutline } from "react-icons/io5";
-
-interface DeleteModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-  loading?: boolean;
-  title?: string;
-  description?: string;
-}
+import type { DeleteModalProps } from "../types";
 
 export const DeleteModal: React.FC<DeleteModalProps> = ({
   isOpen,
@@ -20,8 +11,8 @@ export const DeleteModal: React.FC<DeleteModalProps> = ({
   loading = false,
   title = "Delete Confirmation",
   description = "Are you sure you want to delete this item? ",
-  id,
 }) => {
+  //comman delete modal 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title}>
       {/* BODY */}

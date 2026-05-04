@@ -82,6 +82,7 @@ export default function UserTabel() {
     edit: canEditUser,
     add: canAddUser,
   } = access?.users || {};
+  //handle access header if no edit and delte then it will not show Action  header
   const filteredHeaders = tableHeaders.filter((header) => {
     if (header === "Action") {
       return canEditUser || canDeleteUser;
