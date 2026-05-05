@@ -25,33 +25,23 @@ import { User } from "../../types";
 
 import { useUserTable } from "../../hooks/useuser-tabel";
 import PageMeta from "../../../../components/common/page-meta";
+import { tableHeadersUsers } from "../../../../constant/config";
 
-const tableHeaders = [
-  "User Details",
-
-  "Email",
-  "Role",
-  "Status",
-  "Created At",
-  "Updated At",
-  "Action",
-];
 export default function UserTabel() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const { user } = useAuth();
   const [limit, setLimit] = useState(5);
 
-  const { data, isLoading, filteredUsers, access, isSearching } = useUserTable(
-    user,
+  const { data, isLoading, filteredUsers, access, isSearching } = useUserTable({
     search,
     page,
     limit,
-  );
+  });
 
   const [currentid, setcurrentid] = useState<number | undefined>(undefined);
   const [isOpen, setIsOpen] = useState(false);
-  const [iseditOpen, setiseditOpen] = useState(false);
+  // const [iseditOpen, setiseditOpen] = useState(false);
 
   const debouncedSearch = useDebounce(search, 700);
 
@@ -83,7 +73,7 @@ export default function UserTabel() {
     add: canAddUser,
   } = access?.users || {};
   //handle access header if no edit and delte then it will not show Action  header
-  const filteredHeaders = tableHeaders.filter((header) => {
+  const filteredHeaders = tableHeadersUsers.filter((header) => {
     if (header === "Action") {
       return canEditUser || canDeleteUser;
     }
@@ -95,7 +85,7 @@ export default function UserTabel() {
       <PageMeta title="UserDesk | Users" description="This is User tables " />
       <div className="flex justify-between  ">
         <SearchBar value={search} onChange={setSearch} />
-    
+
         {canAddUser && (
           <div className="flex justify-center items-center mt-2">
             <Button size="sm" onClick={handleAdd} className="h-8 ">
@@ -184,7 +174,7 @@ export default function UserTabel() {
                               <button
                                 type="button"
                                 onClick={() => {
-                                  setiseditOpen(true);
+                                  // setiseditOpen(true);
                                   setcurrentid(user.id);
                                   handleEdit(user.id);
                                 }}
@@ -246,6 +236,7 @@ export default function UserTabel() {
         onClose={() => {
           setIsModalOpen(false);
           setSelectedId(undefined);
+          
         }}
         id={selectedId}
       />

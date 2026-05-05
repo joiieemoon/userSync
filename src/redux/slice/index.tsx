@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { PermissionFlags } from "../../features/roles/types";
 
 export type PermissionState = {
   role: string;
-  permissions: Record<string, any>;
+  permissions: Record<string, PermissionFlags>;
 };
 
 const initialState: PermissionState = {
@@ -28,7 +29,3 @@ const permissionsSlice = createSlice({
 export const { setPermissions, clearPermissions } = permissionsSlice.actions;
 
 export default permissionsSlice.reducer;
-
-
-
-

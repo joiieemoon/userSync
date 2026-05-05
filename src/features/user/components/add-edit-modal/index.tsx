@@ -15,19 +15,19 @@ import { useListRoles } from "../../../roles/hooks";
 import { updateusersFields } from "../../../../components/ui/input/input-config";
 import { ChevronDownIcon } from "../../../../assets/icons";
 import { Role } from "../../../roles/types";
-import type { User } from "../../types";
 
+import * as Sentry from "@sentry/react";
+// import type { User } from "../../types";
+import type { addEditUser } from "../../../auth/types";
 type Props = {
   isOpen: boolean;
   onClose: () => void;
-  id?: number;
+  id?: number | undefined;
 };
 
 const AddEditUserModal = ({ isOpen, onClose, id }: Props) => {
-  const { data: user } = useGetUserById(id!, {
-    enabled: !!id,
-  });
-
+  
+  const { data: user } = useGetUserById(id!);
   const { mutate: updateUser, isPending } = useUpdateUser();
   const { mutate: createUser, isPending: isCreating } = useCreateUser();
 
@@ -36,6 +36,7 @@ const AddEditUserModal = ({ isOpen, onClose, id }: Props) => {
     limit: 100,
   });
   const updatefields = updateusersFields(id);
+
   return (
     <Modal
       isOpen={isOpen}
@@ -57,7 +58,7 @@ const AddEditUserModal = ({ isOpen, onClose, id }: Props) => {
         }}
         validationSchema={updateUserValidation}
         onSubmit={(values, { resetForm }) => {
-          const payload: User = {
+          const payload: addEditUser = {
             ...values,
           };
           if (id) {
@@ -77,6 +78,7 @@ const AddEditUserModal = ({ isOpen, onClose, id }: Props) => {
                   const err = error as {
                     response?: { data?: { message?: string } };
                   };
+                  Sentry.captureException(error);
                   toast.error(err?.response?.data?.message || "Update failed");
                 },
               },
@@ -93,6 +95,7 @@ const AddEditUserModal = ({ isOpen, onClose, id }: Props) => {
                 const err = error as {
                   response?: { data?: { message?: string } };
                 };
+                Sentry.captureException(error);
                 toast.error(err?.response?.data?.message || "Create failed");
               },
             });
@@ -110,15 +113,23 @@ const AddEditUserModal = ({ isOpen, onClose, id }: Props) => {
                     label={field.label}
                     name={field.name}
                     type={field.name === "password" ? "password" : "text"}
-                    value={values[field.name]}
-                    onChange={(e) => setFieldValue(field.name, e.target.value)}
+                    // value={values[field.name]}
+                    value={values[field.name as keyof typeof values]}
+                    // onChange={(e) => setFieldValue(field.name, e.target.value)}
+                    onChange={(e) =>
+                      setFieldValue(
+                        field.name as keyof typeof values,
+                        e.target.value,
+                      )
+                    }
                   />
 
-                  {touched[field.name] && errors[field.name] && (
-                    <p className="text-xs text-red-500 mt-1">
-                      {errors[field.name]}
-                    </p>
-                  )}
+                  {touched[field.name as keyof typeof touched] &&
+                    errors[field.name as keyof typeof errors] && (
+                      <p className="text-xs text-red-500 mt-1">
+                        {String(errors[field.name as keyof typeof errors])}
+                      </p>
+                    )}
                 </div>
               ))}
               <div className=" mt-3">
@@ -147,7 +158,9 @@ const AddEditUserModal = ({ isOpen, onClose, id }: Props) => {
                   </span>
                 </div>
                 {touched.roleId && errors.roleId && (
-                  <p className="text-xs text-red-500 mt-1">{errors.roleId}</p>
+                  <p className="text-xs text-red-500 mt-1">
+                    {String(errors.roleId)}
+                  </p>
                 )}
               </div>
               <div className="relative">

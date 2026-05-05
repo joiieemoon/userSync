@@ -1,7 +1,8 @@
-import GridShape from "../../layout/index.tsx";
-import { Link } from "react-router";
-import PageMeta from "../../layout/index.tsx";
 
+import GridShape from "../../components/common/grid-shap/index.tsx";
+import { Link } from "react-router";
+
+import PageMeta from "../../components/common/page-meta/index.tsx";
 export default function NotFound() {
   return (
     <>

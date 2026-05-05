@@ -1,7 +1,8 @@
-import GridShape from "../../layout/index.tsx";
-import { Link, Outlet } from "react-router";
-import ThemeTogglerTwo from "../../layout/index.tsx";
 
+import GridShape from "../../components/common/grid-shap/index.tsx";
+import { Link, Outlet } from "react-router";
+
+import ThemeTogglerTwo from "../../components/common/theme-toggler-two/index.tsx";
 export default function AuthLayout() {
   return (
     <div className="relative p-6 bg-white z-1 dark:bg-gray-900 sm:p-0">

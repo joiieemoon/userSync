@@ -1,5 +1,5 @@
-import PageBreadcrumb from "../../layout/index.tsx";
 
+import PageBreadcrumb from "../../components/common/page-bread-crumb/index.tsx";
 import UserTabel from "./components/user-tabel";
 
 export default function UserTables() {

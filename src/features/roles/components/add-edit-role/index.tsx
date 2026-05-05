@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
 import ToggleSwitch from "../toggle-switch";
 
-import { useGetRoleById, useupdateRoles, useCreateRole } from "../../hooks";
+import { useGetRoleById, useUpdateRoles, useCreateRole } from "../../hooks";
 import {
   formatPermissionsForAPI,
   formatPermissionsForUI,
@@ -17,18 +17,22 @@ import { setPermissions } from "../../../../redux/slice";
 import { useDispatch } from "react-redux";
 import { ChevronDownIcon } from "../../../../assets/icons";
 import { usePermission } from "../../../auth/hooks/uselogin-singup";
-import type { AddEditRoleProps } from "../../types";
+import type { AddEditRoleProps, AccessMap } from "../../types";
+import { useAuth } from "../../../auth/hooks/useAuth";
 
 const AddEditRoleModal = ({ isOpen, onClose, id }: AddEditRoleProps) => {
+  const { user } = useAuth();
   const { data } = useGetRoleById(id!);
   const dispatch = useDispatch();
-  const { mutate: updateRole, isPending } = useupdateRoles();
+  const { mutate: updateRole, isPending } = useUpdateRoles();
   const { mutate: createRole, isPending: isCreating } = useCreateRole();
   const queryClient = useQueryClient();
   const formattedPermissions = useMemo(() => {
     return formatPermissionsForUI(data?.permissions || []);
   }, [data?.permissions]);
 
+  const userRoleId = user?.roleId;
+  const { data: refetchPermission } = usePermission(userRoleId);
   return (
     <Modal
       isOpen={isOpen}
@@ -48,7 +52,9 @@ const AddEditRoleModal = ({ isOpen, onClose, id }: AddEditRoleProps) => {
         onSubmit={(values) => {
           const payload = {
             ...values,
-            permissions: formatPermissionsForAPI(values.permissions),
+            permissions: formatPermissionsForAPI(
+              values.permissions as AccessMap,
+            ),
           };
 
           if (id) {
@@ -60,11 +66,7 @@ const AddEditRoleModal = ({ isOpen, onClose, id }: AddEditRoleProps) => {
                   queryClient.invalidateQueries({ queryKey: ["profile"] });
                   onClose();
 
-                
-
-                  const userRoleId = user?.roleId;
-                  usePermission(userRoleId);
-                
+                  refetchPermission();
                 },
               },
             );
@@ -128,9 +130,12 @@ const AddEditRoleModal = ({ isOpen, onClose, id }: AddEditRoleProps) => {
                 onChange={(val) => setFieldValue("permissions", val)}
               />
 
-              {touched.permissions && errors.permissions && (
-                <p className="text-xs text-red-500 ">{errors.permissions}</p>
-              )}
+              {touched.permissions?.users?.view &&
+                errors.permissions?.users?.view && (
+                  <p className="text-xs text-red-500">
+                    {String(errors.permissions.users.view)}
+                  </p>
+                )}
             </div>
 
             <div className="flex justify-end gap-3 mt-6">

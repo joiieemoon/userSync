@@ -7,16 +7,20 @@ import { signupvalidationSchema } from "../../../../components/ui/input/validati
 import { signupFields } from "../../../../components/ui/input/input-config";
 import InputController from "../../../../components/ui/input/input-controller";
 import Button from "../../../../components/ui/button";
-
+import * as Sentry from "@sentry/react";
 import { useSignUp } from "../../hooks/uselogin-singup";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { SignupProps } from "../../types";
 import PageMeta from "../../../../components/common/page-meta";
+import type { FormikHelpers } from "formik";
 export default function SignUpForm() {
   const [lock, setLock] = useState(false);
   const { mutate, isPending } = useSignUp();
-  const handleSubmit = (values: SignupProps, { setErrors }) => {
+  const handleSubmit = (
+    values: SignupProps,
+    { setErrors }: FormikHelpers<SignupProps>,
+  ) => {
     if (lock) return;
 
     setLock(true);
@@ -28,22 +32,24 @@ export default function SignUpForm() {
         }, 5000);
       },
 
-      onError: (error: {
-        response?: {
-          data?: {
-            message?: string;
-            errors?: { field: string; message: string }[];
+      onError: (error: Error) => {
+        const axiosError = error as {
+          response?: {
+            data?: {
+              message?: string;
+              errors?: { field: string; message: string }[];
+            };
           };
         };
-      }) => {
-        const data = error?.response?.data;
+        const data = axiosError?.response?.data;
 
+        Sentry.captureException(error);
         if (data?.message) {
           toast.error(data.message);
         }
 
         if (data?.errors && Array.isArray(data.errors)) {
-          const formErrors = {};
+          const formErrors: Record<string, string> = {};
 
           data.errors.forEach((err) => {
             formErrors[err.field] = err.message;
@@ -105,7 +111,6 @@ export default function SignUpForm() {
                     handleChange,
                     setFieldValue,
                     setFieldTouched,
-                    setErrors,
                   }) => (
                     <Form>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -132,7 +137,7 @@ export default function SignUpForm() {
                                 }
                                 type={field.type}
                                 onChange={handleChange}
-                                onBlur={handleBlur} 
+                                onBlur={handleBlur}
                                 placeholder={field.placeholder}
                                 disabled={lock}
                                 error={

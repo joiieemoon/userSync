@@ -8,9 +8,12 @@ export const moduleIdMap: Record<number, string> = {
   1: "role",
   2: "users",
 };
-
-export const formatPermissionsForUI = (permissions: PermissionWithSlug[] = []) => {
+export const formatPermissionsForUI = (
+  permissions: PermissionWithSlug[] = [],
+): AccessMap => {
   const result: AccessMap = {};
+
+  if (!Array.isArray(permissions)) return result;
 
   permissions.forEach((perm) => {
     const key = perm.moduleSlug?.trim()?.toLowerCase();
@@ -18,16 +21,35 @@ export const formatPermissionsForUI = (permissions: PermissionWithSlug[] = []) =
     if (!key) return;
 
     result[key] = {
-      view: perm.view === 1,
-      add: perm.add === 1,
-      edit: perm.edit === 1,
-      delete: perm.delete === 1,
-      list: perm.list === 1,
+      view: !!perm.view,
+      add: !!perm.add,
+      edit: !!perm.edit,
+      delete: !!perm.delete,
+      list: !!perm.list,
     };
   });
 
   return result;
 };
+// export const formatPermissionsForUI = (permissions: PermissionWithSlug[] = []) => {
+//   const result: AccessMap = {};
+
+//   permissions.forEach((perm) => {
+//     const key = perm.moduleSlug?.trim()?.toLowerCase();
+
+//     if (!key) return;
+
+//     result[key] = {
+//       view: perm.view === 1,
+//       add: perm.add === 1,
+//       edit: perm.edit === 1,
+//       delete: perm.delete === 1,
+//       list: perm.list === 1,
+//     };
+//   });
+
+//   return result;
+// };
 /**
  * Formats permissions object into API-ready array structure using moduleId
  */
@@ -36,14 +58,9 @@ export const formatPermissionsForAPI = (
 ): RolePermission[] => {
   return Object.keys(permissions)
     .map((key) => {
-      const moduleId = Object.entries(moduleIdMap).find(
-        ([, v]) => v === key,
-      )?.[0]; 
-
-      if (!moduleId) return null;
-
+      const slug = key.toLowerCase();
       return {
-        moduleId: Number(moduleId),
+        moduleSlug: slug,
         list: !!permissions[key]?.list,
         view: !!permissions[key]?.view,
         add: !!permissions[key]?.add,

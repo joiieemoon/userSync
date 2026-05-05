@@ -1,25 +1,32 @@
 import { useDebounce } from "../../../../hooks/usedebounce";
 import { useListUsers } from "../uselistusers-api";
 
-import { getAccess } from "../../../../lib/helper/flate-permission";
+// import { getAccess } from "../../../../lib/helper/flate-permission";
 
-import { User } from "../../../auth/types";
+import type { User } from "../../../../components/common/types";
 import { useSelector } from "react-redux";
-export const useUserTable = (
-  user: User,
-  search: string,
-  page: number,
-  limit: number,
-) => {
+import { RootState } from "../../../../redux/store";
+export const useUserTable = ({
+  search,
+  page,
+  limit,
+}: {
+  search: string;
+  page: number;
+  limit: number;
+}) => {
   const debouncedSearch = useDebounce(search, 700);
 
-  const searchText = debouncedSearch.toLowerCase();
 
-  const isSearching = debouncedSearch.trim().length > 0;
+  const searchValue = String(debouncedSearch ?? "");
 
+  const searchText = searchValue.toLowerCase();
+
+  const isSearching = searchValue.trim().length > 0;
   const params = {
     page: isSearching ? 1 : page,
     limit,
+    search,
   };
 
   if (isSearching) {
@@ -27,14 +34,14 @@ export const useUserTable = (
   }
 
   const { data, isLoading } = useListUsers(params);
-  const { permissions } = useSelector((state) => state.permissions);
+  const { permissions } = useSelector((state: RootState) => state.permissions);
 
-  const access = getAccess(permissions || []);
-
+  const access = permissions || {};
+  // const access = permissions;
   const users = data?.users || [];
   // const totaluser=data?.
 
-  const filteredUsers = users.filter((u) => {
+  const filteredUsers = users.filter((u: User) => {
     const fullName = `${u.firstName} ${u.lastName}`.toLowerCase();
 
     return (

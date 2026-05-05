@@ -1,10 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback } from "react";
 import { Link, useLocation } from "react-router";
 import { useSelector } from "react-redux";
 
 import type { RootState } from "../../redux/store";
 import {
-  ChevronDownIcon,
   GridIcon,
   GroupIcon,
   UserCircleIcon,
@@ -12,10 +11,8 @@ import {
 } from "../../assets/icons";
 
 import { useSidebar } from "../../context/sidebar-context";
-
-import Button from "../../components/ui/button";
-
-import { getAccess } from "../../lib/helper/flate-permission";
+// import { getAccess } from "../../lib/helper/flate-permission";
+// import Button from "../../components/ui/button";
 
 type NavItem = {
   name: string;
@@ -30,11 +27,15 @@ const AppSidebar: React.FC = () => {
 
   const { permissions } = useSelector((state: RootState) => state.permissions);
 
-  const access = getAccess(permissions);
+  // const getAccess = (permissions: AccessMap) => {
+  //   return permissions;
+  // };
 
+  const access = permissions;
+  // const access = permissions;
   const canviewUser = access?.users?.view;
   const canviewRole = access?.role?.view;
-  // console.log(canviewRole);
+  console.log(canviewRole);
 
   const navItems: NavItem[] = [
     {
@@ -64,143 +65,151 @@ const AppSidebar: React.FC = () => {
     },
   ];
 
-  const [openSubmenu, setOpenSubmenu] = useState<{
-    type: "main" | "others";
-    index: number;
-  } | null>(null);
+  // const [openSubmenu, setOpenSubmenu] = useState<{
+  //   type: "main" | "others";
+  //   index: number;
+  // } | null>(null);
 
-  const [subMenuHeight, setSubMenuHeight] = useState<Record<string, number>>(
-    {},
-  );
+  // const [subMenuHeight, setSubMenuHeight] = useState<Record<string, number>>(
+  //   {},
+  // );
 
-  const subMenuRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  // const subMenuRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   const isActive = useCallback(
     (path: string) => location.pathname === path,
     [location.pathname],
   );
 
-  useEffect(() => {
-    let submenuMatched = false;
+  // useEffect(() => {
+  //   ["main", "others"].forEach((menuType) => {
+  //     const items = menuType === "main" ? navItems : othersItems;
 
-    ["main", "others"].forEach((menuType) => {
-      const items = menuType === "main" ? navItems : othersItems;
+  //     items.forEach((nav, index) => {
+  //       if (nav.subItems) {
+  //         nav.subItems.forEach((subItem) => {
+  //           if (isActive(subItem.path)) {
+  //           }
+  //         });
+  //       }
+  //     });
+  //   });
+  // }, [location, isActive, navItems]);
 
-      items.forEach((nav, index) => {
-        if (nav.subItems) {
-          nav.subItems.forEach((subItem) => {
-            if (isActive(subItem.path)) {
-              setOpenSubmenu({
-                type: menuType as "main" | "others",
-                index,
-              });
-              submenuMatched = true;
-            }
-          });
-        }
-      });
-    });
+  // useEffect(() => {
+  //   if (openSubmenu !== null) {
+  //     const key = `${openSubmenu.type}-${openSubmenu.index}`;
+  //     if (subMenuRefs.current[key]) {
+  //       setSubMenuHeight((prevHeights) => ({
+  //         ...prevHeights,
+  //         [key]: subMenuRefs.current[key]?.scrollHeight || 0,
+  //       }));
+  //     }
+  //   }
+  // }, [openSubmenu]);
 
-    if (!submenuMatched) {
-      setOpenSubmenu(null);
-    }
-  }, [location, isActive, navItems]);
-
-  useEffect(() => {
-    if (openSubmenu !== null) {
-      const key = `${openSubmenu.type}-${openSubmenu.index}`;
-      if (subMenuRefs.current[key]) {
-        setSubMenuHeight((prevHeights) => ({
-          ...prevHeights,
-          [key]: subMenuRefs.current[key]?.scrollHeight || 0,
-        }));
-      }
-    }
-  }, [openSubmenu]);
-
-  const handleSubmenuToggle = (index: number, menuType: "main" | "others") => {
-    setOpenSubmenu((prevOpenSubmenu) => {
-      if (
-        prevOpenSubmenu &&
-        prevOpenSubmenu.type === menuType &&
-        prevOpenSubmenu.index === index
-      ) {
-        return null;
-      }
-      return { type: menuType, index };
-    });
-  };
-
-  const renderMenuItems = (items: NavItem[], menuType: "main" | "others") => (
+  // const handleSubmenuToggle = (index: number, menuType: "main" | "others") => {
+  //   setOpenSubmenu((prevOpenSubmenu) => {
+  //     if (
+  //       prevOpenSubmenu &&
+  //       prevOpenSubmenu.type === menuType &&
+  //       prevOpenSubmenu.index === index
+  //     ) {
+  //       return null;
+  //     }
+  //     return { type: menuType, index };
+  //   });
+  // };
+  const renderMenuItems = (items: NavItem[]) => (
     <ul className="flex flex-col gap-4">
-      {items.map((nav, index) => (
+      {items.map((nav) => (
         <li key={nav.name}>
-          {nav.subItems ? (
-            <Button
-              onClick={() => handleSubmenuToggle(index, menuType)}
-              className={`menu-item group ${
-                openSubmenu?.type === menuType && openSubmenu?.index === index
-                  ? "menu-item-active"
-                  : "menu-item-inactive"
-              } cursor-pointer ${
-                !isExpanded && !isHovered
-                  ? "lg:justify-center"
-                  : "lg:justify-start"
-              }`}
-            >
-              <span
-                className={`menu-item-icon-size  ${
-                  openSubmenu?.type === menuType && openSubmenu?.index === index
-                    ? "menu-item-icon-active"
-                    : "menu-item-icon-inactive"
-                }`}
-              >
-                {nav.icon}
-              </span>
+          <Link
+            to={nav.path!}
+            className={`menu-item group ${
+              isActive(nav.path!) ? "menu-item-active" : "menu-item-inactive"
+            }`}
+          >
+            <span className="menu-item-icon-size">{nav.icon}</span>
 
-              {(isExpanded || isHovered || isMobileOpen) && (
-                <span className="menu-item-text">{nav.name}</span>
-              )}
-
-              {(isExpanded || isHovered || isMobileOpen) && (
-                <ChevronDownIcon
-                  className={`ml-auto w-5 h-5 transition-transform duration-200 ${
-                    openSubmenu?.type === menuType &&
-                    openSubmenu?.index === index
-                      ? "rotate-180 text-brand-500"
-                      : ""
-                  }`}
-                />
-              )}
-            </Button>
-          ) : (
-            nav.path && (
-              <Link
-                to={nav.path}
-                className={`menu-item group ${
-                  isActive(nav.path) ? "menu-item-active" : "menu-item-inactive"
-                }`}
-              >
-                <span
-                  className={`menu-item-icon-size ${
-                    isActive(nav.path)
-                      ? "menu-item-icon-active"
-                      : "menu-item-icon-inactive"
-                  }`}
-                >
-                  {nav.icon}
-                </span>
-
-                {(isExpanded || isHovered || isMobileOpen) && (
-                  <span className="menu-item-text">{nav.name}</span>
-                )}
-              </Link>
-            )
-          )}
+            {(isExpanded || isHovered || isMobileOpen) && (
+              <span className="menu-item-text">{nav.name}</span>
+            )}
+          </Link>
         </li>
       ))}
     </ul>
   );
+  // const renderMenuItems = (items: NavItem[], menuType: "main" | "others") => (
+  //   <ul className="flex flex-col gap-4">
+  //     {items.map((nav, index) => (
+  //       <li key={nav.name}>
+  //         {nav.subItems ? (
+  //           <Button
+  //             onClick={() => handleSubmenuToggle(index, menuType)}
+  //             className={`menu-item group ${
+  //               openSubmenu?.type === menuType && openSubmenu?.index === index
+  //                 ? "menu-item-active"
+  //                 : "menu-item-inactive"
+  //             } cursor-pointer ${
+  //               !isExpanded && !isHovered
+  //                 ? "lg:justify-center"
+  //                 : "lg:justify-start"
+  //             }`}
+  //           >
+  //             <span
+  //               className={`menu-item-icon-size  ${
+  //                 openSubmenu?.type === menuType && openSubmenu?.index === index
+  //                   ? "menu-item-icon-active"
+  //                   : "menu-item-icon-inactive"
+  //               }`}
+  //             >
+  //               {nav.icon}
+  //             </span>
+
+  //             {(isExpanded || isHovered || isMobileOpen) && (
+  //               <span className="menu-item-text">{nav.name}</span>
+  //             )}
+
+  //             {(isExpanded || isHovered || isMobileOpen) && (
+  //               <ChevronDownIcon
+  //                 className={`ml-auto w-5 h-5 transition-transform duration-200 ${
+  //                   openSubmenu?.type === menuType &&
+  //                   openSubmenu?.index === index
+  //                     ? "rotate-180 text-brand-500"
+  //                     : ""
+  //                 }`}
+  //               />
+  //             )}
+  //           </Button>
+  //         ) : (
+  //           nav.path && (
+  //             <Link
+  //               to={nav.path}
+  //               className={`menu-item group ${
+  //                 isActive(nav.path) ? "menu-item-active" : "menu-item-inactive"
+  //               }`}
+  //             >
+  //               <span
+  //                 className={`menu-item-icon-size ${
+  //                   isActive(nav.path)
+  //                     ? "menu-item-icon-active"
+  //                     : "menu-item-icon-inactive"
+  //                 }`}
+  //               >
+  //                 {nav.icon}
+  //               </span>
+
+  //               {(isExpanded || isHovered || isMobileOpen) && (
+  //                 <span className="menu-item-text">{nav.name}</span>
+  //               )}
+  //             </Link>
+  //           )
+  //         )}
+  //       </li>
+  //     ))}
+  //   </ul>
+  // );
 
   return (
     <aside
@@ -229,11 +238,12 @@ const AppSidebar: React.FC = () => {
 
       <div className="flex flex-col overflow-y-auto no-scrollbar">
         <nav className="mb-6">
-          {renderMenuItems(navItems, "main")}
+          {renderMenuItems(navItems)}
 
           <h2 className="mt-6 text-xs text-gray-400">Others</h2>
 
-          {renderMenuItems(othersItems, "others")}
+          {/* {renderMenuItems(othersItems, "others")} */}
+          {renderMenuItems(othersItems)}
         </nav>
       </div>
     </aside>

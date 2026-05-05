@@ -1,11 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import permissionsReducer from "../slice";
+
 import rootReducer from "../root-reducer";
 
 export const store = configureStore({
-  reducer: {
-    permissions: permissionsReducer,
-  },
+  reducer: rootReducer,
 });
 
 export type RootState = ReturnType<typeof store.getState>;

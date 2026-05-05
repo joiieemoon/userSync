@@ -1,5 +1,5 @@
 import type { PermissionKey, ModuleKey, Propstoggleswitch } from "../../types";
-
+import { permissionKeys } from "../../../../constant/config";
 export default function ToggleSwitch({ value, onChange }: Propstoggleswitch) {
   const permissions = value || {};
   const modules: { name: string; key: ModuleKey }[] = [
@@ -7,13 +7,14 @@ export default function ToggleSwitch({ value, onChange }: Propstoggleswitch) {
     { name: "Role", key: "role" },
   ];
 
-  const permissionKeys: PermissionKey[] = [
-    "list",
-    "view",
-    "add",
-    "edit",
-    "delete",
-  ];
+  
+  // const permissionKeys: PermissionKey[] = [
+  //   "list",
+  //   "view",
+  //   "add",
+  //   "edit",
+  //   "delete",
+  // ];
   const updatePermissions = (module: string, key: PermissionKey) => {
     const current = permissions?.[module] || {};
 

@@ -5,9 +5,9 @@ import type {
   SignupResponse,
 } from "../../features/auth/types";
 import { User } from "../../features/user/types";
-import { UpdateRolePayload } from "../../features/roles/types";
+// import { UpdateRolePayload } from "../../features/roles/types";
 import type { AuthProviderProps } from "../../components/common/types";
-
+import * as Sentry from "@sentry/react";
 export const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [token, setToken] = useState<string | null>(null);
@@ -24,7 +24,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const login = ({ token, user }: LoginResponse) => {
     setToken(token ?? null);
     setUser(user);
-
+    Sentry.setUser({
+      id: user.id,
+      email: user.email,
+    });
     localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify(user));
   };
@@ -32,7 +35,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const logout = () => {
     setToken(null);
     setUser(null);
-
+    Sentry.setUser(null);
     localStorage.removeItem("persist:root");
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -44,10 +47,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify(user));
   };
-  const updateUser = (updatedUser: UpdateRolePayload) => {
+  const updateUser = (updatedUser: User) => {
     setUser(updatedUser);
     localStorage.setItem("user", JSON.stringify(updatedUser));
   };
+
   return (
     <AuthContext.Provider
       value={{

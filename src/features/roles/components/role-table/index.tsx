@@ -5,7 +5,8 @@ import {
   TableHeader,
   TableRow,
 } from "../../../../components/ui/table";
-import Badge from "../../../../layout/index.tsx";
+
+import Badge from "../../../../components/ui/badge/index.tsx";
 import { PencilIcon, PlusIcon, TrashBinIcon } from "../../../../assets/icons";
 import { toast } from "react-toastify";
 import Pagination from "../../../../components/common/pagination";
@@ -13,24 +14,25 @@ import { useEffect, useMemo, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { DeleteModal } from "../../../../components/common/delete-modal";
-import Button from "../../../../layout/index.tsx";
-import { usedeleteRoles, useListRoles } from "../../hooks";
+
+import Button from "../../../../components/ui/button/index.tsx";
+import { useDeleteRoles, useListRoles } from "../../hooks";
 import AddEditRoleModal from "../add-edit-role";
 import SearchBar from "../../../../components/ui/search";
 import { useSelector } from "react-redux";
-import { useDebounce } from "../../../../layout/index.tsx";
-import type { ListParams, RoleList } from "../../../../layout/index.tsx";
-import { getAccess } from "../../../../layout/index.tsx";
-import PageMeta from "../../../../layout/index.tsx";
-import { RootState } from "../../../../layout/index.tsx";
-const tableHeaders = [
-  "id",
-  "Role Name",
-  "Status",
-  "Created At",
-  "Updated At",
-  "Action",
-];
+
+import * as Sentry from "@sentry/react";
+import { useDebounce } from "../../../../hooks/usedebounce/index.tsx";
+
+import type { ListParams, RoleList } from "../../types/index.tsx";
+// import { getAccess } from "../../../../lib/helper/flate-permission/index.tsx";
+
+import PageMeta from "../../../../components/common/page-meta/index.tsx";
+
+import { RootState } from "../../../../redux/store/index.tsx";
+import { tableHeaders } from "../../../../constant/config.ts";
+// import { tableHeaders } from "../../../../constant/config.ts";
+// import { getAccess } from "../../../../lib/helper/flate-permission/index.tsx";
 
 export default function RoleTable() {
   const [page, setPage] = useState(1);
@@ -43,6 +45,7 @@ export default function RoleTable() {
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 1000);
   const isSearching = debouncedSearch.trim().length > 0;
+
   const searchText = useMemo(
     () => debouncedSearch.toLowerCase(),
     [debouncedSearch],
@@ -66,13 +69,15 @@ export default function RoleTable() {
     role.title.toLowerCase().includes(searchText),
   );
 
-  const { mutate: deleteuser, isPending } = usedeleteRoles();
+  const { mutate: deleteuser, isPending } = useDeleteRoles();
 
   const pageSize = 5;
   const { permissions } = useSelector((state: RootState) => state.permissions);
 
   //get
-  const access = getAccess(permissions || []);
+
+  const access = permissions || {};
+  // const access = permissions;
 
   const canAddRole = access?.role?.add;
   const canEditRole = access?.role?.edit;
@@ -254,11 +259,9 @@ export default function RoleTable() {
               setIsDeleteOpen(false);
               setcurrentid(undefined);
             },
-            onError: (error) => {
-              const err = error as {
-                response?: { data?: { message?: string } };
-              };
-              const message = err?.response?.data?.message || "Delete failed";
+            onError: (error: ApiError) => {
+              Sentry.captureException(error);
+              const message = error?.response?.data?.message || "Delete failed";
               toast.error(message);
             },
           });

@@ -1,10 +1,12 @@
-import axios from "axios";
+import axios, { AxiosHeaders } from "axios";
 import { clearPermissions } from "../../../redux/slice";
 import { store } from "../../../redux/store";
 import { toast } from "react-toastify";
-
+import * as Sentry from "@sentry/react";
 const axiosInstance = axios.create({
-    baseURL: "http://192.168.1.141:8000/api/",
+    // baseURL: "http://192.168.1.141:8000/api/",
+
+    baseURL: import.meta.env.VITE_API_BASE_URL,
     headers: {
         "Content-Type": "application/json",
     },
@@ -13,9 +15,11 @@ axiosInstance.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem("token");
 
+
         if (!config.headers) {
-            config.headers = {};
+            config.headers = new AxiosHeaders();
         }
+
 
         config.headers.Authorization = `Bearer ${token}`;
 
@@ -33,7 +37,7 @@ axiosInstance.interceptors.response.use(
     (error) => {
         const status = error?.response?.status;
         const isLoginRequest = error.config.url?.includes("/signin");
-
+        Sentry.captureException(error);
         console.log(status);
 
         if ((status === 401 || status === 403) && !isLoginRequest && !isSessionExpiredShown) {
@@ -52,6 +56,7 @@ axiosInstance.interceptors.response.use(
 
             localStorage.removeItem("token");
             localStorage.removeItem("user");
+            Sentry.setUser(null);
             sessionStorage.clear();
 
             setTimeout(() => {

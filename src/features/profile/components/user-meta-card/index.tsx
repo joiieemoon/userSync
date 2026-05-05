@@ -1,13 +1,12 @@
-
 import { useModal } from "../../../../hooks/usemodal/index.ts";
 import { Modal } from "../../../../components/ui/modal/index.tsx";
-import Button from "../../../../layout/index.tsx";
+
+import Button from "../../../../components/ui/button/index.tsx";
 import "react-phone-input-2/lib/style.css";
 import PhoneInput from "react-phone-input-2";
 
 import { Form, Formik } from "formik";
-import InputController from "../../../../layout/index.tsx";
-
+import * as Sentry from "@sentry/react";
 import { updateprofilevaldiation } from "../../../../components/ui/input/validation/index.ts";
 import { useAuth } from "../../../auth/hooks/useAuth/index.tsx";
 import { updateFields } from "../../../../components/ui/input/input-config/index.ts";
@@ -17,11 +16,12 @@ import {
 } from "../../hooks/update-profile/index.tsx";
 import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
+import InputController from "../../../../components/ui/input/input-controller/index.tsx";
 export default function UserMetaCard() {
   const { isOpen, openModal, closeModal } = useModal();
   const { mutate, isPending } = useUpdateProfile();
 
-  const { user, updateUser } = useAuth();
+  const { updateUser } = useAuth();
 
   const { data: profile } = useGetProfilebyid();
   const queryClient = useQueryClient();
@@ -102,6 +102,7 @@ export default function UserMetaCard() {
               onError: (error: {
                 response?: { data?: { message?: string } };
               }) => {
+                Sentry.captureException(error);
                 toast.error(error?.response?.data?.message || "Update failed");
               },
             });
@@ -138,7 +139,7 @@ export default function UserMetaCard() {
                             isHalf ? "col-span-2 lg:col-span-1" : "col-span-2"
                           }
                         >
-                          <InputController
+                          {/* <InputController
                             control="input"
                             label={field.label}
                             name={field.name}
@@ -151,6 +152,29 @@ export default function UserMetaCard() {
                               !!(errors[field.name] && touched[field.name])
                             }
                             errorMessage={errors[field.name]}
+                          /> */}
+                          <InputController
+                            control="input"
+                            label={field.label}
+                            name={field.name as keyof typeof values}
+                            type={field.type}
+                            placeholder={field.placeholder}
+                            value={values[field.name as keyof typeof values]}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            error={
+                              !!(
+                                errors[field.name as keyof typeof values] &&
+                                touched[field.name as keyof typeof values]
+                              )
+                            }
+                            errorMessage={
+                              errors[field.name as keyof typeof values]
+                                ? String(
+                                    errors[field.name as keyof typeof values],
+                                  )
+                                : ""
+                            }
                           />
                         </div>
                       );
@@ -175,7 +199,9 @@ export default function UserMetaCard() {
                       </div>
 
                       {touched.phone && errors.phone && (
-                        <p className="text-xs text-red-500 ">{errors.phone}</p>
+                        <p className="text-xs text-red-500 ">
+                          {String(errors.phone)}
+                        </p>
                       )}
                     </div>
                   </div>

@@ -63,7 +63,7 @@ export default function RecentUser() {
 
                 {/* Joined Date */}
                 <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                  {new Date(user.joinedAt).toLocaleString()}
+                  {user.joinedAt ? new Date(user.joinedAt).toLocaleString() : "-"}
                 </TableCell>
               </TableRow>
             ))}

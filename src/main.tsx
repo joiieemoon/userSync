@@ -22,17 +22,20 @@ const queryClient = new QueryClient();
 
 Sentry.init({
   dsn: import.meta.env.VITE_SENTRY_DSN,
+  environment: import.meta.env.MODE,
   integrations: [
     Sentry.browserTracingIntegration(),
+
     // Sentry.reactRouterV6Instrumentation(),
   ],
-  tracesSampleRate: 1.0,
+  // tracesSampleRate: 1.0,
+  tracesSampleRate: import.meta.env.DEV ? 0.1 : 0.3,
   sendDefaultPii: true,
 });
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ThemeProvider>
-      <Sentry.ErrorBoundary fallback={"Something went wrong"}>
+      <Sentry.ErrorBoundary fallback={<div>"Something went wrong"</div>}>
         <AuthProvider>
           <Provider store={store}>
             <QueryClientProvider client={queryClient}>

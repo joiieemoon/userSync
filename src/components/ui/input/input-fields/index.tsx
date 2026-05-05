@@ -52,7 +52,7 @@ const Input: FC<InputProps> = ({
             name={name}
             value={value}
             onChange={onChange}
-            onBlur={onblur}
+            onBlur={onBlur}
             disabled={disabled}
             className={inputClasses}
             {...rest}
@@ -68,7 +68,7 @@ const Input: FC<InputProps> = ({
             name={name}
             value={value}
             onChange={onChange}
-            onBlur={onblur}
+            onBlur={onBlur}
             rows={rows}
             placeholder={placeholder}
             disabled={disabled}

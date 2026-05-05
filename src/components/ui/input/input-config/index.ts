@@ -43,7 +43,7 @@ export const signupFields: FormField[] = [
         placeholder: "Enter User Name",
 
     },
-    
+
 
 
 ];
@@ -90,7 +90,7 @@ export const updateRoleFields = [
     { name: "title", label: "Role Name", type: "text" },
     { name: "status", label: "Status", type: "select" },
 ];
-export const updateusersFields = (id: number) => [
+export const updateusersFields = (id: number | undefined) => [
     {
         name: "firstName",
         label: "First Name",

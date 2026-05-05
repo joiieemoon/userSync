@@ -4,7 +4,11 @@ import { useAuth } from "../../features/auth/hooks/useAuth";
 import { useDispatch } from "react-redux";
 import { useGetRoleById } from "../../features/roles/hooks";
 import { setPermissions } from "../../redux/slice";
-import type { PermissionState } from "../../features/roles/types";
+import type { PermissionState } from "../../redux/slice";
+import type {
+  PermissionFlags,
+  RolePermission,
+} from "../../features/roles/types";
 type SidebarContextType = {
   isExpanded: boolean;
   isMobileOpen: boolean;
@@ -38,10 +42,27 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
   const { data } = useGetRoleById(user?.roleId || 0);
 
   useEffect(() => {
-    if (data as PermissionState) {
-      dispatch(setPermissions(data));
+    if (data) {
+      const permissionData: PermissionState = {
+        role: data.role.title || "",
+        permissions: data.permissions.reduce(
+          (acc: Record<string, PermissionFlags>, perm: RolePermission) => {
+acc[perm.moduleSlug] = {
+              list: perm.list,
+              view: perm.view,
+              add: perm.add,
+              edit: perm.edit,
+              delete: perm.delete,
+            };
+            return acc;
+          },
+          {} as Record<string, PermissionFlags>,
+        ),
+      };
+      dispatch(setPermissions(permissionData));
     }
   }, [data, dispatch]);
+
   const [isExpanded, setIsExpanded] = useState(true);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);

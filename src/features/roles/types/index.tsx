@@ -20,7 +20,7 @@ export interface RoleList {
 }
 
 export type RolePermission = PermissionFlags & {
-  moduleId: number;
+  moduleSlug: string;
 };
 
 export type RolePayload = {
@@ -34,7 +34,7 @@ export type GetRoleByIdResponse = {
     title?: string;
     status: "active" | "inactive";
   };
-  permissions: RolePermission[];
+  permissions: PermissionWithSlug[];
 };
 export type Role = {
   id: number;
@@ -58,7 +58,7 @@ export type PermissionState = {
   role: string | { title: string; status: "active" | "inactive" };
   permissions: Record<string, PermissionFlags>;
 };
-export type PermissionMap = Record<string, RolePermission>;
+export type PermissionMap = Record<string, PermissionFlags>;
 
 export interface ListParams {
   page: number;
@@ -69,7 +69,7 @@ export interface ListParams {
 export type AddEditRoleProps = {
   isOpen: boolean;
   onClose: () => void;
-  id?: number;
+  id?: number | undefined;
 };
 
 export type PermissionWithSlug = PermissionFlags & {

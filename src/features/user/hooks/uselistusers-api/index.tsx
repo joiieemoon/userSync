@@ -12,6 +12,7 @@ import {
   updateuserApi,
 } from "../../services/list-users-api";
 import {  User } from "../../types";
+import type { PaginationParams } from "../../types";
 
 export const useGetUserById = (id: number) => {
   return useQuery({

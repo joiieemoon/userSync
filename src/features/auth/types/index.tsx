@@ -1,10 +1,11 @@
+import type { User as loginUser } from "../../../components/common/types";
 export type loginProps = {
   email: string;
   password: string;
 };
 export type LoginResponse = {
   token: string;
-  user: User;
+  user: loginUser;
 };
 export type SignupProps = {
   email: string;
@@ -26,9 +27,50 @@ export type User = {
   roleTitle?: string;
   joinedAt?: string;
 };
+export type addEditUser = {
+  id?: number | undefined;
+  name?: string;
+  email: string;
+  username?: string;
+  phone?: string;
+  firstName: string;
+  lastName: string;
+  roleId?: number;
+  roleTitle?: string;
+  joinedAt?: string;
+  password?: string;
+  isActive?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+};
+// CREATE
+export type CreateUser = {
+  name?: string;
+  email: string;
+  username?: string;
+  phone?: string;
+  firstName: string;
+  lastName: string;
+  roleId?: number;
+  password?: string;
+};
+// EDIT
+export type UpdateUser = {
+  id: number;
+  name?: string;
+  email: string;
+  username?: string;
+  phone?: string;
+  firstName: string;
+  lastName: string;
+  roleId?: number;
+  roleTitle?: string;
+  joinedAt?: string;
+  password?: string;
+};
 export type SignupResponse = {
   token: string;
-  user: User;
+  user: loginUser;
 };
 export type AuthContextType = {
   token: string | null;
@@ -36,6 +78,6 @@ export type AuthContextType = {
   login: (data: LoginResponse) => void;
   signUp: (data: SignupResponse) => void;
   logout: () => void;
-  updateUser: (user: User) => void;
+  updateUser: (user: loginUser) => void;
   isAuthenticated: boolean;
 };

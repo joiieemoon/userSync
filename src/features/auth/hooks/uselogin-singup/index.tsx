@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useAuth } from "../useAuth";
 import { loginApi, signupApi } from "../../services/auth-api";
@@ -18,11 +19,9 @@ export const useLogin = () => {
         token: data.token,
         user: data.user,
       });
-    
 
       navigation("/", { replace: true });
     },
-   
   });
 };
 export const useSignUp = () => {
@@ -32,7 +31,6 @@ export const useSignUp = () => {
     mutationFn: signupApi,
 
     onSuccess: (response) => {
-
       navigation("/", { replace: true });
 
       signUp({
@@ -47,19 +45,22 @@ export const useSignUp = () => {
 export const usePermission = (id: number) => {
   const dispatch = useDispatch();
 
-  return useQuery({
+  const { data } = useQuery({
     queryKey: ["permission", id],
     queryFn: () => getrolebyidApi(id),
     enabled: !!id,
+  });
 
-    onSuccess: (data) => {
-
+  useEffect(() => {
+    if (data) {
       dispatch(
         setPermissions({
           role: data.role,
           permissions: formatPermissionsForUI(data.permissions),
         }),
       );
-    },
-  });
+    }
+  }, [data, dispatch]);
+
+  return { data };
 };
