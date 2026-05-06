@@ -11,7 +11,7 @@ import {
   listusersApi,
   updateuserApi,
 } from "../../services/list-users-api";
-import {  User } from "../../types";
+import { User } from "../../types";
 import type { PaginationParams } from "../../types";
 
 export const useGetUserById = (id: number) => {
@@ -19,11 +19,9 @@ export const useGetUserById = (id: number) => {
     queryKey: ["user", id],
     queryFn: () => getuserbyidApi(id),
     enabled: !!id,
-  
-    
   });
 };
-export const useListUsers = (params:PaginationParams, options = {}) => {
+export const useListUsers = (params: PaginationParams, options = {}) => {
   return useQuery({
     queryKey: ["users", params],
     queryFn: () => listusersApi(params),
@@ -48,14 +46,13 @@ export const useUpdateUser = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: number; data: User }) =>
+    // mutationFn: ({ id, data }: { id: number; data: User }) =>
+    //   updateuserApi(id, data),
+    mutationFn: ({ id, data }: { id: number; data: Partial<User> }) =>
       updateuserApi(id, data),
-
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
     },
-
-    
   });
 };
 export const useCreateUser = () => {
@@ -64,8 +61,6 @@ export const useCreateUser = () => {
     mutationFn: (data: User) => createuserApi(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
-    
     },
-   
   });
 };

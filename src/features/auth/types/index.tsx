@@ -16,7 +16,7 @@ export type SignupProps = {
   phone: string;
 };
 export type User = {
-  id: number;
+  id?: number;
   name?: string;
   email: string;
   username?: string;
@@ -28,7 +28,8 @@ export type User = {
   joinedAt?: string;
 };
 export type addEditUser = {
-  id?: number | undefined;
+  id?: number;
+
   name?: string;
   email: string;
   username?: string;

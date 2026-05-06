@@ -34,9 +34,11 @@ export default function SignInForm() {
         }, 5000);
       },
 
-      onError: (error?: { response?: { data?: { message: string } } }) => {
+     
+      onError: (error) => {
+        const apiError = error as ApiError;
         const message =
-          error?.response?.data?.message || "Something went wrong";
+          apiError?.response?.data?.message || "Something went wrong";
 
         Sentry.captureException(error);
         console.log("sentry need to woerk");

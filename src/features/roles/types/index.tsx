@@ -78,6 +78,7 @@ export type PermissionWithSlug = PermissionFlags & {
 export type UpdateRolePayload = {
   title: string;
   status: "active" | "inactive";
-  permissions: PermissionFlags[];
+  // permissions: PermissionFlags[];
+  permissions: RolePermission[];
 };
 export type AccessMap = Record<string, PermissionFlags>;

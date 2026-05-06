@@ -17,8 +17,7 @@ import { useDispatch } from "react-redux";
 import { setPermissions } from "../../../redux/slice";
 import { PaginationParams } from "../../user/types";
 import type { RolePayload, UpdateRolePayload } from "../types";
-// import type { PermissionState } from "../../../redux/slice";
-// import { formatPermissionsForUI } from "../../../lib/helper/flate-permission";
+
 import type { GetRoleByIdResponse } from "../types";
 // Keeps previous page data to avoid UI flicker during pagination
 export const useListRoles = (params: PaginationParams) => {
@@ -41,7 +40,7 @@ export const useDeleteRoles = () => {
     },
   });
 };
-//
+
 export const useUpdateRoles = () => {
   const queryClient = useQueryClient();
   return useMutation({

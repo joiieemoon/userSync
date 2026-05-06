@@ -25,14 +25,13 @@ import * as Sentry from "@sentry/react";
 import { useDebounce } from "../../../../hooks/usedebounce/index.tsx";
 
 import type { ListParams, RoleList } from "../../types/index.tsx";
-// import { getAccess } from "../../../../lib/helper/flate-permission/index.tsx";
 
+import { ApiError } from "../../../../types/api-error.ts";
 import PageMeta from "../../../../components/common/page-meta/index.tsx";
 
 import { RootState } from "../../../../redux/store/index.tsx";
 import { tableHeaders } from "../../../../constant/config.ts";
-// import { tableHeaders } from "../../../../constant/config.ts";
-// import { getAccess } from "../../../../lib/helper/flate-permission/index.tsx";
+
 
 export default function RoleTable() {
   const [page, setPage] = useState(1);
@@ -74,7 +73,6 @@ export default function RoleTable() {
   const pageSize = 5;
   const { permissions } = useSelector((state: RootState) => state.permissions);
 
-  //get
 
   const access = permissions || {};
   // const access = permissions;
@@ -259,9 +257,11 @@ export default function RoleTable() {
               setIsDeleteOpen(false);
               setcurrentid(undefined);
             },
-            onError: (error: ApiError) => {
+            onError: (error) => {
+              const apiError = error as ApiError;
               Sentry.captureException(error);
-              const message = error?.response?.data?.message || "Delete failed";
+              const message =
+                apiError?.response?.data?.message || "Delete failed";
               toast.error(message);
             },
           });

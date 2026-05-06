@@ -2,7 +2,7 @@ import { apiClient } from "../../../lib/api/api-client";
 
 import { ENDPOINTS } from "../../../lib/api/end-points";
 import type { PaginationParams } from "../../../components/common/types";
-import { RolePayload } from "../types";
+// import { RolePayload } from "../types";
 
 export const listrolesApi = async (params: PaginationParams) => {
   const query = new URLSearchParams(
@@ -15,7 +15,10 @@ export const deleteroleApi = async (id: number) => {
   const res = await apiClient.delete(`${ENDPOINTS.ROLES}/${id}`);
   return res.data;
 };
-export const updateroleApi = async (id: number, data: RolePayload) => {
+export const updateroleApi = async (
+  id: number,
+  data: Record<string, unknown>,
+) => {
   const res = await apiClient.put(`${ENDPOINTS.ROLES}/${id}`, data);
   return res.data;
 };
@@ -23,7 +26,7 @@ export const getrolebyidApi = async (id: number) => {
   const res = await apiClient.get(`${ENDPOINTS.ROLES}/${id}`);
   return res.data.data;
 };
-export const createroleApi = async (data: RolePayload) => {
+export const createroleApi = async (data: Record<string, unknown>) => {
   const res = await apiClient.post(`${ENDPOINTS.ROLES}`, data);
   return res.data;
 };

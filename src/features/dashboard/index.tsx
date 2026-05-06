@@ -11,9 +11,10 @@ import UserStates from "./components/dash-user/index.tsx";
 
 import type {
   PermissionState,
-  PermissionFlags,
+ 
 } from "../../redux/slice/index.tsx";
-import type { RolePermission } from "../roles/types/index.tsx";
+
+import type { RolePermission,PermissionFlags } from "../roles/types/index.tsx";
 import RecentUser from "./components/recent-user-tabel/index.tsx";
 export default function Home() {
   const dispatch = useDispatch();
@@ -26,7 +27,7 @@ export default function Home() {
         role: data.role.title || "",
         permissions: data.permissions.reduce(
           (acc: Record<string, PermissionFlags>, perm: RolePermission) => {
-acc[perm.moduleSlug] = {
+            acc[perm.moduleSlug] = {
               list: perm.list,
               view: perm.view,
               add: perm.add,

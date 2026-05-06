@@ -90,7 +90,7 @@ export const updateRoleFields = [
     { name: "title", label: "Role Name", type: "text" },
     { name: "status", label: "Status", type: "select" },
 ];
-export const updateusersFields = (id: number | undefined) => [
+export const updateusersFields = (id: number ) => [
     {
         name: "firstName",
         label: "First Name",

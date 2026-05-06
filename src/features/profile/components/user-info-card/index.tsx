@@ -1,9 +1,12 @@
+import { User } from "../../../auth/types";
 import { useGetProfilebyid } from "../../hooks/update-profile";
-
+export type GetUserResponse = {
+  user: User;
+};
 export default function UserInfoCard() {
   const { data } = useGetProfilebyid();
 
-  const user = data?.user;
+  const user = data?.user ;
   const personalInfo = [
     {
       label: "First Name",
@@ -18,7 +21,7 @@ export default function UserInfoCard() {
       value: user?.email,
     },
 
-    {
+    { 
       label: "Phone",
       value: user?.phone ? `+${user.phone}` : "",
     },

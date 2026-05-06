@@ -18,6 +18,8 @@ import { useDispatch } from "react-redux";
 import { ChevronDownIcon } from "../../../../assets/icons";
 import { usePermission } from "../../../auth/hooks/uselogin-singup";
 import type { AddEditRoleProps, AccessMap } from "../../types";
+
+import * as Sentry from "@sentry/react";
 import { useAuth } from "../../../auth/hooks/useAuth";
 
 const AddEditRoleModal = ({ isOpen, onClose, id }: AddEditRoleProps) => {
@@ -32,7 +34,7 @@ const AddEditRoleModal = ({ isOpen, onClose, id }: AddEditRoleProps) => {
   }, [data?.permissions]);
 
   const userRoleId = user?.roleId;
-  const { data: refetchPermission } = usePermission(userRoleId);
+  const { data: refetchPermission } = usePermission(userRoleId as number);
   return (
     <Modal
       isOpen={isOpen}
@@ -65,7 +67,7 @@ const AddEditRoleModal = ({ isOpen, onClose, id }: AddEditRoleProps) => {
                   toast.success("Role updated successfully");
                   queryClient.invalidateQueries({ queryKey: ["profile"] });
                   onClose();
-
+                  Sentry.captureMessage("permission updated ");
                   refetchPermission();
                 },
               },

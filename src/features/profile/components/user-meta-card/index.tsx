@@ -99,11 +99,12 @@ export default function UserMetaCard() {
                 updateUser(values);
                 queryClient.invalidateQueries({ queryKey: ["profile"] });
               },
-              onError: (error: {
-                response?: { data?: { message?: string } };
-              }) => {
+              onError: (error: unknown) => {
                 Sentry.captureException(error);
-                toast.error(error?.response?.data?.message || "Update failed");
+                const err = error as {
+                  response?: { data?: { message?: string } };
+                };
+                toast.error(err?.response?.data?.message || "Update failed");
               },
             });
           }}

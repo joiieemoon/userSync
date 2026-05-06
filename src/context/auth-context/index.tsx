@@ -5,14 +5,14 @@ import type {
   SignupResponse,
 } from "../../features/auth/types";
 import { User } from "../../features/user/types";
-// import { UpdateRolePayload } from "../../features/roles/types";
+
 import type { AuthProviderProps } from "../../components/common/types";
 import * as Sentry from "@sentry/react";
 export const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
-  // const [user, setUser] = useState<LoginResponse | null>(null);
+
   useEffect(() => {
     const t = localStorage.getItem("token");
     const u = localStorage.getItem("user");

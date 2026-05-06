@@ -11,8 +11,6 @@ import {
 } from "../../assets/icons";
 
 import { useSidebar } from "../../context/sidebar-context";
-// import { getAccess } from "../../lib/helper/flate-permission";
-// import Button from "../../components/ui/button";
 
 type NavItem = {
   name: string;
@@ -27,15 +25,10 @@ const AppSidebar: React.FC = () => {
 
   const { permissions } = useSelector((state: RootState) => state.permissions);
 
-  // const getAccess = (permissions: AccessMap) => {
-  //   return permissions;
-  // };
-
   const access = permissions;
-  // const access = permissions;
+
   const canviewUser = access?.users?.view;
   const canviewRole = access?.role?.view;
-  console.log(canviewRole);
 
   const navItems: NavItem[] = [
     {
@@ -65,61 +58,14 @@ const AppSidebar: React.FC = () => {
     },
   ];
 
-  // const [openSubmenu, setOpenSubmenu] = useState<{
-  //   type: "main" | "others";
-  //   index: number;
-  // } | null>(null);
-
-  // const [subMenuHeight, setSubMenuHeight] = useState<Record<string, number>>(
-  //   {},
-  // );
-
-  // const subMenuRefs = useRef<Record<string, HTMLDivElement | null>>({});
+ 
 
   const isActive = useCallback(
     (path: string) => location.pathname === path,
     [location.pathname],
   );
 
-  // useEffect(() => {
-  //   ["main", "others"].forEach((menuType) => {
-  //     const items = menuType === "main" ? navItems : othersItems;
 
-  //     items.forEach((nav, index) => {
-  //       if (nav.subItems) {
-  //         nav.subItems.forEach((subItem) => {
-  //           if (isActive(subItem.path)) {
-  //           }
-  //         });
-  //       }
-  //     });
-  //   });
-  // }, [location, isActive, navItems]);
-
-  // useEffect(() => {
-  //   if (openSubmenu !== null) {
-  //     const key = `${openSubmenu.type}-${openSubmenu.index}`;
-  //     if (subMenuRefs.current[key]) {
-  //       setSubMenuHeight((prevHeights) => ({
-  //         ...prevHeights,
-  //         [key]: subMenuRefs.current[key]?.scrollHeight || 0,
-  //       }));
-  //     }
-  //   }
-  // }, [openSubmenu]);
-
-  // const handleSubmenuToggle = (index: number, menuType: "main" | "others") => {
-  //   setOpenSubmenu((prevOpenSubmenu) => {
-  //     if (
-  //       prevOpenSubmenu &&
-  //       prevOpenSubmenu.type === menuType &&
-  //       prevOpenSubmenu.index === index
-  //     ) {
-  //       return null;
-  //     }
-  //     return { type: menuType, index };
-  //   });
-  // };
   const renderMenuItems = (items: NavItem[]) => (
     <ul className="flex flex-col gap-4">
       {items.map((nav) => (
@@ -140,76 +86,7 @@ const AppSidebar: React.FC = () => {
       ))}
     </ul>
   );
-  // const renderMenuItems = (items: NavItem[], menuType: "main" | "others") => (
-  //   <ul className="flex flex-col gap-4">
-  //     {items.map((nav, index) => (
-  //       <li key={nav.name}>
-  //         {nav.subItems ? (
-  //           <Button
-  //             onClick={() => handleSubmenuToggle(index, menuType)}
-  //             className={`menu-item group ${
-  //               openSubmenu?.type === menuType && openSubmenu?.index === index
-  //                 ? "menu-item-active"
-  //                 : "menu-item-inactive"
-  //             } cursor-pointer ${
-  //               !isExpanded && !isHovered
-  //                 ? "lg:justify-center"
-  //                 : "lg:justify-start"
-  //             }`}
-  //           >
-  //             <span
-  //               className={`menu-item-icon-size  ${
-  //                 openSubmenu?.type === menuType && openSubmenu?.index === index
-  //                   ? "menu-item-icon-active"
-  //                   : "menu-item-icon-inactive"
-  //               }`}
-  //             >
-  //               {nav.icon}
-  //             </span>
-
-  //             {(isExpanded || isHovered || isMobileOpen) && (
-  //               <span className="menu-item-text">{nav.name}</span>
-  //             )}
-
-  //             {(isExpanded || isHovered || isMobileOpen) && (
-  //               <ChevronDownIcon
-  //                 className={`ml-auto w-5 h-5 transition-transform duration-200 ${
-  //                   openSubmenu?.type === menuType &&
-  //                   openSubmenu?.index === index
-  //                     ? "rotate-180 text-brand-500"
-  //                     : ""
-  //                 }`}
-  //               />
-  //             )}
-  //           </Button>
-  //         ) : (
-  //           nav.path && (
-  //             <Link
-  //               to={nav.path}
-  //               className={`menu-item group ${
-  //                 isActive(nav.path) ? "menu-item-active" : "menu-item-inactive"
-  //               }`}
-  //             >
-  //               <span
-  //                 className={`menu-item-icon-size ${
-  //                   isActive(nav.path)
-  //                     ? "menu-item-icon-active"
-  //                     : "menu-item-icon-inactive"
-  //                 }`}
-  //               >
-  //                 {nav.icon}
-  //               </span>
-
-  //               {(isExpanded || isHovered || isMobileOpen) && (
-  //                 <span className="menu-item-text">{nav.name}</span>
-  //               )}
-  //             </Link>
-  //           )
-  //         )}
-  //       </li>
-  //     ))}
-  //   </ul>
-  // );
+  
 
   return (
     <aside

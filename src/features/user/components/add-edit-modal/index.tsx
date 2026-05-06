@@ -22,11 +22,10 @@ import type { addEditUser } from "../../../auth/types";
 type Props = {
   isOpen: boolean;
   onClose: () => void;
-  id?: number | undefined;
+  id?: number;
 };
 
 const AddEditUserModal = ({ isOpen, onClose, id }: Props) => {
-  
   const { data: user } = useGetUserById(id!);
   const { mutate: updateUser, isPending } = useUpdateUser();
   const { mutate: createUser, isPending: isCreating } = useCreateUser();
@@ -35,7 +34,7 @@ const AddEditUserModal = ({ isOpen, onClose, id }: Props) => {
     page: 1,
     limit: 100,
   });
-  const updatefields = updateusersFields(id);
+  const updatefields = updateusersFields(id as number);
 
   return (
     <Modal
@@ -67,6 +66,8 @@ const AddEditUserModal = ({ isOpen, onClose, id }: Props) => {
             }
           }
           if (id) {
+            if (!id) return;
+
             updateUser(
               { id, data: payload },
               {
@@ -113,9 +114,7 @@ const AddEditUserModal = ({ isOpen, onClose, id }: Props) => {
                     label={field.label}
                     name={field.name}
                     type={field.name === "password" ? "password" : "text"}
-                    // value={values[field.name]}
                     value={values[field.name as keyof typeof values]}
-                    // onChange={(e) => setFieldValue(field.name, e.target.value)}
                     onChange={(e) =>
                       setFieldValue(
                         field.name as keyof typeof values,

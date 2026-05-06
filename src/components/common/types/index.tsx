@@ -24,7 +24,7 @@ export type SearchBarProps = {
   onFocus?: React.FocusEventHandler<
     HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
   >;
-  
+
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   onSubmit?: () => void;
   placeholder?: string;

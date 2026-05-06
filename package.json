@@ -1,14 +1,14 @@
 {
-  "name": "tailadmin-react",
+  "name": "user-desk",
+  "version": "3.4.3",
   "private": true,
-  "version": "2.1.0",
   "type": "module",
-    "scripts": {
-      "dev": "vite",
-      "build": "tsc -b && vite build",
-      "lint": "eslint .",
-      "preview": "vite preview" 
-    },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
   "dependencies": {
     "@fullcalendar/core": "^6.1.15",
     "@fullcalendar/daygrid": "^6.1.15",
