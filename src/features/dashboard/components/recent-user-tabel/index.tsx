@@ -16,7 +16,8 @@ export default function RecentUser() {
   return (
     <>
       <h1 className="mb-2 font-medium">Recent User</h1>
-      <div className="max-h-[400px] rounded-xl border border-gray-200  dark:border-white/[0.05]   overflow-y-auto">
+      <div className="max-h-[60vh] md:max-h-[40vh] rounded-xl border border-gray-200 dark:border-white/[0.05] overflow-y-auto">
+      {/* <div className="max-h-[400px] md:h-[350px] rounded-xl border border-gray-200  dark:border-white/[0.05]   overflow-y-auto"> */}
         <Table>
           {/* Table Header */}
 
@@ -63,7 +64,9 @@ export default function RecentUser() {
 
                 {/* Joined Date */}
                 <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                  {user.joinedAt ? new Date(user.joinedAt).toLocaleString() : "-"}
+                  {user.joinedAt
+                    ? new Date(user.joinedAt).toLocaleString()
+                    : "-"}
                 </TableCell>
               </TableRow>
             ))}

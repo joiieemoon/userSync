@@ -12,3 +12,4 @@ export const signupApi = async (data: SignupProps): Promise<SignupResponse> => {
     const res = await apiClient.post(ENDPOINTS.SIGNUp, data);
     return res.data.data;
 };
+    

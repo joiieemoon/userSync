@@ -36,6 +36,8 @@ axiosInstance.interceptors.response.use(
     (response) => response,
     (error) => {
         const status = error?.response?.status;
+        console.log(status);
+        console.log(error);
         const isLoginRequest = error.config.url?.includes("/signin");
         Sentry.captureException(error);
         console.log(status);

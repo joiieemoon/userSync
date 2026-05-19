@@ -26,7 +26,7 @@ const Input: FC<InputProps> = ({
   rows = 3,
   autoComplete,
   errorMessage,
-
+  registration,
   ...rest
 }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -92,23 +92,18 @@ const Input: FC<InputProps> = ({
               >
                 {label}
               </label>
+
               <input
-                // type={type}
-                type={isPassword ? (showPassword ? "text" : "password") : type}
+                {...registration}
                 id={id}
-                name={name}
                 placeholder={placeholder}
-                value={value}
-                onChange={onChange}
                 min={min}
                 max={max}
                 step={step}
                 disabled={disabled}
                 className={inputClasses}
-                onBlur={onBlur}
                 autoComplete={autoComplete}
               />
-
               {isPassword && (
                 <button
                   type="button"

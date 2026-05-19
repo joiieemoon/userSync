@@ -1,12 +1,15 @@
+import { useRef } from "react";
 import { User } from "../../../auth/types";
 import { useGetProfilebyid } from "../../hooks/update-profile";
+
 export type GetUserResponse = {
   user: User;
 };
 export default function UserInfoCard() {
   const { data } = useGetProfilebyid();
 
-  const user = data?.user ;
+  const user = data?.user;
+
   const personalInfo = [
     {
       label: "First Name",
@@ -21,7 +24,7 @@ export default function UserInfoCard() {
       value: user?.email,
     },
 
-    { 
+    {
       label: "Phone",
       value: user?.phone ? `+${user.phone}` : "",
     },
@@ -34,6 +37,13 @@ export default function UserInfoCard() {
       value: user?.roleTitle,
     },
   ];
+
+  const countref = useRef(0);
+  const handleClick = () => {
+    countref.current += 1;
+    console.log("count", countref.current);
+  };
+
   return (
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-7 2xl:gap-x-32 mx-10">
       {personalInfo.map((item, index) => (
@@ -47,6 +57,7 @@ export default function UserInfoCard() {
           </p>
         </div>
       ))}
+      
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { Formik, Form } from "formik";
+
 import * as Sentry from "@sentry/react";
 import Button from "../../../../components/ui/button/index.tsx";
 import { useState } from "react";
@@ -15,12 +15,26 @@ import { loginProps } from "../../types/index.tsx";
 import PageMeta from "../../../../components/common/page-meta/index.tsx";
 import InputController from "../../../../components/ui/input/input-controller/index.tsx";
 import type { ApiError } from "../../../../types/api-error";
-
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 export default function SignInForm() {
   const { mutate, isPending } = useLogin();
   const [lock, setLock] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors, touchedFields, isSubmitting, },
+  } = useForm<loginProps>({
+    resolver: zodResolver(loginvalidationSchema),
+    mode: "all",
+  });
 
-  const handleSubmit = (values: loginProps) => {
+  const welcomeadmin = watch("email");
+ 
+  const onSubmit = (values: loginProps) => {
+    console.log("this is on submit ");
+
     if (lock) return;
 
     setLock(true);
@@ -34,13 +48,16 @@ export default function SignInForm() {
         }, 5000);
       },
 
-     
       onError: (error) => {
         const apiError = error as ApiError;
+        console.log(apiError?.response?.data?.message);
         const message =
           apiError?.response?.data?.message || "Something went wrong";
 
         Sentry.captureException(error);
+        // Sentry.logger.info("User triggered test log", {
+        //   log_source: "sentry_test",
+        // });
         console.log("sentry need to woerk");
         toast.error(message);
 
@@ -56,6 +73,7 @@ export default function SignInForm() {
         title="UserDesk | Signin"
         description="this is signup for register new user in userdes"
       ></PageMeta>
+
       <div className="flex flex-col flex-1">
         <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
           <div>
@@ -74,67 +92,49 @@ export default function SignInForm() {
                   <div className="w-full border-t border-gray-200 dark:border-gray-800"></div>
                 </div>
               </div>
-
+              <p>
+                {welcomeadmin === "admin@example.com" ? "welcome admin" : ""}
+              </p>
               <div className="space-y-6 mt-3">
-                <Formik
-                  initialValues={{
-                    email: "",
-                    password: "",
-                  }}
-                  validationSchema={loginvalidationSchema}
-                  onSubmit={handleSubmit}
-                >
-                  {({
-                    values,
-                    touched,
-                    errors,
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  {loginFields.map((field) => (
+                    <div key={field.name} className="relative">
+                      <InputController
+                        control="input"
+                        label={field.label}
+                        id={field.name}
+                        type={field.type}
+                        placeholder={field.placeholder}
+                        disabled={lock}
+                        registration={register(field.name as keyof loginProps)}
+                        error={
+                          !!(
+                            errors[field.name as keyof loginProps] &&
+                            touchedFields[
+                              field.name as keyof typeof touchedFields
+                            ]
+                          )
+                        }
+                        errorMessage={
+                          errors[field.name as keyof loginProps]?.message
+                        }
+                      />
+                    </div>
+                  ))}
 
-                    handleBlur,
-                    handleChange,
-                  }) => (
-                    <Form>
-                      {loginFields.map((field) => (
-                        <div key={field.name} className="relative">
-                          <InputController
-                            control="input"
-                            label={field.label}
-                            id={field.name}
-                            name={field.name}
-                            type={field.type}
-                            value={values[field.name as keyof typeof values]}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            placeholder={field.placeholder}
-                            disabled={lock}
-                            autoComplete={field?.autoComplete}
-                            error={
-                              !!(
-                                errors[field.name as keyof typeof errors] &&
-                                touched[field.name as keyof typeof touched]
-                              )
-                            }
-                            errorMessage={
-                              errors[
-                                field.name as keyof typeof errors
-                              ] as string
-                            }
-                          />
-                        </div>
-                      ))}
-
-                      <div className="mt-5">
-                        <Button
-                          className="w-full"
-                          size="sm"
-                          type="submit"
-                          disabled={isPending || lock}
-                        >
-                          {isPending ? "Signing in..." : "Sign in"}
-                        </Button>
-                      </div>
-                    </Form>
-                  )}
-                </Formik>
+                  <div className="mt-5">
+                    <Button
+                      className="w-full"
+                      size="sm"
+                      type="submit"
+                      disabled={isPending || lock || isSubmitting}
+                    >
+                      {isPending ? "Signing in..." : "Sign in"}
+                    </Button>
+                  </div>
+                </form>
+                {/* )}
+                </Formik> */}
               </div>
 
               <div className="mt-5">

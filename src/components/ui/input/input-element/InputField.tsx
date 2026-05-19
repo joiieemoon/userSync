@@ -1,12 +1,14 @@
 import type React from "react";
 import type { FC } from "react";
-
+import { useState } from "react";
+import { EyeCloseIcon, EyeIcon } from "../../../../assets/icons";
+import { UseFormRegisterReturn } from "react-hook-form";
 interface InputProps {
   type?: "text" | "number" | "email" | "password" | "date" | "time" | string;
   id?: string;
   name?: string;
   placeholder?: string;
-  value?: string | number;
+  // value?: string | number;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
   min?: string;
@@ -16,6 +18,8 @@ interface InputProps {
   success?: boolean;
   error?: boolean;
   hint?: string;
+  registration?: UseFormRegisterReturn;
+  autoComplete?: string;
 }
 
 const Input: FC<InputProps> = ({
@@ -23,19 +27,22 @@ const Input: FC<InputProps> = ({
   id,
   name,
   placeholder,
-  value,
-  onChange,
+  // value,
+  // onChange,
   className = "",
   min,
   max,
   step,
+  registration,
   disabled = false,
   success = false,
   error = false,
+  autoComplete,
   hint,
 }) => {
   let inputClasses = ` h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3  dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 ${className}`;
-
+  const [showPassword, setShowPassword] = useState(false);
+  const isPassword = type === "password";
   if (disabled) {
     inputClasses += ` text-gray-500 border-gray-300 opacity-40 bg-gray-100 cursor-not-allowed dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700 opacity-40`;
   } else if (error) {
@@ -48,28 +55,56 @@ const Input: FC<InputProps> = ({
 
   return (
     <div className="relative">
-      <input
-        type={type}
+      {/* <input
+        {...registration}
+        type={isPassword ? (showPassword ? "text" : "password") : type}
         id={id}
         name={name}
         placeholder={placeholder}
-        value={value}
-        onChange={onChange}
         min={min}
         max={max}
         step={step}
         disabled={disabled}
         className={inputClasses}
+        autoComplete={autoComplete}
+      /> */}
+      <input
+        {...registration}
+        // value={registration ? undefined : value}
+        // onChange={registration ? undefined : onChange}
+        // onBlur={registration ? undefined : onBlur}
+        type={isPassword ? (showPassword ? "text" : "password") : type}
+        id={id}
+        name={name}
+        placeholder={placeholder}
+        min={min}
+        max={max}
+        step={step}
+        disabled={disabled}
+        className={inputClasses}
+        autoComplete={autoComplete}
       />
-
+      {isPassword && (
+        <button
+          type="button"
+          onClick={() => setShowPassword(!showPassword)}
+          className="absolute right-3 top-1/2 -translate-y-1/2 mt-3"
+        >
+          {showPassword ? (
+            <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
+          ) : (
+            <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
+          )}
+        </button>
+      )}
       {hint && (
         <p
           className={`mt-1.5 text-xs ${
             error
               ? "text-error-500"
               : success
-              ? "text-success-500"
-              : "text-gray-500"
+                ? "text-success-500"
+                : "text-gray-500"
           }`}
         >
           {hint}

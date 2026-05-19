@@ -41,7 +41,7 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
   const { user } = useAuth();
   const { data } = useGetRoleById(user?.roleId || 0);
 
-  useEffect(() => {
+  useEffect(() => { 
     if (data) {
       const permissionData: PermissionState = {
         role: data.role.title || "",

@@ -23,7 +23,7 @@ const LayoutContent: React.FC = () => {
       >
         <AppHeader />
 
-        <div className="p-4 md:p-6 w-full">
+        <div className="p-4 md:p-4 w-full">
           <Outlet />
         </div>
       </div>

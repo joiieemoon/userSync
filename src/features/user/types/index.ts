@@ -31,3 +31,23 @@ export type PaginationParams = {
     page: number;
     limit: number;
 };
+export interface UpdateUserForm {
+    firstName: string;
+    lastName: string;
+    email: string;
+    username: string;
+    phone: string;
+    roleId: string;
+    isActive: string;
+    password?: string;
+}
+export interface UpdateUserPayload {
+    firstName: string;
+    lastName: string;
+    email: string;
+    username: string;
+    phone: string;
+    roleId: number;
+    isActive: boolean;
+    password?: string;
+}

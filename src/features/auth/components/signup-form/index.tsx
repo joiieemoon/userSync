@@ -1,6 +1,5 @@
 import { Link } from "react-router";
 
-import { Form, Formik } from "formik";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { signupvalidationSchema } from "../../../../components/ui/input/validation";
@@ -13,13 +12,24 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { SignupProps } from "../../types";
 import PageMeta from "../../../../components/common/page-meta";
-import type { FormikHelpers } from "formik";
+import { SignupPropsform } from "../../../../components/ui/input/validation";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 export default function SignUpForm() {
   const [lock, setLock] = useState(false);
   const { mutate, isPending } = useSignUp();
-  const handleSubmit = (
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors, touchedFields },
+  } = useForm<SignupPropsform>({
+    resolver: zodResolver(signupvalidationSchema),
+    mode: "all",
+  });
+  const onSubmit = (
     values: SignupProps,
-    { setErrors }: FormikHelpers<SignupProps>,
+    // { setErrors }: FormikHelpers<SignupProps>,
   ) => {
     if (lock) return;
 
@@ -55,7 +65,7 @@ export default function SignUpForm() {
             formErrors[err.field] = err.message;
           });
 
-          setErrors(formErrors);
+          // setErrors(formErrors);
         }
 
         setTimeout(() => {
@@ -90,111 +100,115 @@ export default function SignUpForm() {
               </div>
 
               <div className="abosulate">
-                <Formik
-                  initialValues={{
-                    email: "",
-                    firstName: "",
-                    lastName: "",
-                    password: "",
-                    username: "",
-                    phone: "",
-                  }}
-                  validationSchema={signupvalidationSchema}
-                  onSubmit={handleSubmit}
-                >
-                  {({
-                    values,
-                    touched,
-                    errors,
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {signupFields.map((field) => {
+                      const isHalf =
+                        field.name === "firstName" ||
+                        field.name === "lastName" ||
+                        field.name == "password" ||
+                        field.name === "username" ||
+                        field.name === "cpassword";
 
-                    handleBlur,
-                    handleChange,
-                    setFieldValue,
-                    setFieldTouched,
-                  }) => (
-                    <Form>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        {signupFields.map((field) => {
-                          const isHalf =
-                            field.name === "firstName" ||
-                            field.name === "lastName" ||
-                            field.name == "password" ||
-                            field.name === "username" ||
-                            field.name === "cpassword";
+                      return (
+                        <div
+                          key={field.name}
+                          className={isHalf ? "" : "sm:col-span-2"}
+                        >
+                          <InputController
+                            control="input"
+                            label={field.label}
+                            name={field.name}
+                            autoComplete={field?.autoComplete}
+                            registration={register(
+                              field.name as keyof SignupPropsform,
+                            )}
+                            type={field.type}
+                            placeholder={field.placeholder}
+                            disabled={lock}
+                            error={
+                              !!(
+                                errors[field.name as keyof typeof errors]
+                              )
+                            }
+                            errorMessage={
+                              errors[field.name as keyof typeof errors]?.message
+                            }
+                          />
+                        </div>
+                      );
+                    })}
+                    {/* <div>
+                      <label htmlFor="" className="text-sm">
+                        Phone
+                      </label>
+                      <div
+                        className={`mt-4 w-full rounded-lg border ${
+                          touchedFields.phone && errors.phone
+                            ? "border-red-500"
+                            : "border-gray-300"
+                        }`}
+                      >
+                        <PhoneInput
+                          country={"in"}
+                          value={values.phone}
+                          onChange={(phone) => setFieldValue("phone", phone)}
+                          onBlur={() => setFieldTouched("phone", true)}
+                          inputClass="!w-full !border-0 !text-sm"
+                        />
+                      </div>
+                      {touchedFields.phone && errors.phone && (
+                        <p className="text-xs text-red-500 mt-1">
+                          {errors.phone}
+                        </p>
+                      )}
+                    </div> */}
 
-                          return (
-                            <div
-                              key={field.name}
-                              className={isHalf ? "" : "sm:col-span-2"}
-                            >
-                              <InputController
-                                control="input"
-                                label={field.label}
-                                name={field.name}
-                                autoComplete={field?.autoComplete}
-                                value={
-                                  values[field.name as keyof typeof values]
-                                }
-                                type={field.type}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                placeholder={field.placeholder}
-                                disabled={lock}
-                                error={
-                                  !!(
-                                    errors[field.name as keyof typeof errors] &&
-                                    touched[field.name as keyof typeof touched]
-                                  )
-                                }
-                                errorMessage={
-                                  errors[
-                                    field.name as keyof typeof errors
-                                  ] as string
-                                }
-                              />
-                            </div>
-                          );
-                        })}
-                        <div>
-                          <label htmlFor="" className="text-sm">
-                            Phone
-                          </label>
-                          <div
-                            className={`mt-4 w-full rounded-lg border ${
-                              touched.phone && errors.phone
-                                ? "border-red-500"
-                                : "border-gray-300"
-                            }`}
-                          >
+                    <div>
+                      <label className="text-sm">Phone</label>
+                      <div
+                        className={`mt-4 w-full rounded-lg  ${
+                          touchedFields.phone && errors.phone
+                            ? "border-red-500"
+                            : "border-gray-300"
+                        }`}
+                      >
+                        <Controller
+                          name="phone"
+                          control={control}
+                          defaultValue=""
+                          render={({ field }) => (
                             <PhoneInput
                               country={"in"}
-                              value={values.phone}
-                              onChange={(phone) =>
-                                setFieldValue("phone", phone)
-                              }
-                              onBlur={() => setFieldTouched("phone", true)}
-                              inputClass="!w-full !border-0 !text-sm"
+                              value={field.value}
+                              onChange={(phone) => field.onChange(phone)}
+                              onBlur={field.onBlur}
+                              disabled={lock}
+                              inputClass="!w-full !h-11 !text-sm bg-red"
+                              containerClass="mt-2 !w-full"
                             />
-                          </div>
-                          {touched.phone && errors.phone && (
-                            <p className="text-xs text-red-500 mt-1">
-                              {errors.phone}
-                            </p>
                           )}
-                        </div>
+                        />
                       </div>
+                      {errors.phone && (
+                        <p className="mt-1 text-xs text-red-500">
+                          {errors.phone.message}
+                        </p>
+                      )}
+                    </div>
+                  </div>
 
-                      <Button
-                        className="w-full mt-5"
-                        size="sm"
-                        type="submit"
-                        disabled={lock}
-                      >
-                        {isPending ? "Sign Up..." : " Sign Up"}
-                      </Button>
-                    </Form>
-                  )}
-                </Formik>
+                  <Button
+                    className="w-full mt-5"
+                    size="sm"
+                    type="submit"
+                    disabled={lock}
+                  >
+                    {isPending ? "Sign Up..." : " Sign Up"}
+                  </Button>
+                </form>
+                {/* )}
+                </Formik> */}
               </div>
               <div className="mt-5">
                 <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">

@@ -1,16 +1,9 @@
 import { useCallback } from "react";
 import { Link, useLocation } from "react-router";
-import { useSelector } from "react-redux";
 
-import type { RootState } from "../../redux/store";
-import {
-  GridIcon,
-  GroupIcon,
-  UserCircleIcon,
-  UserIcon,
-} from "../../assets/icons";
 
 import { useSidebar } from "../../context/sidebar-context";
+import { useNavItems } from "../../constant/route";
 
 type NavItem = {
   name: string;
@@ -22,49 +15,15 @@ type NavItem = {
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const location = useLocation();
-
-  const { permissions } = useSelector((state: RootState) => state.permissions);
-
-  const access = permissions;
-
-  const canviewUser = access?.users?.view;
-  const canviewRole = access?.role?.view;
-
-  const navItems: NavItem[] = [
-    {
-      icon: <GridIcon />,
-      name: "Dashboard",
-      path: "/",
-    },
-
-    canviewUser && {
-      icon: <UserIcon />,
-      name: "Users",
-      path: "/users",
-    },
-
-    canviewRole && {
-      icon: <GroupIcon />,
-      name: "Roles",
-      path: "/roles",
-    },
-  ].filter(Boolean) as NavItem[];
-
-  const othersItems: NavItem[] = [
-    {
-      icon: <UserCircleIcon />,
-      name: "User Profile",
-      path: "/profile",
-    },
-  ];
-
+  const { navItems, othersItems } = useNavItems();
+  
  
+
 
   const isActive = useCallback(
     (path: string) => location.pathname === path,
     [location.pathname],
   );
-
 
   const renderMenuItems = (items: NavItem[]) => (
     <ul className="flex flex-col gap-4">
@@ -86,7 +45,6 @@ const AppSidebar: React.FC = () => {
       ))}
     </ul>
   );
-  
 
   return (
     <aside

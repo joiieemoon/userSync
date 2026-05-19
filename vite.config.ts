@@ -16,4 +16,12 @@ export default defineConfig({
     }),
   ],
 
+  build: {
+
+    modulePreload: true,
+    outDir: "./jainil",
+
+  },
+
+
 }); 

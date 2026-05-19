@@ -1,6 +1,7 @@
-import {  useEffect } from "react";
+import { useEffect } from "react";
 import type { ModalProps } from "../../../features/roles/types";
-
+import {  createPortal } from "react-dom";
+import { usePortalRoot } from "../../../features/user/hooks/useportal";
 export const Modal: React.FC<ModalProps> = ({
   isOpen,
   onClose,
@@ -11,8 +12,8 @@ export const Modal: React.FC<ModalProps> = ({
   title,
   footer,
 }) => {
-
-
+  // const portalRoot = document.getElementById("portal-root") as HTMLElement;
+  const portalRoot = usePortalRoot();
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -42,42 +43,47 @@ export const Modal: React.FC<ModalProps> = ({
   }, [isOpen]);
 
   if (!isOpen) return null;
-
+  if (!portalRoot) return null;
   // const contentClasses = isFullscreen
   //   ? "w-full h-full"
   //   : "relative w-full rounded-3xl bg-white  dark:bg-gray-900";
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-99999">
-      {/* overlay */}
-      {!isFullscreen && (
-        <div
-          className="fixed inset-0 bg-gray-400/50 backdrop-blur-[32px]"
-          onClick={onClose}
-        />
+    <>
+      {createPortal(
+        <div className="fixed inset-0 flex items-center justify-center z-99999">
+          {/* overlay */}
+          {!isFullscreen && (
+            <div
+              className="fixed inset-0 bg-gray-400/50 backdrop-blur-[32px]"
+              onClick={onClose}
+            />
+          )}
+
+          <div
+            className={`${isFullscreen ? "w-full h-full" : "rounded-3xl"} dark:text-white relative bg-white dark:bg-gray-900 ${className}`}
+          >
+            {/* HEADER */}
+            {(title || showCloseButton) && (
+              <div className="flex items-center justify-between p-4 border-b dark:border-gray-700">
+                <h2 className="text-lg font-semibold mt-6 flex justify-center  w-full">
+                  {title}
+                </h2>
+              </div>
+            )}
+
+            {/* BODY */}
+            <div className="p-4">{children}</div>
+
+            {/* FOOTER */}
+            {footer && (
+              <div className="p-4 border-t dark:border-gray-700 flex justify-end gap-2">
+                {footer}
+              </div>
+            )}
+          </div>
+        </div>,
+        portalRoot,
       )}
-
-      <div
-        className={`${isFullscreen ? "w-full h-full" : "rounded-3xl"} dark:text-white relative bg-white dark:bg-gray-900 ${className}`}
-      >
-        {/* HEADER */}
-        {(title || showCloseButton) && (
-          <div className="flex items-center justify-between p-4 border-b dark:border-gray-700">
-            <h2 className="text-lg font-semibold mt-6 flex justify-center  w-full">
-              {title}
-            </h2>
-          </div>
-        )}
-
-        {/* BODY */}
-        <div className="p-4">{children}</div>
-
-        {/* FOOTER */}
-        {footer && (
-          <div className="p-4 border-t dark:border-gray-700 flex justify-end gap-2">
-            {footer}
-          </div>
-        )}
-      </div>
-    </div>
+    </>
   );
 };

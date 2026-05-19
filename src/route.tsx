@@ -36,35 +36,37 @@ const PublicCheck = ({ children }: { children: React.ReactNode }) => {
 
   return <>{children}</>;
 };
-export const router = createBrowserRouter([
-  {
-    path: "/",
-    element: (
-      <AuthCheck>
-        <AppLayout />
-       </AuthCheck>
-    ),
-    children: [
-      { index: true, element: <Home /> },
-      { path: "profile", element: <UserProfiles /> },
-      { path: "users", element: <UserTables /> },
-      { path: "roles", element: <RoleTables /> },
-    ],
-  },
-  {
-    path: "/",
-    element: (
-      <PublicCheck>
-        <AuthLayout />
-      </PublicCheck>
-    ),
-    children: [
-      { path: "signin", element: <SignInForm /> },
-      { path: "signup", element: <SignUpForm /> },
-    ],
-  },
-  {
-    path: "*",
-    element: <NotFound />,
-  },
-]);
+export const router = createBrowserRouter(
+  [
+    {
+      path: "/",
+      element: (
+        <AuthCheck>
+          <AppLayout />
+        </AuthCheck>
+      ),
+      children: [
+        { index: true, element: <Home /> },
+        { path: "profile", element: <UserProfiles /> },
+        { path: "users", element: <UserTables /> },
+        { path: "roles", element: <RoleTables /> },
+      ],
+    },
+    {
+      path: "/",
+      element: (
+        <PublicCheck>
+          <AuthLayout />
+        </PublicCheck>
+      ),
+      children: [
+        { path: "signin", element: <SignInForm /> },
+        { path: "signup", element: <SignUpForm /> },
+      ],
+    },
+    {
+      path: "*",
+      element: <NotFound />,
+    },
+  ],
+);

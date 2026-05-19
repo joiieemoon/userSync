@@ -82,3 +82,8 @@ export type UpdateRolePayload = {
   permissions: RolePermission[];
 };
 export type AccessMap = Record<string, PermissionFlags>;
+export type RoleFormValues = {
+  title: string;
+  status: "active" | "inactive";
+  permissions: AccessMap;
+};

@@ -1,112 +1,130 @@
 
 import { errorMessage } from "./error-message";
-import * as yup from "yup";
+
+import { z } from "zod";
+
 import 'yup-phone-lite';
 import { PermissionFlags, AccessMap } from "../../../../features/roles/types";
 const letterRegx = /^[A-Za-z]+$/;
-export const loginvalidationSchema = yup.object().shape({
-    email: yup.string().email(errorMessage.email).required(errorMessage.email),
-    password: yup
-        .string()
-        .required(errorMessage.required)
+export type loginPropsform = z.infer<typeof loginvalidationSchema>
+export const loginvalidationSchema = z.object({
+
+    email: z.string().nonempty(errorMessage.required).email(errorMessage.email),
+    password: z
+        .string().nonempty(errorMessage.required)
+
         .min(8, errorMessage.passwordMin)
-        .matches(/[A-Z]/, errorMessage.passwordUpper)
-        .matches(/[a-z]/, errorMessage.passwordLower)
-        .matches(/[0-9]/, errorMessage.passwordNumber)
-        .matches(/[@$!%*?&]/, errorMessage.passwordSpecial),
-})
-export const signupvalidationSchema = yup.object().shape({
-
-    firstName: yup.string().matches(letterRegx, errorMessage.letter).required(errorMessage.required),
-    lastName: yup.string().matches(letterRegx, errorMessage.letter).required(errorMessage.required),
-    email: yup.string().email(errorMessage.email).required(errorMessage.email),
-    password: yup
-        .string()
-        .required(errorMessage.required)
-        .min(8, errorMessage.passwordMin)
-        .matches(/[A-Z]/, errorMessage.passwordUpper)
-        .matches(/[a-z]/, errorMessage.passwordLower)
-        .matches(/[0-9]/, errorMessage.passwordNumber)
-        .matches(/[@$!%*?&]/, errorMessage.passwordSpecial),
-    cpassword: yup
-        .string()
-        .required(errorMessage.required)
-        .oneOf([yup.ref("password")], errorMessage.passwordMatch),
-    username: yup.string().required(errorMessage.required),
-    phone: yup.string().required(errorMessage.required),
-
-
+        .regex(/[A-Z]/, errorMessage.passwordUpper)
+        .regex(/[a-z]/, errorMessage.passwordLower)
+        .regex(/[0-9]/, errorMessage.passwordNumber)
+        .regex(/[@$!%*?&]/, errorMessage.passwordSpecial),
 })
 
-export const updateprofilevaldiation = yup.object().shape({
-    firstName: yup.string().matches(letterRegx, errorMessage.letter).required(errorMessage.required),
-    lastName: yup.string().matches(letterRegx, errorMessage.letter).required(errorMessage.required),
-    email: yup.string().email(errorMessage.email).required(errorMessage.email),
-    phone: yup.string().required(errorMessage.required),
+export type SignupPropsform = z.infer<typeof signupvalidationSchema>;
+export const signupvalidationSchema = z
+    .object({
+        firstName: z.string().nonempty(errorMessage.required)
+            .regex(letterRegx, errorMessage.letter),
+
+        lastName: z.string().nonempty(errorMessage.required)
+            .regex(letterRegx, errorMessage.letter)
+        ,
+
+        email: z.string()
+            .nonempty(errorMessage.required)
+            .email(errorMessage.email)
+        ,
+
+        password: z.string()
+            .nonempty(errorMessage.required)
+            .min(8, errorMessage.passwordMin)
+            .regex(/[A-Z]/, errorMessage.passwordUpper)
+            .regex(/[a-z]/, errorMessage.passwordLower)
+            .regex(/[0-9]/, errorMessage.passwordNumber)
+            .regex(/[@$!%*?&]/, errorMessage.passwordSpecial),
+
+        cpassword: z.string()
+            .nonempty(errorMessage.required),
+
+        username: z.string()
+            .nonempty(errorMessage.required).min(3, errorMessage.minLengthuser),
+        phone: z.string().nonempty(errorMessage.required),
+    })
+    .refine((data) => data.password === data.cpassword, {
+        message: errorMessage.passwordMatch,
+        path: ["cpassword"],
+    });
+
+
+export type updateprofileProps = z.infer<typeof updateprofilevaldiation>
+export const updateprofilevaldiation = z.object({
+    firstName: z.string().nonempty(errorMessage.required).regex(letterRegx, errorMessage.letter),
+    lastName: z.string().nonempty(errorMessage.required).regex(letterRegx, errorMessage.letter),
+    email: z.string().nonempty(errorMessage.email).email(errorMessage.email),
+    phone: z.string().nonempty(errorMessage.required),
 })
 
+export type updateUserformProps = z.infer<typeof updateUserValidation>;
+export const updateUserValidation = z.object({
+    firstName: z
+        .string().nonempty(errorMessage.required)
+        .regex(letterRegx, errorMessage.letter),
 
-export const updateUserValidation = yup.object().shape({
-    firstName: yup
+
+    lastName: z
         .string()
-        .matches(letterRegx, errorMessage.letter)
-        .required(errorMessage.required),
+        .regex(letterRegx, errorMessage.letter)
+        .nonempty(errorMessage.required),
 
-    lastName: yup
-        .string()
-        .matches(letterRegx, errorMessage.letter)
-        .required(errorMessage.required),
-
-    email: yup
+    email: z
         .string()
         .email(errorMessage.email)
-        .required(errorMessage.email),
+        .nonempty(errorMessage.email),
 
-    phone: yup
+    phone: z
         .string()
-        .required(errorMessage.required),
+        .nonempty(errorMessage.required),
 
-    roleId: yup
-        .number()
-        .required("Role is required"),
-    username: yup.string().required(errorMessage.required),
-    password: yup.string().when([], {
-        is: () => true,
-        then: (schema) =>
-            schema.test(
-                "password-check",
-                "Password must be at least 6 characters",
-                (value) => {
-                    if (!value) return true;
-                    return value.length >= 6;
-                }
-            ),
+    roleId: z
+        .string()
+        .nonempty("Role is required"),
+    username: z.string().nonempty(errorMessage.required),
+    password: z.string().optional().refine((value) => {
+        if (!value) return true; // allow empty
+        return value.length >= 6;
+    }, {
+        message: "Password must be at least 6 characters",
+
     }),
+    isActive: z.string(),
+
 });
-export const roleValidationSchema = yup.object().shape({
-    title: yup
+export const roleValidationSchema = z.object({
+    title: z
         .string()
-        .required("Role name is required")
+        .nonempty("Role name is required")
         .min(2, "Role name must be at least 2 characters")
     ,
 
-    status: yup
-        .string()
-        .oneOf(["active", "inactive"], "Invalid status")
-        .required("Status is required"),
-    permissions: yup
-        .object<AccessMap>()
-
-        .test(
-            "permissions-required",
-            "At least one permission must be selected",
+    status: z
+        .enum(["active", "inactive"])
+        .refine((val) => val !== undefined && val !== null, {
+            message: "Status is required",
+        }),
+    permissions: z
+        .custom<AccessMap>()
+        .refine(
             (value) => {
                 if (!value) return false;
 
                 return (Object.values(value) as PermissionFlags[]).some((module) =>
                     Object.values(module).some(Boolean)
                 );
+            },
+            {
+                message: "At least one permission must be selected",
             }
-        ),
+        )
+
 
 });

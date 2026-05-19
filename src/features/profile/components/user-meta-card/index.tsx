@@ -5,7 +5,7 @@ import Button from "../../../../components/ui/button/index.tsx";
 import "react-phone-input-2/lib/style.css";
 import PhoneInput from "react-phone-input-2";
 
-import { Form, Formik } from "formik";
+import { useEffect } from "react";
 import * as Sentry from "@sentry/react";
 import { updateprofilevaldiation } from "../../../../components/ui/input/validation/index.ts";
 import { useAuth } from "../../../auth/hooks/useAuth/index.tsx";
@@ -17,6 +17,8 @@ import {
 import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
 import InputController from "../../../../components/ui/input/input-controller/index.tsx";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 export default function UserMetaCard() {
   const { isOpen, openModal, closeModal } = useModal();
   const { mutate, isPending } = useUpdateProfile();
@@ -28,6 +30,47 @@ export default function UserMetaCard() {
 
   const profileUser = profile?.user;
 
+  const {
+    register,
+    control,
+    reset,
+    handleSubmit,
+    formState: { errors, touchedFields },
+  } = useForm({
+    resolver: zodResolver(updateprofilevaldiation),
+    mode: "all",
+  });
+  const onSubmit = (values) => {
+    mutate(values, {
+      onSuccess: () => {
+        closeModal();
+
+        updateUser(values);
+        queryClient.invalidateQueries({ queryKey: ["profile"] });
+        toast.success("Profile updated successfully");
+      },
+      onError: (error: unknown) => {
+        Sentry.captureException(error);
+        const err = error as {
+          response?: { data?: { message?: string } };
+        };
+        toast.error(err?.response?.data?.message || "Update failed");
+      },
+    });
+  };
+
+  useEffect(() => {
+    if (profileUser) {
+      reset({
+        firstName: profileUser.firstName || "",
+        lastName: profileUser.lastName || "",
+        email: profileUser.email || "",
+
+        phone: profileUser.phone || "",
+      });
+    }
+  }, [profileUser, reset]);
+  // console.log(profileUser,);
   return (
     <>
       <div className="p-10 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
@@ -47,6 +90,7 @@ export default function UserMetaCard() {
                 <div className="hidden h-3.5 w-px bg-gray-300 dark:bg-gray-700 xl:block"></div>
 
                 <p className="text-sm text-gray-500 dark:text-gray-400 font-extrabold">
+                  {profileUser?.roleTitle}
                   {profileUser?.roleTitle}
                 </p>
               </div>
@@ -82,149 +126,122 @@ export default function UserMetaCard() {
         onClose={closeModal}
         className="max-w-[700px] m-4"
       >
-        <Formik
-          enableReinitialize
-          initialValues={{
-            firstName: profileUser?.firstName || "",
-            lastName: profileUser?.lastName || "",
-            email: profileUser?.email || "",
-            phone: profileUser?.phone || "",
-          }}
-          onSubmit={(values) => {
-            mutate(values, {
-              onSuccess: () => {
-                toast.success("Profile updated successfully");
-                closeModal();
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col mx-5">
+          <div className="custom-scrollbar h-[400px] overflow-y-auto px-2 ">
+            <div className="mt-2">
+              <h5 className=" text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
+                Personal Information
+              </h5>
 
-                updateUser(values);
-                queryClient.invalidateQueries({ queryKey: ["profile"] });
-              },
-              onError: (error: unknown) => {
-                Sentry.captureException(error);
-                const err = error as {
-                  response?: { data?: { message?: string } };
-                };
-                toast.error(err?.response?.data?.message || "Update failed");
-              },
-            });
-          }}
-          validationSchema={updateprofilevaldiation}
-        >
-          {({
-            values,
-            errors,
-            touched,
-            handleChange,
-            handleBlur,
-            setFieldValue,
-            setFieldTouched,
-          }) => (
-            <Form className="flex flex-col mx-5">
-              <div className="custom-scrollbar h-[400px] overflow-y-auto px-2 ">
-                <div className="mt-2">
-                  <h5 className=" text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
-                    Personal Information
-                  </h5>
+              <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
+                {updateFields.map((field) => {
+                  const isHalf =
+                    field.name === "firstName" ||
+                    field.name === "lastName" ||
+                    field.name === "username";
 
-                  <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
-                    {updateFields.map((field) => {
-                      const isHalf =
-                        field.name === "firstName" ||
-                        field.name === "lastName" ||
-                        field.name === "username";
+                  return (
+                    <div
+                      key={field.name}
+                      className={
+                        isHalf ? "col-span-2 lg:col-span-1" : "col-span-2"
+                      }
+                    >
+                      {/* <InputController
+                        control="input"
+                        label={field.label}
+                        // name={field.name as keyof typeof values}
+                        type={field.type}
+                        placeholder={field.placeholder}
+                        // value={values[field.name as keyof typeof values]}
+                        // onChange={handleChange}
+                        // onBlur={handleBlur}
+                        registration={register(field.name)}
+                        error={!!errors[field.name as keyof typeof values]}
+                        // errorMessage={
+                        //   errors[field.name as keyof typeof values]
+                        //     ? String(errors[field.name as keyof typeof values])
+                        //     : ""
+                        // }
+                        errorMessage={
+                          errors[field.name as keyof typeof errors]
+                            ?.message && (
+                            <p className="text-xs text-red-500 mt-1">
+                              {
+                                errors[field.name as keyof typeof errors]
+                                  ?.message as string
+                              }
+                            </p>
+                          )
+                        }
+                      /> */}
 
-                      return (
-                        <div
-                          key={field.name}
-                          className={
-                            isHalf ? "col-span-2 lg:col-span-1" : "col-span-2"
-                          }
-                        >
-                          {/* <InputController
-                            control="input"
-                            label={field.label}
-                            name={field.name}
-                            type={field.type}
-                            placeholder={field.placeholder}
-                            value={values[field.name]}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            error={
-                              !!(errors[field.name] && touched[field.name])
-                            }
-                            errorMessage={errors[field.name]}
-                          /> */}
-                          <InputController
-                            control="input"
-                            label={field.label}
-                            name={field.name as keyof typeof values}
-                            type={field.type}
-                            placeholder={field.placeholder}
-                            value={values[field.name as keyof typeof values]}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            error={
-                              !!(
-                                errors[field.name as keyof typeof values] &&
-                                touched[field.name as keyof typeof values]
-                              )
-                            }
-                            errorMessage={
-                              errors[field.name as keyof typeof values]
-                                ? String(
-                                    errors[field.name as keyof typeof values],
-                                  )
-                                : ""
-                            }
-                          />
-                        </div>
-                      );
-                    })}
+                      <InputController
+                        control="input"
+                        label={field.label}
+                        type={field.type}
+                        placeholder={field.placeholder}
+                        registration={register(field.name)}
+                        error={!!errors[field.name as keyof typeof errors]}
+                        errorMessage={
+                          errors[field.name as keyof typeof errors]
+                            ?.message as string
+                        }
+                      />
+                    </div>
+                  );
+                })}
 
-                    <div className="col-span-2 lg:col-span-2">
-                      <label className="text-sm">Phone</label>
-                      <div
-                        className={`mt-2 w-full rounded-lg border ${
-                          touched.phone && errors.phone
-                            ? "border-red-500"
-                            : "border-gray-300"
-                        }`}
-                      >
+                <div className="col-span-2 lg:col-span-2">
+                  <label className="text-sm">Phone</label>
+                  <div
+                    className={` w-full rounded-lg  ${
+                      touchedFields.phone && errors.phone
+                        ? "border-red-500"
+                        : "border-gray-300"
+                    }`}
+                  >
+                    <Controller
+                      name="phone"
+                      control={control}
+                      defaultValue=""
+                      render={({ field }) => (
                         <PhoneInput
                           country={"in"}
-                          value={values.phone}
-                          onChange={(phone) => setFieldValue("phone", phone)}
-                          onBlur={() => setFieldTouched("phone", true)}
-                          inputClass="!w-full !border-0 !text-sm"
+                          value={field.value}
+                          onChange={(phone) => field.onChange(phone)}
+                          onBlur={field.onBlur}
+                          inputClass="!w-full !h-11 !text-sm bg-red"
+                          containerClass=" !w-full"
                         />
-                      </div>
-
-                      {touched.phone && errors.phone && (
-                        <p className="text-xs text-red-500 ">
-                          {String(errors.phone)}
-                        </p>
                       )}
-                    </div>
+                    />
                   </div>
+
+                  {errors.phone && (
+                    <p className="text-xs text-red-500 ">
+                      {String(errors.phone.message)}
+                    </p>
+                  )}
                 </div>
               </div>
+            </div>
+          </div>
 
-              <div className="flex items-center gap-3 px-2  lg:justify-end mb-2 ">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={closeModal}
-                  type="button"
-                >
-                  Close
-                </Button>
-                <Button size="sm" type="submit" disabled={isPending}>
-                  {isPending ? "saving...." : "Save Changes"}
-                </Button>
-              </div>
-            </Form>
-          )}
-        </Formik>
+          <div className="flex items-center gap-3 px-2  lg:justify-end mb-2 ">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={closeModal}
+              type="button"
+            >
+              Close
+            </Button>
+            <Button size="sm" type="submit" disabled={isPending}>
+              {isPending ? "saving...." : "Save Changes"}
+            </Button>
+          </div>
+        </form>
       </Modal>
     </>
   );

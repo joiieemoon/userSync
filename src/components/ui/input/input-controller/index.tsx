@@ -6,13 +6,13 @@ import Input from "../input-fields";
 const InputController = ({ control, ...props }: InputControllerProps) => {
   switch (control) {
     case "input":
-      return <Input {...props} />;
+      return <Input  {...props} />;
 
     case "textarea":
-      return <Input as="textarea" {...props} />;
+      return <Input as="textarea"  {...props} />;
 
     case "select":
-      return <Input as="select" {...props} />;
+      return <Input as="select"  {...props} />;
 
     case "checkbox":
       return (
@@ -20,7 +20,6 @@ const InputController = ({ control, ...props }: InputControllerProps) => {
           type="checkbox"
         
           onChange={(e) => props.onChange?.(e)}
-      
           className="w-4 h-4 cursor-pointer accent-amber-400"
         />
       );

@@ -13,8 +13,10 @@ export type SignupProps = {
   lastName: string;
   username: string;
   password: string;
+  cpassword: string;
   phone: string;
 };
+
 export type User = {
   id?: number;
   name?: string;

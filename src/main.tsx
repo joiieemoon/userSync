@@ -25,14 +25,15 @@ Sentry.init({
   environment: import.meta.env.MODE,
   integrations: [
     Sentry.browserTracingIntegration(),
-
-    // Sentry.reactRouterV6Instrumentation(),
+    Sentry.consoleLoggingIntegration({ levels: ["log", "warn", "error"] }),
   ],
-  // tracesSampleRate: 1.0,
+
   tracesSampleRate: import.meta.env.DEV ? 0.1 : 0.3,
   sendDefaultPii: true,
+  enableLogs: true,
 });
 createRoot(document.getElementById("root")!).render(
+  
   <StrictMode>
     <ThemeProvider>
       <Sentry.ErrorBoundary fallback={<div>"Something went wrong"</div>}>

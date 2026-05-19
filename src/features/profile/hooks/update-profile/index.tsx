@@ -11,27 +11,7 @@ export const useUpdateProfile = () => {
     mutationFn: updateProfileApi,
   });
 };
-// export const useGetProfilebyid = () => {
-//   const queryClient = useQueryClient();
-//   return useQuery<User>({
-//     queryKey: ["profile"],
-//     queryFn: () => getProfilebyidApi(),
 
-//     onSuccess: () => {
-//       queryClient.invalidateQueries({
-//         queryKey: ["profile"],
-//       });
-//     },
-//   });
-//   // return useMutation({
-//   //   mutationFn: getProfilebyidApi,
-//   //   onSuccess: () => {
-//   //     queryClient.invalidateQueries({
-//   //       queryKey: ["profile"],
-//   //     });
-//   //   },
-//   // });
-// };
 
 export const useGetProfilebyid = () => {
   const queryClient = useQueryClient();
