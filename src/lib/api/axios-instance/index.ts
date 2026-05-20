@@ -3,6 +3,12 @@ import { clearPermissions } from "../../../redux/slice";
 import { store } from "../../../redux/store";
 import { toast } from "react-toastify";
 import * as Sentry from "@sentry/react";
+enum StatusCode {
+    NotFound = 404,
+  
+    Unauthorized = 401,
+    Forbidden = 403
+}
 const axiosInstance = axios.create({
     // baseURL: "http://192.168.1.141:8000/api/",
 
@@ -42,11 +48,11 @@ axiosInstance.interceptors.response.use(
         Sentry.captureException(error);
         console.log(status);
 
-        if ((status === 401 || status === 403) && !isLoginRequest && !isSessionExpiredShown) {
+        if ((status === StatusCode.Unauthorized || status === StatusCode.Forbidden) && !isLoginRequest && !isSessionExpiredShown) {
             isSessionExpiredShown = true;
 
             const message =
-                status === 403
+                status === StatusCode.Forbidden
                     ? "Access denied. Please login again"
                     : "Session expired, please login again";
 
@@ -70,6 +76,6 @@ axiosInstance.interceptors.response.use(
         return Promise.reject(error);
     }
 );
-
+    
 
 export default axiosInstance;

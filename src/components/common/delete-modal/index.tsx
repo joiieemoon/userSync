@@ -12,7 +12,7 @@ export const DeleteModal: React.FC<DeleteModalProps> = ({
   title = "Delete Confirmation",
   description = "Are you sure you want to delete this item? ",
 }) => {
-  //comman delete modal 
+  //comman delete modal
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title}>
       {/* BODY */}

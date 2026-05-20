@@ -1,6 +1,6 @@
 
 import Input from "../input-fields";
-import type { UseFormRegisterReturn, FieldError } from "react-hook-form";
+import type { UseFormRegisterReturn, } from "react-hook-form";
 
 // export interface InputControllerProps
 //     extends React.ComponentProps<typeof Input> {
@@ -16,7 +16,7 @@ import type { UseFormRegisterReturn, FieldError } from "react-hook-form";
 
 export interface InputControllerProps
     extends React.ComponentProps<typeof Input> {
-    control: "input" | "textarea" | "select" | "checkbox" |string;
+    control: "input" | "textarea" | "select" | "checkbox" | string;
 
     registration?: UseFormRegisterReturn;
 
@@ -51,7 +51,7 @@ export interface InputProps {
     >;
 
     className?: string;
-    min?: string |number;
+    min?: string | number;
     max?: string | number;
     step?: number;
     disabled?: boolean;
@@ -67,7 +67,7 @@ export interface InputProps {
 
     children?: React.ReactNode;
 
-    as?: "input" | "textarea" | "select";
+    as?: "input" | "textarea" | "select" | string;
 }
 export interface InputProps {
     type?: "text" | "number" | "email" | "password" | "date" | "time" | string;
@@ -82,8 +82,8 @@ export interface InputProps {
         >
     ) => void;
     className?: string;
-    min?: string;
-    max?: string;
+    min?: string | number;
+    max?: string | number;
     step?: number;
     disabled?: boolean;
     success?: boolean;
@@ -100,8 +100,11 @@ export interface InputProps {
     onFocus?: React.FocusEventHandler<
         HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >;
-    onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
-    }
+
+    onKeyDown?: React.KeyboardEventHandler<
+        HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >;
+}
 export interface FormField {
     email?: string,
     name?: string,
@@ -111,3 +114,4 @@ export interface FormField {
     autoComplete?: string,
 
 }   
+

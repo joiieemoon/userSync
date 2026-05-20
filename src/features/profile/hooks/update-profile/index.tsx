@@ -3,7 +3,7 @@ import {
   getProfilebyidApi,
   updateProfileApi,
 } from "../../service/update-profile-api";
-import { User } from "../../../user/types";
+
 import { useEffect } from "react";
 
 export const useUpdateProfile = () => {
@@ -16,7 +16,7 @@ export const useUpdateProfile = () => {
 export const useGetProfilebyid = () => {
   const queryClient = useQueryClient();
 
-  const query = useQuery<User>({
+  const query = useQuery({
     queryKey: ["profile"],
     queryFn: () => getProfilebyidApi(),
   });

@@ -19,16 +19,28 @@ import { useQueryClient } from "@tanstack/react-query";
 import InputController from "../../../../components/ui/input/input-controller/index.tsx";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { User } from "../../../user/types/index.ts";
+type Profile = {
+  user: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    roleTitle?: string;
+  };
+};
 export default function UserMetaCard() {
   const { isOpen, openModal, closeModal } = useModal();
   const { mutate, isPending } = useUpdateProfile();
 
   const { updateUser } = useAuth();
 
+  // const { data: profile } = useGetProfilebyid<Profile>();
   const { data: profile } = useGetProfilebyid();
   const queryClient = useQueryClient();
-
-  const profileUser = profile?.user;
+  const typedProfile = profile as Profile;
+  // const profileUser = profile?.user;
+  const profileUser = typedProfile?.user;
 
   const {
     register,
@@ -40,7 +52,7 @@ export default function UserMetaCard() {
     resolver: zodResolver(updateprofilevaldiation),
     mode: "all",
   });
-  const onSubmit = (values) => {
+  const onSubmit = (values: User) => {
     mutate(values, {
       onSuccess: () => {
         closeModal();
@@ -137,8 +149,8 @@ export default function UserMetaCard() {
                 {updateFields.map((field) => {
                   const isHalf =
                     field.name === "firstName" ||
-                    field.name === "lastName" ||
-                    field.name === "username";
+                    field.name === "lastName" ;
+                 
 
                   return (
                     <div

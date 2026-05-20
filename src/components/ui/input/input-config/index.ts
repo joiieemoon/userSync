@@ -47,7 +47,12 @@ export const signupFields: FormField[] = [
 
 
 ];
-
+type Field = {
+    name: "email" | "firstName" | "lastName" | "phone";
+    type: string;
+    placeholder: string;
+    label: string;
+};
 export const loginFields: FormField[] = [
     {
         name: "email",
@@ -71,7 +76,7 @@ export const editUserFields: FormField[] = [
     { name: "email", label: "Email", type: "email", placeholder: "joiie@yopmail.com" },
     { name: "role", label: "Role", type: "select", placeholder: "" },
 ];
-export const updateFields = [
+export const updateFields: Field[] = [
     { name: "firstName", label: "First Name", type: "text", placeholder: "Jainil" },
     { name: "lastName", label: "Last Name", type: "text", placeholder: "kukrolia" },
     { name: "email", label: "Email Address", type: "text", placeholder: "joiie@yopmail.com" },
@@ -90,7 +95,7 @@ export const updateRoleFields = [
     { name: "title", label: "Role Name", type: "text" },
     { name: "status", label: "Status", type: "select" },
 ];
-export const updateusersFields = (id: number ) => [
+export const updateusersFields = (id: number) => [
     {
         name: "firstName",
         label: "First Name",

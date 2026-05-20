@@ -1,10 +1,10 @@
-import { useRef } from "react";
-import { User } from "../../../auth/types";
+// import { User } from "../../../auth/types";
 import { useGetProfilebyid } from "../../hooks/update-profile";
-
+import { User } from "../../../user/types";
 export type GetUserResponse = {
   user: User;
 };
+
 export default function UserInfoCard() {
   const { data } = useGetProfilebyid();
 
@@ -38,12 +38,6 @@ export default function UserInfoCard() {
     },
   ];
 
-  const countref = useRef(0);
-  const handleClick = () => {
-    countref.current += 1;
-    console.log("count", countref.current);
-  };
-
   return (
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-7 2xl:gap-x-32 mx-10">
       {personalInfo.map((item, index) => (
@@ -57,7 +51,6 @@ export default function UserInfoCard() {
           </p>
         </div>
       ))}
-      
     </div>
   );
 }

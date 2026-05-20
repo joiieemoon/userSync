@@ -17,7 +17,7 @@ import { ChevronDownIcon } from "../../../../assets/icons";
 // import { Role } from "../../../roles/types";
 import { useEffect } from "react";
 import * as Sentry from "@sentry/react";
-import type {  User } from "../../types";
+import type { User } from "../../types";
 // import type { addEditUser } from "../../../auth/types";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -121,7 +121,18 @@ const AddEditUserModal = ({ isOpen, onClose, id }: Props) => {
                 placeholder={field.placeholder}
                 label={field.label}
                 type={field.name === "password" ? "password" : "text"}
-                registration={register(field.name)}
+                // registration={register(field.name as string)}
+                registration={register(
+                  field.name as
+                    | "email"
+                    | "password"
+                    | "firstName"
+                    | "lastName"
+                    | "phone"
+                    | "username"
+                    | "roleId"
+                    | "isActive",
+                )}
               />
 
               {errors[field.name as keyof typeof errors]?.message && (
@@ -151,7 +162,7 @@ const AddEditUserModal = ({ isOpen, onClose, id }: Props) => {
                   </InputController>
                 )}
               />
-           
+
               <span className="pointer-events-none absolute right-3 top-[50%] -translate-y-1/2 text-gray-500">
                 <ChevronDownIcon className="w-5 h-5" />
               </span>

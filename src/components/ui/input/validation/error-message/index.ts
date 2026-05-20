@@ -17,3 +17,4 @@ export const errorMessage = {
     img: "Please upload a valid image file (.png, .jpg, .jpeg).",
 
 };
+    

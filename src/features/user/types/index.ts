@@ -12,6 +12,21 @@ export interface User {
     updatedAt: string;
     password?: string;
 }
+
+export type updateUserprofile = {
+  id?: number;
+  roleTitle?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  roleId: string;
+  username: string;
+  isActive: string;
+  password?: string;
+};
 export interface updateUser {
     id: number;
     firstName: string;
@@ -51,3 +66,5 @@ export interface UpdateUserPayload {
     isActive: boolean;
     password?: string;
 }
+
+
