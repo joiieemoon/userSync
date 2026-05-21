@@ -1,6 +1,6 @@
 import { apiClient } from "../../../../lib/api/api-client";
 import { ENDPOINTS } from "../../../../lib/api/end-points";
-import { User, PaginationParams } from "../../types";
+import { User, PaginationParams, UpdateUserPayload } from "../../types";
 
 export const getuserbyidApi = async (id: number) => {
   const res = await apiClient.get(`${ENDPOINTS.USERS}/${id}`);
@@ -18,11 +18,11 @@ export const deleteuserApi = async (id: number) => {
   const res = await apiClient.delete(`${ENDPOINTS.USERS}/${id}`);
   return res.data;
 };
-export const updateuserApi = async (id: number, data: User) => {
+export const updateuserApi = async (id: number, data: Partial<User>) => {
   const res = await apiClient.put(`${ENDPOINTS.USERS}/${id}`, data);
   return res.data;
 };
-export const createuserApi = async (data: User) => {
+export const createuserApi = async (data: UpdateUserPayload) => {
   const res = await apiClient.post(`${ENDPOINTS.USERS}`, data);
   return res.data;
 };

@@ -56,8 +56,7 @@ export default function UserMetaCard() {
     mutate(values, {
       onSuccess: () => {
         closeModal();
-
-        updateUser( values);
+        updateUser(values);
         queryClient.invalidateQueries({ queryKey: ["profile"] });
         toast.success("Profile updated successfully");
       },

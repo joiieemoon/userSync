@@ -47,9 +47,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify(user));
   };
-  const updateUser = (updatedUser: User) => {
-    setUser(updatedUser);
-    localStorage.setItem("user", JSON.stringify(updatedUser));
+  const updateUser = (updatedUser: Partial<User>) => {
+    setUser(user ? { ...user, ...updatedUser } : (updatedUser as User));
+    localStorage.setItem(
+      "user",
+      JSON.stringify(user ? { ...user, ...updatedUser } : updatedUser),
+    );
   };
 
   return (

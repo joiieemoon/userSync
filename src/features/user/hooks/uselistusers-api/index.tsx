@@ -12,7 +12,7 @@ import {
   updateuserApi,
 } from "../../services/list-users-api";
 import { User } from "../../types";
-import type { PaginationParams } from "../../types";
+import type { PaginationParams, UpdateUserPayload } from "../../types";
 
 export const useGetUserById = (id: number) => {
   return useQuery({
@@ -58,7 +58,7 @@ export const useUpdateUser = () => {
 export const useCreateUser = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: User) => createuserApi(data),
+    mutationFn: (data: UpdateUserPayload) => createuserApi(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
     },

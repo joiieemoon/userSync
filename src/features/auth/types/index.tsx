@@ -81,6 +81,6 @@ export type AuthContextType = {
   login: (data: LoginResponse) => void;
   signUp: (data: SignupResponse) => void;
   logout: () => void;
-  updateUser: (user: loginUser) => void;
+  updateUser: (user: Partial<User>) => void;
   isAuthenticated: boolean;
 };
