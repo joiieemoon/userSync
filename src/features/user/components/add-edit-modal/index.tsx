@@ -17,7 +17,7 @@ import { ChevronDownIcon } from "../../../../assets/icons";
 // import { Role } from "../../../roles/types";
 import { useEffect } from "react";
 import * as Sentry from "@sentry/react";
-import type { User } from "../../types";
+import type { UpdateUserPayload } from "../../types";
 // import type { addEditUser } from "../../../auth/types";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,7 +28,6 @@ type Props = {
   onClose: () => void;
   id?: number;
 };
-
 const AddEditUserModal = ({ isOpen, onClose, id }: Props) => {
   const { data: user } = useGetUserById(id!);
   const { mutate: updateUser, isPending } = useUpdateUser();
@@ -72,7 +71,16 @@ const AddEditUserModal = ({ isOpen, onClose, id }: Props) => {
     }
   }, [id, user, reset]);
   const onSubmit = (data: updateUserformProps) => {
-    const payload: User = { ...data };
+    const payload: UpdateUserPayload = {
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      username: data.username,
+      phone: data.phone,
+      roleId: Number(data.roleId),
+      isActive: data.isActive === "true",
+      password: data.password,
+    };
 
     if (id && !payload.password) {
       delete payload.password;
@@ -80,7 +88,7 @@ const AddEditUserModal = ({ isOpen, onClose, id }: Props) => {
 
     if (id) {
       updateUser(
-        { id, data: payload },
+        { id, data: payload as Partial<UpdateUserPayload> },
         {
           onSuccess: () => {
             toast.success("User updated successfully");

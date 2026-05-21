@@ -46,7 +46,7 @@ export const useUpdateUser = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: number; data: User }) =>
+    mutationFn: ({ id, data }: { id: number; data: Partial<User> }) =>
       updateuserApi(id, data),
     // mutationFn: ({ id, data }: { id: number; data: Partial<User> }) =>
     //   updateuserApi(id, data),

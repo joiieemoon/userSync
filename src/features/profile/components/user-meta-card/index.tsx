@@ -52,12 +52,12 @@ export default function UserMetaCard() {
     resolver: zodResolver(updateprofilevaldiation),
     mode: "all",
   });
-  const onSubmit = (values: User) => {
+  const onSubmit = (values: Partial<User>) => {
     mutate(values, {
       onSuccess: () => {
         closeModal();
 
-        updateUser(values);
+        updateUser( values);
         queryClient.invalidateQueries({ queryKey: ["profile"] });
         toast.success("Profile updated successfully");
       },
@@ -148,9 +148,7 @@ export default function UserMetaCard() {
               <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
                 {updateFields.map((field) => {
                   const isHalf =
-                    field.name === "firstName" ||
-                    field.name === "lastName" ;
-                 
+                    field.name === "firstName" || field.name === "lastName";
 
                   return (
                     <div
