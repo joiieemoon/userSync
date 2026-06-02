@@ -1,0 +1,136 @@
+:root {
+  color-scheme: light;
+  color: #222;
+  background: #f3f6fb;
+
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #f5f8ff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+.App {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 32px 20px;
+}
+
+.inputContainer,
+.commentContainer {
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+}
+
+.commentContainer {
+  background: #fbfcff;
+}
+
+.inputContainer__input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 12px;
+  outline: none;
+  transition: border-color 0.15s ease;
+  background: #f7f9ff;
+}
+
+.inputContainer__input:focus {
+  border-color: #4f46e5;
+  background: #ffffff;
+}
+
+.first_input {
+  margin-bottom: 12px;
+}
+
+.reply {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: #eef2ff;
+  color: #3730a3;
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    transform 0.15s ease;
+}
+
+.reply:hover {
+  background: #dde4ff;
+  transform: translateY(-1px);
+}
+
+.reply.comment {
+  background: #4338ca;
+  color: #ffffff;
+}
+
+.reply.comment:hover {
+  background: #3730a3;
+}
+
+.commentContainer > div:first-child,
+.inputContainer > div:first-child {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.commentContainer span {
+  display: block;
+  min-height: 28px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.commentContainer span[contenteditable="true"] {
+  padding: 6px 8px;
+  border-radius: 12px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: #ffffff;
+}
+
+.commentContainer > div + div {
+  margin-top: 12px;
+}
+
+@media (max-width: 640px) {
+  .App {
+    padding: 24px 14px;
+  }
+
+  .reply {
+    width: 100%;
+    justify-content: center;
+  }
+}
