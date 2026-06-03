@@ -28,7 +28,7 @@ const App = () => {
 
   const addTodo = () => {
     if (newtodo.trim() === '') return;
-    console.log("this is not");
+
     const newTodoItem = {
       id: Date.now(),
       title: newtodo,
@@ -59,7 +59,7 @@ const App = () => {
     if (e.target.value === "") return;
 
     if (e.key === "Enter") {
-      console.log("this is enter");
+
       addTodo();
     }
   }
@@ -76,9 +76,9 @@ const App = () => {
         newState[draggedItem.column] = newState[draggedItem.column].filter(item => item.id !== draggedItem.id);
 
 
-        newState[column] = [...newState[column], { id: draggedItem.id, title: draggedItem.title, completed: draggedItem.completed }];
+        newState[column] = [...newState[column], { id: draggedItem.id, title: draggedItem.title }];
 
-
+        console.log(newState);
         return newState;
       })
       setDraggedItem(null);
@@ -101,14 +101,17 @@ const App = () => {
 
       <div className='box-section'  >
         {Object.keys(state).map(column => (
+
+
           <div
             className='box-list-bg'
             key={column}
             onDragOver={handelDragOver}
             onDrop={(e) => handleDrop(e, column)}
-
           >
             <h2>{column.toUpperCase()}</h2>
+
+
             {state[column].map(item => (
               <div
 
