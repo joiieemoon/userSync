@@ -1,5 +1,7 @@
 
 import { useState } from 'react'
+
+
 const App = () => {
   const [state, setState] = useState({
     todos: [
@@ -23,7 +25,7 @@ const App = () => {
 
   const [draggedItem, setDraggedItem] = useState(null);
 
-
+  const [selectedItems, setSelectedItems] = useState({});
 
 
   const addTodo = () => {
@@ -47,11 +49,17 @@ const App = () => {
       ...prevState,
       [column]: prevState[column].filter(item => item.id !== id)
     }))
-
+    setSelectedItems({});
   }
   const handelDragStart = (item, column) => {
-    setDraggedItem({ ...item, column });
+
+    const isManyselected = !!selectedItems[item.id];
+
+
+    setDraggedItem({ ...item, column, isMultiSelected: isManyselected });
   }
+
+
   const handelDragOver = (e) => {
     e.preventDefault();
   }
@@ -63,75 +71,128 @@ const App = () => {
       addTodo();
     }
   }
+  const handlemultiChange = (item, column) => {
+    setSelectedItems((prev) => {
 
+      const newSelected = { ...prev };
+      if (newSelected[item.id]) {
+
+        delete newSelected[item.id]
+      }
+      else {
+        newSelected[item.id] = { ...item, column };
+      } return newSelected;
+
+    })
+  }
   const handleDrop = (e, column) => {
     e.preventDefault();
     if (!draggedItem) return;
     if (draggedItem.column === column) return;
 
     if (draggedItem) {
+
+
       setState(prevState => {
         const newState = { ...prevState };
+        if (draggedItem.isMultiSelected) {
+          const itemToMove = Object.values(selectedItems);
 
-        newState[draggedItem.column] = newState[draggedItem.column].filter(item => item.id !== draggedItem.id);
+
+          itemToMove.forEach((item) => {
+            newState[item.column] = newState[item.column].filter((i) => i.id !== item.id);
+
+          })
+          const formateItems = itemToMove.map(({ id, title }) => ({ id, title }));
+
+          newState[column] = [...newState[column], ...formateItems];
 
 
-        newState[column] = [...newState[column], { id: draggedItem.id, title: draggedItem.title }];
+        }
 
-        console.log(newState);
+
+
+        else {
+          newState[draggedItem.column] = newState[draggedItem.column].filter(item => item.id !== draggedItem.id);
+          newState[column] = [...newState[column], { id: draggedItem.id, title: draggedItem.title }];
+
+
+
+        }
         return newState;
-      })
+      });
       setDraggedItem(null);
+      setSelectedItems({})
     }
   }
 
+
   return (
-    <div>
-      <h1>BaseCamp </h1>
-      <input
-        type="text"
-        value={newtodo}
-        onKeyDown={handlekeydown}
-        onChange={(e) => setNewtodo(e.target.value)}
-        placeholder="Add a new todo"
+    <>
+      <div>
+        <h1>BaseCamp </h1>
+        <input
+          type="text"
+          value={newtodo}
+          onKeyDown={handlekeydown}
+          onChange={(e) => setNewtodo(e.target.value)}
+          placeholder="Add a new todo"
 
 
-      />
-      <button onClick={addTodo} className="Add-btn" >Add</button>
+        />
+        <button onClick={addTodo} className="Add-btn" >Add</button>
 
-      <div className='box-section'  >
-        {Object.keys(state).map(column => (
-
-
-          <div
-            className='box-list-bg'
-            key={column}
-            onDragOver={handelDragOver}
-            onDrop={(e) => handleDrop(e, column)}
-          >
-            <h2>{column.toUpperCase()}</h2>
+        <div className='box-section'  >
+          {Object.keys(state).map(column => (
 
 
-            {state[column].map(item => (
-              <div
-
-                className="box-list-items"
-                key={item.id}
-                draggable
-
-                onDragStart={() => handelDragStart(item, column)}
-                style={{ backgroundColor: [colorlist[column] || "null"], color: "black", fontWeight: "bold", cursor: "grab" }}
-              >
-                {item.title}
+            <div
+              className='box-list-bg'
+              key={column}
+              onDragOver={handelDragOver}
+              onDrop={(e) => handleDrop(e, column)}
+            >
+              <h2>{column.toUpperCase()}</h2>
 
 
-                <button onClick={() => removetodo(item.id, column)} style={{ float: 'right', borderRadius: "20px", backgroundColor: "#ccbebe", color: "black", cursor: "pointer" }}>X</button>
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
-    </div >
+              {state[column].map(item => (
+                <div
+
+                  className="box-list-items"
+                  key={item.id}
+                  draggable
+
+                  onDragStart={() => handelDragStart(item, column)}
+                  style={{ backgroundColor: [colorlist[column] || "null"], color: "black", fontWeight: "bold", cursor: "grab" }}
+                >
+
+                  <input
+                    className="checkbox"
+                    type="checkbox"
+                    onChange={() => {
+                      handlemultiChange(item, column);
+                    }}
+                    checked={!!selectedItems[item.id]}
+                  />
+
+
+
+
+                  <span className='items'>
+                    {item.title}
+                  </span>
+
+
+                  <button onClick={() => removetodo(item.id, column)} style={{ borderRadius: "20px", backgroundColor: "#ccbebe", color: "black", cursor: "pointer" }}>X</button>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div >
+
+
+    </>
   )
 }
 

@@ -136,14 +136,44 @@ p {
   border: 1px solid black;
   border-radius: 5px;
 }
+
+
+
+
+.items {
+  text-align: center;
+  width: 100%;
+}
+
 .box-list-items {
-  padding: 8px;
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
   margin: 5px 0;
   background-color: #f0f0f0;
   border-radius: 15px;
-  
 }
 
+.checkbox {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.box-list-items span {
+  flex: 1;
+  text-align: center;
+}
+
+.items {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.box-list-items button {
+  flex-shrink: 0;
+}
 code,
 .counter {
   font-family: var(--mono);
