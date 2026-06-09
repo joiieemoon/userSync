@@ -126,7 +126,7 @@ const App = () => {
     }
   }
 
-
+  console.log("state", handleDrop);
   return (
     <>
       <div>
@@ -150,7 +150,6 @@ const App = () => {
               className='box-list-bg'
               key={column}
               onDragOver={handelDragOver}
-              onDrop={(e) => handleDrop(e, column)}
             >
               <h2>{column.toUpperCase()}</h2>
 
