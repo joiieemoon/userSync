@@ -1,11 +1,11 @@
 import Sidebar from "./sidebar";
 import { useState } from "react";
-
+import type { FieldInputData } from "../components/input/type";
 import FormRenderer from "../components/form/form-render";
 const Layout = () => {
-  const [schema, Setschema] = useState<any[]>([]);
-  const addFiledToSchema = (data) => {
-    console.log(data, "dataaaa");
+  const [schema, Setschema] = useState<Array<Record<string, unknown>>>([]);
+  const addFiledToSchema = (data: FieldInputData) => {
+    console.log(data, "dataaaaa");
     const newField = {
       id: `${data.label}_${Date.now()}`,
       control: data.controlType,
@@ -13,6 +13,8 @@ const Layout = () => {
       label: data.label,
       placeholder: data.placeholder,
       isRequired: data.validation,
+      min: data.min,
+      max: data.max,
     };
 
     Setschema((previous) => [...previous, newField]);

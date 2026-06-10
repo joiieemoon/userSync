@@ -21,7 +21,7 @@ body {
   color: white;
   padding: 20px;
   border: #1a76ff;
-  
+
   overflow-y: auto;
 }
 
@@ -29,7 +29,7 @@ body {
   background-color: #2b1d1d;
   color: #333;
   padding: 20px;
-  
+
   overflow-y: auto;
 }
 .prevcontainer {
@@ -80,10 +80,4 @@ body {
 
   cursor: pointer;
 }
-.flex {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  margin-top: 10px;
-}
+

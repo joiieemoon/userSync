@@ -1,9 +1,12 @@
-import React from "react";
-import { useForm, Controller } from "react-hook-form";
-
+import React, { useMemo } from "react";
+import { useForm } from "react-hook-form";
 import InputController from "../../input/input-controller";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { createDynamicSchema } from "../../validation";
+import { useEffect } from "react";
+
 interface FormRendererProps {
-  schema: any[];
+  schema: Array<Record<string, unknown>>;
   OnDeleteField: (id: string) => void;
 }
 
@@ -11,18 +14,39 @@ const FormRenderer: React.FC<FormRendererProps> = ({
   schema,
   OnDeleteField,
 }) => {
+  const defaultValues = useMemo(() => {
+    const values: Record<string, string> = {};
+    schema.forEach((field) => {
+      values[field.id as string] = "";
+    });
+    return values;
+  }, [schema]);
+
+  const dynamicYupSchema = useMemo(() => {
+    return createDynamicSchema(schema);
+  }, [schema]);
+
   const {
+    formState,
     register,
     handleSubmit,
-    control,
-    formState: { errors },
+    formState: { errors, touchedFields },
     reset,
-  } = useForm();
-  console.log(schema, "schemaa");
-  const onSubmit = (data: any) => {
+  } = useForm({
+    mode: "onTouched",
+    reValidateMode: "onChange",
+    defaultValues,
+    resolver: yupResolver(dynamicYupSchema),
+  });
+
+  useEffect(() => {
+    reset(defaultValues);
+  }, [defaultValues, reset]);
+
+  const onSubmit = (data: Record<string, unknown>) => {
     console.log("Form Submitted Successfully Data:", data);
     alert(JSON.stringify(data, null, 2));
-    reset();
+    reset(defaultValues);
   };
 
   if (!schema || schema.length === 0) {
@@ -43,66 +67,58 @@ const FormRenderer: React.FC<FormRendererProps> = ({
       </h3>
 
       {schema.map((field) => {
-        const validationRules: any = {};
-        if (field.isRequired) {
-          validationRules.required = `${field.label} is a required field`;
-        }
+        const id = field.id as string;
 
+        const showError =
+          !!errors[id] && (touchedFields[id] || formState.isSubmitted);
         return (
-          <div key={field.key}>
+          <div key={field.id as string}>
             {field.control !== "checkbox" ? (
-              <div key={field.id} className="w-full flex  items-center gap-2  ">
+              <div className="w-full flex items-center gap-2">
+                {(field.isRequired as boolean) && (
+                  <p className="text-red-600">* </p>
+                )}
                 <InputController
-                  control={field.control}
-                  label={field.label}
-                  id={field.id}
-                  options={field.options}
-                  placeholder={field.placeholder}
-                  options={field.options}
-                  {...register(field.id, validationRules)}
-                  error={!!errors[field.id]}
-                  errorMessage={errors[field.id]?.message as string}
+                  control={field.control as string}
+                  label={field.label as string}
+                  placeholder={field.placeholder as string}
+                  options={
+                    field.options as Array<{ label: string; value: string }>
+                  }
+                  {...register(field.id as string)}
+                  error={showError}
+                  errorMessage={errors[field.id as string]?.message as string}
                 />
 
                 <button
-                  onClick={() => OnDeleteField(field.id)}
-                  className="bg-red-500 cursor-pointer text-white px-2 py-1 rounded text-sm"
+                  type="button"
+                  onClick={() => OnDeleteField(field.id as string)}
+                  className="bg-red-500 cursor-pointer text-white px-2 py-1 rounded text-sm h-fit self-end mb-2"
                 >
                   X
                 </button>
               </div>
             ) : (
-              <div className="  flex flex-row w-full ">
-                <div className="pt-2 flex flex-row items-center gap-2  border-gray-900">
-                  <label
-                    htmlFor={field.id || name}
-                    className="text-sm font-semibold a  pb-0 text-gray-900"
-                  >
-                    {field.label}
-                  </label>
-                  <Controller
-                    control={control}
-                    name={field.id}
-                    render={({ field }) => (
-                      <InputController
-                        id={field.id}
-                        control="checkbox"
-                        className="text-slate-600  text-sm cursor-pointer"
-                        value={field.value}
-                        onChange={(e: any) => field.onChange(e.target.checked)}
-                        onBlur={field.onBlur}
-                        label={field.label}
-                      />
-                    )}
-                  />
+              <div className="flex flex-row w-full">
+                {(field.isRequired as boolean) && (
+                  <p className="text-red-600">*</p>
+                )}
+                <InputController
+                  control="checkbox"
+                  label={field.label as string}
+                  className="text-slate-600 text-sm cursor-pointer"
+                  {...register(field.id as string)}
+                  error={!!errors[field.id as string]}
+                  errorMessage={errors[field.id as string]?.message as string}
+                />
 
-                  <button
-                    onClick={() => OnDeleteField(field.id)}
-                    className="bg-red-500 cursor-pointer text-white px-2 py-1 rounded text-sm"
-                  >
-                    X
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => OnDeleteField(field.id as string)}
+                  className="bg-red-500 cursor-pointer text-white px-2 py-1 rounded text-sm ml-3"
+                >
+                  X
+                </button>
               </div>
             )}
           </div>

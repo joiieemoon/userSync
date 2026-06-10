@@ -1,24 +1,33 @@
 import { useState } from "react";
 import InputController from "../../components/input/input-controller";
 
-import { useForm, Controller, useWatch } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { fieldSchema } from "../../components/validation";
 
-interface SidebarProps {
-  onAddField: (controlType: string) => void;
-}
+import type { SidebarProps, FieldInputData } from "../../components/input/type";
 
-const Sidebar = ({ onAddField }) => {
+const defaultValues = {
+  controlType: "input",
+  label: "",
+  placeholder: "",
+  validation: false,
+  min: 0,
+  max: 0,
+};
+const Sidebar: React.FC<SidebarProps> = ({ onAddField }) => {
   const {
     register,
     handleSubmit,
-    reset,
+
+    resetField,
     control,
     formState: { errors },
-  } = useForm();
+  } = useForm({ defaultValues, resolver: yupResolver(fieldSchema) });
 
   const [options, setOptions] = useState<string[]>([]);
   const [newOption, setNewOption] = useState<string>("");
-  const handleFormSubmit = (data) => {
+  const handleFormSubmit = (data: FieldInputData) => {
     console.log(data, "dadsad data");
 
     const payload = {
@@ -27,10 +36,16 @@ const Sidebar = ({ onAddField }) => {
     };
 
     onAddField(payload);
+    resetField("label");
+    resetField("placeholder");
+    resetField("controlType");
+    resetField("validation");
+    resetField("min");
+    resetField("max");
+
     setOptions([]);
-    // reset();
   };
-  const removeOption = (item) => {
+  const removeOption = (item: string) => {
     setOptions((prev) => {
       return prev.filter((i) => i !== item);
     });
@@ -59,13 +74,23 @@ const Sidebar = ({ onAddField }) => {
                   control="input"
                   label="Field Label"
                   placeholder="e.g., Enter Username"
-                  className="w-full text-sm text-slate-700"
-                  {...register("label", {
-                    required: "Field label is required",
-                  })}
+                  error={!!errors.label}
+                  errorMessage={errors.label?.message}
+                  className="w-full text-sm text-slate-700 "
+                  {...register("label")}
                 />
               </div>
-
+              {controlType !== "select" && (
+                <div className="pt-2 flex items-center justify-between  border-gray-900">
+                  <InputController
+                    control="input"
+                    label="Place Holder: "
+                    placeholder="Place holder"
+                    className="text-slate-600 text-sm cursor-pointer"
+                    {...register("placeholder")}
+                  />
+                </div>
+              )}
               <div>
                 <InputController
                   control="select"
@@ -81,6 +106,7 @@ const Sidebar = ({ onAddField }) => {
                   <option value="checkbox">Checkbox</option>
                 </InputController>
               </div>
+
               {controlType === "select" && (
                 <>
                   <div className="p-3 bg-slate-50 border rounded-lg space-y-2">
@@ -126,31 +152,31 @@ const Sidebar = ({ onAddField }) => {
               )}
 
               <div className="pt-2 flex items-center justify-between border-gray-900">
-                <Controller
-                  name="validation"
-                  control={control}
-                  render={({ field }) => (
-                    <InputController
-                      control="checkbox"
-                      label="Mark as Required field:"
-                      className="text-slate-600 text-sm cursor-pointer"
-                      id="validation"
-                      name="validation"
-                      value={field.value}
-                      onChange={(e: any) => field.onChange(e.target.checked)}
-                      onBlur={field.onBlur}
-                    />
-                  )}
+                <InputController
+                  control="checkbox"
+                  label="Mark as Required field:"
+                  className="text-slate-600 text-sm cursor-pointer"
+                
+                  {...register("validation")}
                 />
               </div>
 
-              {controlType !== "select" && (
-                <div className="pt-2 flex items-center justify-between  border-gray-900">
+              {controlType !== "select" && controlType !== "checkbox" && (
+                <div className="flex items-center gap-6">
                   <InputController
-                    control="input"
-                    label="Place Holder: "
-                    className="text-slate-600 text-sm cursor-pointer"
-                    {...register("placeholder")}
+                    control="number"
+                    label="Min"
+                    error={!!errors.min}
+                    errorMessage={errors.min?.message}
+                    {...register("min")}
+                  />
+
+                  <InputController
+                    control="number"
+                    label="Max"
+                    error={!!errors.max}
+                    errorMessage={errors.max?.message}
+                    {...register("max")}
                   />
                 </div>
               )}
