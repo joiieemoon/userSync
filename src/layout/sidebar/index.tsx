@@ -57,6 +57,8 @@ const Sidebar: React.FC<SidebarProps> = ({ onAddField }) => {
       setNewOption("");
     }
   };
+
+ 
   return (
     <>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
