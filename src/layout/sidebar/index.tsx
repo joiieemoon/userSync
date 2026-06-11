@@ -80,7 +80,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onAddField }) => {
                   {...register("label")}
                 />
               </div>
-              {controlType !== "select" && (
+              {controlType !== "select" && controlType !== "checkbox" && (
                 <div className="pt-2 flex items-center justify-between  border-gray-900">
                   <InputController
                     control="input"
@@ -156,7 +156,6 @@ const Sidebar: React.FC<SidebarProps> = ({ onAddField }) => {
                   control="checkbox"
                   label="Mark as Required field:"
                   className="text-slate-600 text-sm cursor-pointer"
-                
                   {...register("validation")}
                 />
               </div>

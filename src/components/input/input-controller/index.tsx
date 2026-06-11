@@ -39,7 +39,7 @@ const InputController = forwardRef<
               {label}
             </label>
             <input
-              ref={ref}
+              ref={ref }
               placeholder={placeholder}
               type={type}
               disabled={disabled}
@@ -213,7 +213,5 @@ const InputController = forwardRef<
     }
   },
 );
-
-InputController.displayName = "InputController";
 
 export default InputController;

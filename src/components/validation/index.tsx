@@ -3,7 +3,7 @@ import * as yup from "yup";
 export const fieldSchema = yup.object({
   controlType: yup.string().required("Field type is required"),
 
-  label: yup.string().trim().required("Field label is required"),           
+  label: yup.string().trim().required("Field label is required"),
 
   placeholder: yup.string().nullable(),
 
@@ -45,8 +45,6 @@ export const createDynamicSchema = (dynamicFields: any[]) => {
         .typeError(`${field.label} must be a number`);
     } else if (field.control === "email") {
       validator = yup.string().email("Invalid email format");
-    } else if (field.control === "checkbox") {
-      validator = yup.boolean();
     }
 
     if (field.isRequired || field.validation) {
